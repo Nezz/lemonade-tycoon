@@ -93,12 +93,12 @@ export default function DayScreen() {
             <Pressable
               onPress={() => toggleExpanded("event")}
               style={[
-                styles.eventTile,
-                expanded === "event" && styles.eventTileActive,
+                styles.weatherTile,
+                expanded === "event" && styles.weatherTileActive,
               ]}
             >
-              <PixelIcon emoji={plannedEvent.emoji} size={16} />
-              <Text style={styles.eventTileText} numberOfLines={1}>
+              <PixelIcon emoji={plannedEvent.emoji} size={28} />
+              <Text style={styles.weatherTileText} numberOfLines={1}>
                 {plannedEvent.name}
               </Text>
             </Pressable>
@@ -155,12 +155,16 @@ export default function DayScreen() {
           {expanded === "event" && (
             <Pressable
               onPress={() => setExpanded(null)}
-              style={styles.eventDetail}
+              style={styles.forecastDetail}
             >
-              <PixelIcon emoji={plannedEvent.emoji} size={20} />
-              <View style={styles.eventDetailText}>
-                <Text style={styles.eventDetailName}>{plannedEvent.name}</Text>
-                <Text style={styles.eventDetailDesc}>
+              <View style={styles.forecastRow}>
+                <PixelIcon emoji={plannedEvent.emoji} size={20} />
+                <Text style={styles.forecastDetailText}>
+                  {plannedEvent.name}
+                </Text>
+              </View>
+              <View style={styles.forecastRow}>
+                <Text style={styles.forecastDetailTextLocked}>
                   {plannedEvent.description}
                 </Text>
               </View>
@@ -347,58 +351,6 @@ const styles = StyleSheet.create({
     fontFamily: PIXEL_FONT,
     fontSize: F.small,
     color: C.textMuted,
-  },
-  eventTile: {
-    flexDirection: "row",
-    alignItems: "center",
-    flexShrink: 1,
-    backgroundColor: C.warning,
-    paddingVertical: 3,
-    paddingHorizontal: 8,
-    borderWidth: 2,
-    borderColor: C.warningBorder,
-    gap: 4,
-    cursor: "pointer" as any,
-  },
-  eventTileActive: {
-    borderColor: C.gold,
-  },
-  eventTileText: {
-    fontFamily: PIXEL_FONT,
-    fontSize: F.tiny,
-    color: C.text,
-    flexShrink: 1,
-  },
-  eventDetail: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: C.warning,
-    padding: 10,
-    marginTop: 6,
-    borderWidth: 3,
-    borderColor: C.warningBorder,
-    ...pixelBevel,
-    borderTopColor: C.borderLight,
-    borderLeftColor: C.borderLight,
-    borderBottomColor: C.borderDark,
-    borderRightColor: C.borderDark,
-    gap: 8,
-    cursor: "pointer" as any,
-  },
-  eventDetailText: {
-    flex: 1,
-  },
-  eventDetailName: {
-    fontFamily: PIXEL_FONT,
-    fontSize: F.small,
-    color: C.text,
-  },
-  eventDetailDesc: {
-    fontFamily: PIXEL_FONT,
-    fontSize: F.tiny,
-    color: C.textLight,
-    marginTop: 3,
-    lineHeight: 24,
   },
   summary: {
     flexDirection: "row",
