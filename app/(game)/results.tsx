@@ -100,7 +100,11 @@ export default function ResultsScreen() {
           <WeatherBadge weather={result.weather} />
         </View>
 
-        {result.event && <EventBanner event={result.event} />}
+        {/* All events — planned + surprises */}
+        <EventBanner event={result.plannedEvent} />
+        {result.surpriseEvents.map((evt) => (
+          <EventBanner key={evt.id} event={evt} />
+        ))}
 
         {/* Satisfaction */}
         <View style={styles.card}>

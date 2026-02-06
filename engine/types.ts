@@ -278,30 +278,76 @@ export interface UpgradeDefinition {
 
 // ── Events ───────────────────────────────────────────────────────────────────
 
+export type EventTiming = "planned" | "surprise";
+
 export type GameEventId =
+  // Existing planned
   | "heatWave"
   | "streetFair"
   | "construction"
-  | "healthInspector"
   | "lemonShortage"
-  | "newspaperFeature"
-  | "powerOutage"
   | "schoolFieldTrip"
   | "competingStand"
-  | "bulkDiscount"
+  // New planned — per-item price surges
+  | "sugarShortage"
+  | "iceTruckDelay"
+  | "cupShortage"
+  | "citrusBlight"
+  // New planned — per-item discounts
+  | "lemonGlut"
+  | "iceSale"
+  | "sugarSurplus"
+  | "cupPromo"
+  // New planned — demand
+  | "localSportsGame"
+  | "charityMarathon"
+  | "neighborhoodGarageSale"
+  | "lemonadeDay"
+  | "rivalClosed"
+  | "parkConcert"
+  | "roadClosure"
+  // New planned — preference / mixed
+  | "churchPicnic"
+  | "dietTrend"
+  // Existing surprise
+  | "healthInspector"
+  | "newspaperFeature"
+  | "powerOutage"
+  | "celebritySighting"
   | "rainSurprise"
-  | "celebritySighting";
+  // New surprise — demand
+  | "touristBus"
+  | "waterMainBreak"
+  | "beeSighting"
+  | "parkingLotClosed"
+  | "heatBurst"
+  // New surprise — reputation
+  | "foodBlogReview"
+  | "badOnlineReview"
+  | "viralVideo"
+  | "lostDogReunion"
+  // New surprise — ice
+  | "fridgeMalfunction"
+  // New surprise — preference
+  | "gymClassField";
+
+/** Resolved effect values for an event (stored so randomized values persist). */
+export interface EventEffects {
+  demandMultiplier: number;
+  supplyCostMultiplier: number;
+  supplyCostMultipliers?: Partial<Record<SupplyId, number>>;
+  reputationEffect: number;
+  destroysIce: boolean;
+  sugarPreferenceShift: number;
+}
 
 export interface GameEventDefinition {
   id: GameEventId;
   name: string;
-  description: string;
   emoji: string;
-  demandMultiplier: number;
-  supplyCostMultiplier: number;
-  reputationEffect: number;
-  destroysIce: boolean;
-  sugarPreferenceShift: number;
+  timing: EventTiming;
+  /** Static effects used as defaults / templates. */
+  effects: EventEffects;
 }
 
 export interface ActiveEvent {
@@ -309,6 +355,9 @@ export interface ActiveEvent {
   name: string;
   description: string;
   emoji: string;
+  timing: EventTiming;
+  /** Resolved effects — may contain randomized values. */
+  effects: EventEffects;
 }
 
 // ── Achievements ─────────────────────────────────────────────────────────────
@@ -360,7 +409,8 @@ export interface DayResult {
   reputationChange: number;
   iceMelted: number;
   spoiledSupplies: SpoiledSupplies;
-  event: ActiveEvent | null;
+  plannedEvent: ActiveEvent;
+  surpriseEvents: ActiveEvent[];
   achievementsUnlocked: AchievementId[];
 }
 
@@ -379,7 +429,8 @@ export interface GameState {
   forecast: WeatherType;
   reputation: number;
   upgrades: Record<UpgradeId, boolean>;
-  activeEvent: ActiveEvent | null;
+  plannedEvent: ActiveEvent;
+  surpriseEvents: ActiveEvent[];
   achievements: Record<AchievementId, boolean>;
   stats: {
     totalRevenue: number;

@@ -5,6 +5,8 @@ import {
   InventoryBatches,
   SupplyId,
   SpoiledSupplies,
+  ActiveEvent,
+  EventEffects,
 } from "@/engine/types";
 import {
   SUPPLY_DEFINITIONS,
@@ -14,7 +16,7 @@ import {
   REPUTATION_DECAY_RATE,
   getRentForDay,
 } from "@/engine/constants";
-import { getEventDefinition } from "@/engine/events";
+import { combineEventEffects } from "@/engine/events";
 import {
   calculateDemand,
   cupsFromInventory,
@@ -138,7 +140,7 @@ function removeExpiredBatches(
 }
 
 /**
- * Run a full day simulation. Returns the DayResult and updated state.
+ * Run a full day simulation. Uses plannedEvent + surpriseEvents for effects.
  */
 export function runDay(state: GameState): {
   result: DayResult;
@@ -154,13 +156,18 @@ export function runDay(state: GameState): {
     inventoryBatches,
     reputation,
     upgrades,
-    activeEvent,
+    plannedEvent,
+    surpriseEvents,
   } = state;
 
   // Aggregate all upgrade effects once
   const effects = aggregateEffects(upgrades);
 
-  // 0. Apply event: power outage destroys ice
+  // Combine all events into one set of effects
+  const allEvents: ActiveEvent[] = [plannedEvent, ...surpriseEvents];
+  const combinedEventEffects: EventEffects = combineEventEffects(allEvents);
+
+  // 0. Apply event: ice destruction (power outage, fridge malfunction, heat burst)
   let workingBatches: InventoryBatches = {
     lemons: [...inventoryBatches.lemons.map((b) => ({ ...b }))],
     sugar: [...inventoryBatches.sugar.map((b) => ({ ...b }))],
@@ -168,16 +175,13 @@ export function runDay(state: GameState): {
     cups: [...inventoryBatches.cups.map((b) => ({ ...b }))],
   };
 
-  if (activeEvent) {
-    const eventDef = getEventDefinition(activeEvent.id);
-    if (eventDef.destroysIce) {
-      workingBatches.ice = [];
-    }
+  if (combinedEventEffects.destroysIce) {
+    workingBatches.ice = [];
   }
 
   const workingInventory = inventoryFromBatches(workingBatches);
 
-  // 1. Calculate demand (uses aggregated effects internally)
+  // 1. Calculate demand (uses combined event effects)
   const maxDemand = calculateDemand(
     day,
     weather,
@@ -185,7 +189,7 @@ export function runDay(state: GameState): {
     recipe,
     reputation,
     upgrades,
-    activeEvent,
+    combinedEventEffects,
   );
 
   // 2. Calculate how many cups we can actually make
@@ -263,7 +267,7 @@ export function runDay(state: GameState): {
           recipe,
           weather,
           pricePerCup,
-          activeEvent,
+          combinedEventEffects,
           effects,
         )
       : 0;
@@ -293,17 +297,16 @@ export function runDay(state: GameState): {
     );
   }
 
-  // Event reputation effects
-  if (activeEvent) {
-    const eventDef = getEventDefinition(activeEvent.id);
-    if (activeEvent.id === "healthInspector") {
+  // Event reputation effects — handle health inspector specially
+  for (const event of allEvents) {
+    if (event.id === "healthInspector") {
       if (satisfaction >= 60) {
         reputationChange += 5;
       } else {
         reputationChange -= 10;
       }
     } else {
-      reputationChange += eventDef.reputationEffect;
+      reputationChange += event.effects.reputationEffect;
     }
   }
 
@@ -328,7 +331,8 @@ export function runDay(state: GameState): {
     reputationChange,
     iceMelted,
     spoiledSupplies,
-    event: activeEvent,
+    plannedEvent,
+    surpriseEvents,
     achievementsUnlocked: [],
   };
 

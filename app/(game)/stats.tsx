@@ -92,7 +92,8 @@ export default function StatsScreen() {
                   <Text style={styles.logDay}>Day {r.day}</Text>
                   <Text style={styles.logDetail}>
                     {r.cupsSold} cups | {r.weather}
-                    {r.event ? ` | ${r.event.emoji}` : ""}
+                    {` | ${r.plannedEvent.emoji}`}
+                    {r.surpriseEvents.map((e) => e.emoji).join("")}
                   </Text>
                 </View>
                 <Text

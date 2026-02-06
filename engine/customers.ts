@@ -1,10 +1,9 @@
-import { WeatherType, Recipe, UpgradeId, ActiveEvent } from "@/engine/types";
+import { WeatherType, Recipe, UpgradeId, EventEffects } from "@/engine/types";
 import {
   WEATHER_DATA,
   BASE_DEMAND,
   DEMAND_GROWTH_PER_DAY,
 } from "@/engine/constants";
-import { getEventDefinition } from "@/engine/events";
 import { AggregatedEffects, aggregateEffects } from "@/engine/upgrades";
 
 /**
@@ -30,25 +29,23 @@ function ingredientScore(value: number, ideal: [number, number]): number {
 /**
  * Calculate recipe quality based on weather conditions.
  * Uses aggregated recipeQuality bonus from effects.
+ * `eventEffects` is the combined EventEffects from all active events.
  */
 export function recipeQuality(
   recipe: Recipe,
   weather: WeatherType,
-  event: ActiveEvent | null,
+  eventEffects: EventEffects | null,
   effects?: AggregatedEffects,
 ): number {
   const info = WEATHER_DATA[weather];
 
   // Apply event sugar preference shift
   let sugarIdeal: [number, number] = info.idealSugar;
-  if (event) {
-    const eventDef = getEventDefinition(event.id);
-    if (eventDef.sugarPreferenceShift !== 0) {
-      sugarIdeal = [
-        clamp(sugarIdeal[0] + eventDef.sugarPreferenceShift, 1, 6),
-        clamp(sugarIdeal[1] + eventDef.sugarPreferenceShift, 1, 6),
-      ];
-    }
+  if (eventEffects && eventEffects.sugarPreferenceShift !== 0) {
+    sugarIdeal = [
+      clamp(sugarIdeal[0] + eventEffects.sugarPreferenceShift, 1, 6),
+      clamp(sugarIdeal[1] + eventEffects.sugarPreferenceShift, 1, 6),
+    ];
   }
 
   const lemonScore = ingredientScore(recipe.lemonsPerCup, info.idealLemons);
@@ -126,7 +123,8 @@ export function satisfactionBonus(effects: AggregatedEffects): number {
 }
 
 /**
- * Calculate total customer demand for a day, including event effects.
+ * Calculate total customer demand for a day, including combined event effects.
+ * `eventEffects` is the pre-combined EventEffects from all active events.
  */
 export function calculateDemand(
   day: number,
@@ -135,35 +133,31 @@ export function calculateDemand(
   recipe: Recipe,
   reputation: number,
   upgrades: Record<UpgradeId, boolean>,
-  event: ActiveEvent | null,
+  eventEffects: EventEffects | null,
 ): number {
   const effects = aggregateEffects(upgrades);
 
   const base = BASE_DEMAND + day * DEMAND_GROWTH_PER_DAY;
   const weatherMod = WEATHER_DATA[weather].demandMultiplier;
   const priceMod = priceModifier(pricePerCup);
-  const qualityMod = recipeQuality(recipe, weather, event, effects);
+  const qualityMod = recipeQuality(recipe, weather, eventEffects, effects);
   const repMod = reputationModifier(reputation);
   const upgMod = upgradeBonus(effects, weather);
 
   // Max served bonus from speed/staff upgrades
   const maxServedMult = 1 + effects.maxServedBonus;
 
-  // Event demand modifier
+  // Event demand modifier (already combined from all events)
   let eventMod = 1.0;
-  if (event) {
-    const eventDef = getEventDefinition(event.id);
-    eventMod = eventDef.demandMultiplier;
+  if (eventEffects) {
+    eventMod = eventEffects.demandMultiplier;
 
-    // Amplify positive events, reduce negative events via effects
-    if (eventDef.demandMultiplier > 1.0 && effects.eventBonusMult > 0) {
-      const bonus = eventDef.demandMultiplier - 1.0;
+    // Amplify positive events, reduce negative events via upgrade effects
+    if (eventMod > 1.0 && effects.eventBonusMult > 0) {
+      const bonus = eventMod - 1.0;
       eventMod = 1.0 + bonus * (1 + effects.eventBonusMult);
-    } else if (
-      eventDef.demandMultiplier < 1.0 &&
-      effects.eventPenaltyReduction > 0
-    ) {
-      const penalty = 1.0 - eventDef.demandMultiplier;
+    } else if (eventMod < 1.0 && effects.eventPenaltyReduction > 0) {
+      const penalty = 1.0 - eventMod;
       eventMod = 1.0 - penalty * (1 - effects.eventPenaltyReduction);
     }
   }
@@ -206,10 +200,10 @@ export function calculateSatisfaction(
   recipe: Recipe,
   weather: WeatherType,
   pricePerCup: number,
-  event: ActiveEvent | null,
+  eventEffects: EventEffects | null,
   effects?: AggregatedEffects,
 ): number {
-  const quality = recipeQuality(recipe, weather, event, effects);
+  const quality = recipeQuality(recipe, weather, eventEffects, effects);
   const priceFairness = clamp(1.5 - pricePerCup * 0.4, 0.3, 1.2);
 
   let raw = quality * 0.7 + priceFairness * 0.3;

@@ -7,7 +7,7 @@ import StandPlaceholder from "@/components/StandPlaceholder";
 import StripedBackground from "@/components/StripedBackground";
 import PixelIcon from "@/components/PixelIcon";
 import { WEATHER_DATA } from "@/engine/constants";
-import type { DayResult } from "@/engine/types";
+import type { ActiveEvent, DayResult } from "@/engine/types";
 import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from "@/theme/pixel";
 
 // ── Constants ────────────────────────────────────────────────────────────────
@@ -20,6 +20,10 @@ const CLOCK_TICK_MS = 100;
 const ICON_FLOAT_DURATION = 2500;
 const ICON_SIZE = 36;
 const NAV_DELAY_AFTER_CLOSE = 1500;
+
+// Surprise toast timing
+const TOAST_DURATION_MS = 3500;
+const TOAST_FADE_MS = 400;
 
 // ── Clock helpers ────────────────────────────────────────────────────────────
 
@@ -71,6 +75,71 @@ function SimulationClock({
     <Text style={[styles.clockText, isSoldOut && styles.soldOutText]}>
       {display}
     </Text>
+  );
+}
+
+// ── Surprise Event Toast ─────────────────────────────────────────────────────
+
+function SurpriseToast({
+  event,
+  delayMs,
+}: {
+  event: ActiveEvent;
+  delayMs: number;
+}) {
+  const opacity = useRef(new Animated.Value(0)).current;
+  const translateY = useRef(new Animated.Value(-30)).current;
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      Animated.parallel([
+        Animated.timing(opacity, {
+          toValue: 1,
+          duration: TOAST_FADE_MS,
+          useNativeDriver: true,
+        }),
+        Animated.timing(translateY, {
+          toValue: 0,
+          duration: TOAST_FADE_MS,
+          useNativeDriver: true,
+        }),
+      ]).start(() => {
+        // Hold, then fade out
+        setTimeout(
+          () => {
+            Animated.parallel([
+              Animated.timing(opacity, {
+                toValue: 0,
+                duration: TOAST_FADE_MS,
+                useNativeDriver: true,
+              }),
+              Animated.timing(translateY, {
+                toValue: -20,
+                duration: TOAST_FADE_MS,
+                useNativeDriver: true,
+              }),
+            ]).start();
+          },
+          TOAST_DURATION_MS - TOAST_FADE_MS * 2,
+        );
+      });
+    }, delayMs);
+
+    return () => clearTimeout(timer);
+  }, [delayMs, opacity, translateY]);
+
+  return (
+    <Animated.View
+      style={[styles.toastBanner, { opacity, transform: [{ translateY }] }]}
+    >
+      <PixelIcon emoji={event.emoji} size={18} />
+      <View style={styles.toastTextContainer}>
+        <Text style={styles.toastName}>{event.name}</Text>
+        <Text style={styles.toastDescription} numberOfLines={2}>
+          {event.description}
+        </Text>
+      </View>
+    </Animated.View>
   );
 }
 
@@ -130,9 +199,11 @@ function buildSchedule(result: DayResult): Schedule {
 
   // ── Hour 0 (8 AM): Opening ──
   schedule.push({ emoji: weatherEmoji, spawnTimeMs: 400, x: rx() });
-  if (result.event) {
-    schedule.push({ emoji: result.event.emoji, spawnTimeMs: 1400, x: rx() });
-  }
+  schedule.push({
+    emoji: result.plannedEvent.emoji,
+    spawnTimeMs: 1400,
+    x: rx(),
+  });
 
   // ── Selling period (compressed when stock runs out early) ──
 
@@ -192,13 +263,22 @@ function buildSchedule(result: DayResult): Schedule {
     });
   }
 
-  // Event reminder — only if it falls within the selling window
-  if (result.event && 4 * MS_PER_HOUR + 800 < effectiveSellingEnd) {
+  // Planned event reminder — only if it falls within the selling window
+  if (4 * MS_PER_HOUR + 800 < effectiveSellingEnd) {
     schedule.push({
-      emoji: result.event.emoji,
+      emoji: result.plannedEvent.emoji,
       spawnTimeMs: 4 * MS_PER_HOUR + 800,
       x: rx(),
     });
+  }
+
+  // Surprise event emoji floats — staggered during selling period
+  for (let i = 0; i < result.surpriseEvents.length; i++) {
+    const evt = result.surpriseEvents[i];
+    const t = sellingStart + (i + 1) * 2 * MS_PER_HOUR + 500;
+    if (t < effectiveSellingEnd) {
+      schedule.push({ emoji: evt.emoji, spawnTimeMs: t, x: rx() });
+    }
   }
 
   // ── Closing (moved earlier when sold out) ──
@@ -322,6 +402,9 @@ export default function SimulationScreen() {
     return null;
   }
 
+  // Surprise toasts are staggered: first at ~2 game-hours, second at ~4 game-hours
+  const surpriseDelays = [2 * MS_PER_HOUR, 4 * MS_PER_HOUR];
+
   return (
     <StripedBackground>
       <SafeAreaView style={styles.safeArea}>
@@ -334,6 +417,17 @@ export default function SimulationScreen() {
               soldOutAtMs={schedule?.soldOutAtMs ?? null}
             />
           </View>
+        </View>
+
+        {/* Surprise Event Toasts */}
+        <View style={styles.toastContainer}>
+          {result.surpriseEvents.map((evt, idx) => (
+            <SurpriseToast
+              key={evt.id}
+              event={evt}
+              delayMs={surpriseDelays[idx] ?? (idx + 1) * 2 * MS_PER_HOUR}
+            />
+          ))}
         </View>
 
         {/* Stand area with floating icons */}
@@ -399,6 +493,46 @@ const styles = StyleSheet.create({
   soldOutText: {
     color: C.red,
   },
+  // Surprise event toasts
+  toastContainer: {
+    position: "absolute",
+    top: 60,
+    left: 12,
+    right: 12,
+    zIndex: 100,
+    gap: 6,
+  },
+  toastBanner: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: C.warning,
+    borderRadius: 0,
+    padding: 10,
+    borderWidth: 3,
+    borderColor: C.warningBorder,
+    ...pixelBevel,
+    borderTopColor: C.borderLight,
+    borderLeftColor: C.borderLight,
+    borderBottomColor: C.borderDark,
+    borderRightColor: C.borderDark,
+    gap: 8,
+  },
+  toastTextContainer: {
+    flex: 1,
+  },
+  toastName: {
+    fontFamily: PIXEL_FONT,
+    fontSize: F.small,
+    color: C.text,
+  },
+  toastDescription: {
+    fontFamily: PIXEL_FONT,
+    fontSize: F.tiny,
+    color: C.textLight,
+    marginTop: 2,
+    lineHeight: 24,
+  },
+  // Stand area
   standArea: {
     flex: 1,
     position: "relative",

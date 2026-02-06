@@ -27,7 +27,7 @@ export default function DayScreen() {
   const recipe = useGameStore((s) => s.recipe);
   const pricePerCup = useGameStore((s) => s.pricePerCup);
   const upgrades = useGameStore((s) => s.upgrades);
-  const activeEvent = useGameStore((s) => s.activeEvent);
+  const plannedEvent = useGameStore((s) => s.plannedEvent);
   const startDay = useGameStore((s) => s.startDay);
   const newlyUnlockedAchievements = useGameStore(
     (s) => s.newlyUnlockedAchievements,
@@ -54,8 +54,8 @@ export default function DayScreen() {
         style={styles.scroll}
         contentContainerStyle={styles.scrollContent}
       >
-        {/* Event Banner */}
-        {activeEvent && <EventBanner event={activeEvent} />}
+        {/* Event Banner — always one planned event */}
+        <EventBanner event={plannedEvent} />
 
         {/* Day & Weather Header */}
         <View style={styles.header}>

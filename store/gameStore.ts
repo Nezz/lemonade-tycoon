@@ -18,7 +18,7 @@ import {
   FORECAST_ACCURACY,
 } from "@/engine/constants";
 import { generateWeather, generateForecast } from "@/engine/weather";
-import { rollEvent, getEventDefinition } from "@/engine/events";
+import { rollPlannedEvent, rollSurpriseEvents } from "@/engine/events";
 import { runDay } from "@/engine/simulation";
 import { checkAchievements } from "@/engine/achievements";
 import { aggregateEffects } from "@/engine/upgrades";
@@ -65,12 +65,11 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const def = SUPPLY_DEFINITIONS[supplyId];
     const effects = aggregateEffects(state.upgrades);
 
-    // Apply event supply cost multiplier
+    // Apply planned event supply cost multiplier (per-supply or global)
     let costMultiplier = 1.0;
-    if (state.activeEvent) {
-      const eventDef = getEventDefinition(state.activeEvent.id);
-      costMultiplier = eventDef.supplyCostMultiplier;
-    }
+    const eventEffects = state.plannedEvent.effects;
+    const perSupply = eventEffects.supplyCostMultipliers?.[supplyId];
+    costMultiplier = perSupply ?? eventEffects.supplyCostMultiplier;
 
     // Apply aggregated cost reduction from supply chain upgrades
     if (effects.costReduction > 0) {
@@ -220,15 +219,24 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
   startDay: () => {
     const state = get();
+
+    // Roll surprise events right before simulation
+    const surprises = rollSurpriseEvents();
+    // Store surprise events so runDay and UI can use them
+    const stateWithSurprises: GameState = {
+      ...state,
+      surpriseEvents: surprises,
+    };
+
     const { result, newInventory, newInventoryBatches, newReputation } =
-      runDay(state);
+      runDay(stateWithSurprises);
 
     // Add passive income and free lemons are handled in runDay via effects
     const newMoney = Math.round((state.money + result.profit) * 100) / 100;
 
     // Check achievements
     const newlyUnlocked = checkAchievements(
-      state,
+      stateWithSurprises,
       result,
       state.totalSpentToday,
     );
@@ -255,6 +263,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       inventoryBatches: newInventoryBatches,
       reputation: newReputation,
       phase: newPhase,
+      surpriseEvents: surprises,
       achievements: updatedAchievements,
       newlyUnlockedAchievements: newlyUnlocked,
       stats: {
@@ -285,7 +294,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
       forecast: updatedState.forecast,
       reputation: updatedState.reputation,
       upgrades: updatedState.upgrades,
-      activeEvent: updatedState.activeEvent,
+      plannedEvent: updatedState.plannedEvent,
+      surpriseEvents: updatedState.surpriseEvents,
       achievements: updatedState.achievements,
       stats: updatedState.stats,
       phase: updatedState.phase,
@@ -309,7 +319,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
     const newWeather = generateWeather(state.forecast, accuracy);
     const newForecast = generateForecast();
-    const newEvent = rollEvent();
+    const newPlannedEvent = rollPlannedEvent();
 
     // Add free lemons from lemon garden / vertical farm
     let newBatches = { ...state.inventoryBatches };
@@ -331,7 +341,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
       day: state.day + 1,
       weather: newWeather,
       forecast: newForecast,
-      activeEvent: newEvent,
+      plannedEvent: newPlannedEvent,
+      surpriseEvents: [],
       phase: "planning",
       totalSpentToday: 0,
       newlyUnlockedAchievements: [],
@@ -345,7 +356,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
   resetGame: () => {
     const weather = generateWeather(null);
     const forecast = generateForecast();
-    const event = rollEvent();
+    const plannedEvent = rollPlannedEvent();
 
     set({
       ...INITIAL_GAME_STATE,
@@ -359,7 +370,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
       recipe: { ...INITIAL_GAME_STATE.recipe },
       upgrades: { ...INITIAL_GAME_STATE.upgrades },
       achievements: { ...INITIAL_GAME_STATE.achievements },
-      activeEvent: event,
+      plannedEvent,
+      surpriseEvents: [],
       stats: { totalRevenue: 0, totalCupsSold: 0, dayResults: [] },
       weather,
       forecast,

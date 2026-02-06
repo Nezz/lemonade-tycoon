@@ -10,7 +10,6 @@ import {
   SUPPLY_DEFINITIONS,
   MAX_INVENTORY_BASE,
 } from "@/engine/constants";
-import { getEventDefinition } from "@/engine/events";
 import { aggregateEffects } from "@/engine/upgrades";
 import PixelIcon from "@/components/PixelIcon";
 import {
@@ -31,14 +30,17 @@ export default function ShopScreen() {
   const day = useGameStore((s) => s.day);
   const buySupply = useGameStore((s) => s.buySupply);
   const discardSupply = useGameStore((s) => s.discardSupply);
-  const activeEvent = useGameStore((s) => s.activeEvent);
+  const plannedEvent = useGameStore((s) => s.plannedEvent);
   const upgrades = useGameStore((s) => s.upgrades);
   const effects = aggregateEffects(upgrades);
   const maxInventory = MAX_INVENTORY_BASE + effects.inventoryBonus;
 
-  const hasSupplyEvent = activeEvent
-    ? getEventDefinition(activeEvent.id).supplyCostMultiplier !== 1.0
-    : false;
+  // Show event banner if it affects any supply costs
+  const eventFx = plannedEvent.effects;
+  const hasSupplyEvent =
+    eventFx.supplyCostMultiplier !== 1.0 ||
+    (eventFx.supplyCostMultipliers !== undefined &&
+      Object.values(eventFx.supplyCostMultipliers).some((m) => m !== 1));
 
   const totalInventory = Object.values(inventory).reduce(
     (sum, v) => sum + v,
@@ -52,7 +54,7 @@ export default function ShopScreen() {
       <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
         <MoneyDisplay amount={money} />
 
-        {activeEvent && hasSupplyEvent && <EventBanner event={activeEvent} />}
+        {hasSupplyEvent && <EventBanner event={plannedEvent} />}
 
         <InventoryBar inventory={inventory} />
 

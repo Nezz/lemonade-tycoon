@@ -11,6 +11,7 @@ import {
   AchievementId,
   GameState,
 } from "@/engine/types";
+import { rollPlannedEvent } from "@/engine/events";
 
 // ── Weather Definitions ──────────────────────────────────────────────────────
 
@@ -1558,10 +1559,6 @@ export function getRentForDay(
   return maxRent;
 }
 
-// ── Event Constants ──────────────────────────────────────────────────────────
-
-export const EVENT_CHANCE = 0.35;
-
 // ── Victory / Game Over ──────────────────────────────────────────────────────
 
 export const VICTORY_REVENUE_GOAL = 500;
@@ -1623,7 +1620,8 @@ export const INITIAL_GAME_STATE: GameState = {
   forecast: "warm",
   reputation: STARTING_REPUTATION,
   upgrades: { ...DEFAULT_UPGRADES },
-  activeEvent: null,
+  plannedEvent: rollPlannedEvent(),
+  surpriseEvents: [],
   achievements: { ...DEFAULT_ACHIEVEMENTS },
   stats: { totalRevenue: 0, totalCupsSold: 0, dayResults: [] },
   phase: "planning",

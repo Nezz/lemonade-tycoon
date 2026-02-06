@@ -166,19 +166,23 @@ export function checkAchievements(
   }
 
   // Event Survivor: profit on a negative-demand event day
-  const negativeEvents = [
+  const negativeEvents: string[] = [
     "construction",
     "competingStand",
     "rainSurprise",
     "lemonShortage",
     "powerOutage",
+    "roadClosure",
+    "waterMainBreak",
+    "beeSighting",
+    "parkingLotClosed",
+    "badOnlineReview",
+    "fridgeMalfunction",
+    "heatBurst",
   ];
-  check(
-    "eventSurvivor",
-    result.event !== null &&
-      negativeEvents.includes(result.event.id) &&
-      result.profit > 0,
-  );
+  const allEvents = [result.plannedEvent, ...result.surpriseEvents];
+  const hasNegativeEvent = allEvents.some((e) => negativeEvents.includes(e.id));
+  check("eventSurvivor", hasNegativeEvent && result.profit > 0);
 
   // Big Spender: $50+ spent on supplies today
   check("bigSpender", totalSpentToday >= 50);
