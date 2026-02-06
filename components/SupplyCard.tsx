@@ -29,8 +29,9 @@ export default function SupplyCard({
   const totalCost = def.packCost * packs;
   const totalUnits = def.packSize * packs;
   const canAfford = totalCost <= money;
-  const wouldExceedMax = totalInventory + totalUnits > maxInventory;
   const isFull = totalInventory >= maxInventory;
+  const spaceLeft = maxInventory - totalInventory;
+  const unitsKept = Math.min(totalUnits, spaceLeft);
 
   const handleBuy = () => {
     const success = onBuy(supplyId, packs);
@@ -73,7 +74,8 @@ export default function SupplyCard({
 
         <View style={styles.costInfo}>
           <Text style={styles.costLabel}>
-            +{totalUnits} {def.unit}
+            +{unitsKept}
+            {unitsKept < totalUnits ? `/${totalUnits}` : ""} {def.unit}
           </Text>
           <Text style={[styles.cost, !canAfford && styles.costRed]}>
             {formatMoney(totalCost)}
@@ -81,9 +83,9 @@ export default function SupplyCard({
         </View>
 
         <GameButton
-          title={isFull ? "FULL" : wouldExceedMax ? "OVER" : "BUY"}
+          title={isFull ? "FULL" : "BUY"}
           onPress={handleBuy}
-          disabled={!canAfford || wouldExceedMax}
+          disabled={!canAfford || isFull}
           small
           style={styles.buyBtn}
         />

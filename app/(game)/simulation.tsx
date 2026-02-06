@@ -33,29 +33,45 @@ function formatGameTime(hour24: number): string {
 }
 
 /**
- * Self-contained clock that ticks continuously from 8 AM to CLOSED.
+ * Clock that ticks continuously from 8 AM.
+ * Shows "SOLD OUT!" if stock ran out early, then "CLOSED" at the end.
  * Isolated in its own component so frequent re-renders don't affect the
  * parent's floating-icon layer.
  */
-function SimulationClock() {
+function SimulationClock({
+  effectiveTotalMs,
+  soldOutAtMs,
+}: {
+  effectiveTotalMs: number;
+  soldOutAtMs: number | null;
+}) {
   const [display, setDisplay] = useState(() => formatGameTime(START_HOUR));
+  const isSoldOut = display === "SOLD OUT!";
 
   useEffect(() => {
     const start = Date.now();
     const interval = setInterval(() => {
       const elapsed = Date.now() - start;
-      if (elapsed >= TOTAL_DURATION_MS) {
+      if (elapsed >= effectiveTotalMs) {
         setDisplay("CLOSED");
         clearInterval(interval);
         return;
       }
-      const gameHours = (elapsed / TOTAL_DURATION_MS) * TOTAL_HOURS;
+      if (soldOutAtMs !== null && elapsed >= soldOutAtMs) {
+        setDisplay("SOLD OUT!");
+        return;
+      }
+      const gameHours = elapsed / MS_PER_HOUR;
       setDisplay(formatGameTime(START_HOUR + gameHours));
     }, CLOCK_TICK_MS);
     return () => clearInterval(interval);
-  }, []);
+  }, [effectiveTotalMs, soldOutAtMs]);
 
-  return <Text style={styles.clockText}>{display}</Text>;
+  return (
+    <Text style={[styles.clockText, isSoldOut && styles.soldOutText]}>
+      {display}
+    </Text>
+  );
 }
 
 // ── Types ────────────────────────────────────────────────────────────────────
@@ -76,14 +92,41 @@ interface ActiveIcon {
 
 // ── Schedule Builder ─────────────────────────────────────────────────────────
 
+interface Schedule {
+  icons: ScheduledIcon[];
+  effectiveTotalMs: number;
+  /** Real-time ms when stock ran out. null if stock lasted all day. */
+  soldOutAtMs: number | null;
+}
+
 /**
  * Build a chronological list of icon spawns based on the day's results.
- * Icons are spread across the 8-hour window (24 real seconds).
+ * If the player ran out of stock before demand was met, the selling window
+ * is shortened proportionally and the shop closes early.
  */
-function buildSchedule(result: DayResult): ScheduledIcon[] {
+function buildSchedule(result: DayResult): Schedule {
   const schedule: ScheduledIcon[] = [];
   const rx = () => 10 + Math.random() * 80;
   const weatherEmoji = WEATHER_DATA[result.weather].emoji;
+
+  // Did we run out of stock before meeting demand?
+  const ranOutOfStock =
+    result.cupsSold > 0 && result.maxSellable < result.maxDemand;
+  const sellFraction = ranOutOfStock ? result.cupsSold / result.maxDemand : 1;
+
+  // ── Timing ──
+  const sellingStart = MS_PER_HOUR;
+  const fullSellingDuration = 6 * MS_PER_HOUR;
+  // Ensure at least 2 game-hours of selling animation
+  const effectiveSellingDuration = Math.max(
+    2 * MS_PER_HOUR,
+    sellFraction * fullSellingDuration,
+  );
+  const effectiveSellingEnd = sellingStart + effectiveSellingDuration;
+  const soldOutGapMs = ranOutOfStock ? MS_PER_HOUR : 0;
+  const closingStart = effectiveSellingEnd + soldOutGapMs;
+  const effectiveTotalMs = closingStart + MS_PER_HOUR;
+  const soldOutAtMs = ranOutOfStock ? effectiveSellingEnd : null;
 
   // ── Hour 0 (8 AM): Opening ──
   schedule.push({ emoji: weatherEmoji, spawnTimeMs: 400, x: rx() });
@@ -91,15 +134,13 @@ function buildSchedule(result: DayResult): ScheduledIcon[] {
     schedule.push({ emoji: result.event.emoji, spawnTimeMs: 1400, x: rx() });
   }
 
-  // ── Hours 1–6 (9 AM – 2 PM): Selling ──
-  const sellingStart = MS_PER_HOUR;
-  const sellingEnd = 7 * MS_PER_HOUR;
-  const sellingDuration = sellingEnd - sellingStart;
+  // ── Selling period (compressed when stock runs out early) ──
 
   // Cups sold — one icon per ~2 cups, capped at 30
   const cupCount = Math.min(Math.ceil(result.cupsSold / 2), 30);
   for (let i = 0; i < cupCount; i++) {
-    const t = sellingStart + (i / Math.max(cupCount - 1, 1)) * sellingDuration;
+    const t =
+      sellingStart + (i / Math.max(cupCount - 1, 1)) * effectiveSellingDuration;
     schedule.push({ emoji: "🥤", spawnTimeMs: t, x: rx() });
   }
 
@@ -109,7 +150,7 @@ function buildSchedule(result: DayResult): ScheduledIcon[] {
     const t =
       sellingStart +
       150 +
-      (i / Math.max(moneyCount - 1, 1)) * (sellingDuration - 150);
+      (i / Math.max(moneyCount - 1, 1)) * (effectiveSellingDuration - 150);
     schedule.push({ emoji: "💸", spawnTimeMs: t, x: rx() });
   }
 
@@ -119,39 +160,40 @@ function buildSchedule(result: DayResult): ScheduledIcon[] {
     const t =
       sellingStart +
       300 +
-      (i / Math.max(customerCount - 1, 1)) * (sellingDuration - 300);
+      (i / Math.max(customerCount - 1, 1)) * (effectiveSellingDuration - 300);
     schedule.push({ emoji: "👤", spawnTimeMs: t, x: rx() });
   }
 
-  // Unmet demand — sad faces if customers were turned away
-  if (result.maxDemand > result.cupsSold && result.cupsSold > 0) {
+  // Unmet demand — wave icons right after selling ends when sold out
+  if (ranOutOfStock) {
     const unmetCount = Math.min(
       Math.ceil((result.maxDemand - result.cupsSold) / 5),
       5,
     );
-    // Place in the later selling hours (hours 4–6)
-    const lateStart = 4 * MS_PER_HOUR;
-    const lateDuration = sellingEnd - lateStart;
     for (let i = 0; i < unmetCount; i++) {
-      const t = lateStart + (i / Math.max(unmetCount - 1, 1)) * lateDuration;
+      const t = effectiveSellingEnd + 200 + i * 400;
       schedule.push({ emoji: "👋", spawnTimeMs: t, x: rx() });
     }
   }
 
-  // Weather reminders at hours 3 and 5
-  schedule.push({
-    emoji: weatherEmoji,
-    spawnTimeMs: 3 * MS_PER_HOUR + 1000,
-    x: rx(),
-  });
-  schedule.push({
-    emoji: weatherEmoji,
-    spawnTimeMs: 5 * MS_PER_HOUR + 1500,
-    x: rx(),
-  });
+  // Weather reminders — only if they fall within the selling window
+  if (3 * MS_PER_HOUR + 1000 < effectiveSellingEnd) {
+    schedule.push({
+      emoji: weatherEmoji,
+      spawnTimeMs: 3 * MS_PER_HOUR + 1000,
+      x: rx(),
+    });
+  }
+  if (5 * MS_PER_HOUR + 1500 < effectiveSellingEnd) {
+    schedule.push({
+      emoji: weatherEmoji,
+      spawnTimeMs: 5 * MS_PER_HOUR + 1500,
+      x: rx(),
+    });
+  }
 
-  // Event reminder at hour 4
-  if (result.event) {
+  // Event reminder — only if it falls within the selling window
+  if (result.event && 4 * MS_PER_HOUR + 800 < effectiveSellingEnd) {
     schedule.push({
       emoji: result.event.emoji,
       spawnTimeMs: 4 * MS_PER_HOUR + 800,
@@ -159,8 +201,7 @@ function buildSchedule(result: DayResult): ScheduledIcon[] {
     });
   }
 
-  // ── Hour 7 (3 PM): Closing ──
-  const closingStart = 7 * MS_PER_HOUR;
+  // ── Closing (moved earlier when sold out) ──
 
   if (result.iceMelted > 0) {
     const count = Math.min(Math.ceil(result.iceMelted / 3), 5);
@@ -187,7 +228,11 @@ function buildSchedule(result: DayResult): ScheduledIcon[] {
     });
   }
 
-  return schedule.sort((a, b) => a.spawnTimeMs - b.spawnTimeMs);
+  return {
+    icons: schedule.sort((a, b) => a.spawnTimeMs - b.spawnTimeMs),
+    effectiveTotalMs,
+    soldOutAtMs,
+  };
 }
 
 // ── Component ────────────────────────────────────────────────────────────────
@@ -201,16 +246,20 @@ export default function SimulationScreen() {
   const nextId = useRef(0);
   const floatHeight = useRef(350);
 
+  const scheduleRef = useRef<Schedule | null>(null);
+  if (result && !scheduleRef.current) {
+    scheduleRef.current = buildSchedule(result);
+  }
+  const schedule = scheduleRef.current;
+
   useEffect(() => {
-    if (!result) {
+    if (!result || !schedule) {
       router.replace("/(game)/day");
       return;
     }
 
-    const schedule = buildSchedule(result);
-
     // Schedule each icon spawn
-    const iconTimeouts = schedule.map((item) =>
+    const iconTimeouts = schedule.icons.map((item) =>
       setTimeout(() => {
         const id = nextId.current++;
         const translateY = new Animated.Value(0);
@@ -261,13 +310,13 @@ export default function SimulationScreen() {
       } else {
         router.replace("/(game)/results");
       }
-    }, TOTAL_DURATION_MS + NAV_DELAY_AFTER_CLOSE);
+    }, schedule.effectiveTotalMs + NAV_DELAY_AFTER_CLOSE);
 
     return () => {
       iconTimeouts.forEach(clearTimeout);
       clearTimeout(navTimeout);
     };
-  }, [result, router]);
+  }, [result, schedule, router]);
 
   if (!result) {
     return null;
@@ -280,7 +329,10 @@ export default function SimulationScreen() {
         <View style={styles.header}>
           <Text style={styles.dayLabel}>DAY {result.day}</Text>
           <View style={styles.clockPanel}>
-            <SimulationClock />
+            <SimulationClock
+              effectiveTotalMs={schedule?.effectiveTotalMs ?? TOTAL_DURATION_MS}
+              soldOutAtMs={schedule?.soldOutAtMs ?? null}
+            />
           </View>
         </View>
 
@@ -343,6 +395,9 @@ const styles = StyleSheet.create({
     fontFamily: PIXEL_FONT,
     fontSize: F.body,
     color: C.text,
+  },
+  soldOutText: {
+    color: C.red,
   },
   standArea: {
     flex: 1,

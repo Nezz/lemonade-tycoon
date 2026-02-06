@@ -1,7 +1,6 @@
 import React from "react";
 import { View, Text, ScrollView, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useGameStore } from "@/store/gameStore";
 import WeatherBadge from "@/components/WeatherBadge";
 import EventBanner from "@/components/EventBanner";
@@ -62,15 +61,13 @@ export default function ResultsScreen() {
   if (!result) {
     return (
       <StripedBackground>
-        <SafeAreaView style={styles.safeArea} edges={["bottom"]}>
-          <View style={styles.center}>
-            <Text style={styles.noResult}>NO RESULTS YET</Text>
-            <GameButton
-              title="BACK"
-              onPress={() => router.replace("/(game)/day")}
-            />
-          </View>
-        </SafeAreaView>
+        <View style={styles.center}>
+          <Text style={styles.noResult}>NO RESULTS YET</Text>
+          <GameButton
+            title="BACK"
+            onPress={() => router.replace("/(game)/day")}
+          />
+        </View>
       </StripedBackground>
     );
   }
@@ -96,130 +93,122 @@ export default function ResultsScreen() {
 
   return (
     <StripedBackground>
-      <SafeAreaView style={styles.safeArea} edges={["bottom"]}>
-        <ScrollView
-          style={styles.scroll}
-          contentContainerStyle={styles.content}
-        >
-          {/* Day header */}
-          <View style={styles.header}>
-            <Text style={styles.dayTitle}>DAY {result.day}</Text>
-            <WeatherBadge weather={result.weather} />
-          </View>
+      <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
+        {/* Day header */}
+        <View style={styles.header}>
+          <Text style={styles.dayTitle}>DAY {result.day}</Text>
+          <WeatherBadge weather={result.weather} />
+        </View>
 
-          {result.event && <EventBanner event={result.event} />}
+        {result.event && <EventBanner event={result.event} />}
 
-          {/* Satisfaction */}
-          <View style={styles.card}>
-            <Text style={styles.cardTitle}>SATISFACTION</Text>
-            <SatisfactionStars satisfaction={result.satisfaction} />
-          </View>
+        {/* Satisfaction */}
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>SATISFACTION</Text>
+          <SatisfactionStars satisfaction={result.satisfaction} />
+        </View>
 
-          {/* Sales Stats */}
-          <View style={styles.card}>
-            <Text style={styles.cardTitle}>SALES REPORT</Text>
-            <StatRow
-              label="Cups Sold"
-              value={`${result.cupsSold}/${result.maxSellable}`}
-            />
-            <StatRow label="Revenue" value={formatMoney(result.revenue)} />
-            <StatRow label="Cost" value={formatMoney(result.costOfGoods)} />
-            {result.rent > 0 && (
-              <StatRow
-                label="Rent"
-                value={`-${formatMoney(result.rent)}`}
-                color={C.red}
-              />
-            )}
-            <StatRow
-              label="Net Profit"
-              value={formatMoney(result.profit)}
-              highlight
-              color={profitColor}
-            />
-          </View>
-
-          {/* Overnight Report */}
-          <View style={styles.card}>
-            <Text style={styles.cardTitle}>OVERNIGHT</Text>
-            <StatRow label="Reputation" value={repChangeStr} color={repColor} />
-            {result.iceMelted > 0 && (
-              <StatRow
-                label="Ice Melted"
-                value={`-${result.iceMelted}`}
-                color={C.red}
-              />
-            )}
-            {hasSpoilage && (
-              <>
-                {result.spoiledSupplies.lemons > 0 && (
-                  <StatRow
-                    label="Lemons Spoiled"
-                    value={`-${result.spoiledSupplies.lemons}`}
-                    color={C.red}
-                  />
-                )}
-                {result.spoiledSupplies.sugar > 0 && (
-                  <StatRow
-                    label="Sugar Spoiled"
-                    value={`-${result.spoiledSupplies.sugar}`}
-                    color={C.red}
-                  />
-                )}
-                {result.spoiledSupplies.cups > 0 && (
-                  <StatRow
-                    label="Cups Spoiled"
-                    value={`-${result.spoiledSupplies.cups}`}
-                    color={C.red}
-                  />
-                )}
-              </>
-            )}
-            <StatRow
-              label="Balance"
-              value={formatMoney(money)}
-              highlight
-              color={C.green}
-            />
-          </View>
-
-          {/* Achievements */}
-          {hasAchievements && (
-            <View style={styles.achievementCard}>
-              <Text style={styles.cardTitle}>ACHIEVEMENTS!</Text>
-              {result.achievementsUnlocked.map((id) => {
-                const def = ACHIEVEMENT_DEFINITIONS[id];
-                return (
-                  <View key={id} style={styles.achievementRow}>
-                    <PixelIcon emoji={def.emoji} size={22} />
-                    <View style={styles.achievementInfo}>
-                      <Text style={styles.achievementName}>{def.name}</Text>
-                      <Text style={styles.achievementDesc}>
-                        {def.description}
-                      </Text>
-                    </View>
-                  </View>
-                );
-              })}
-            </View>
-          )}
-
-          {/* Next Day */}
-          <GameButton
-            title="START NEXT DAY"
-            onPress={handleNextDay}
-            style={styles.nextBtn}
+        {/* Sales Stats */}
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>SALES REPORT</Text>
+          <StatRow
+            label="Cups Sold"
+            value={`${result.cupsSold}/${result.maxSellable}`}
           />
-        </ScrollView>
-      </SafeAreaView>
+          <StatRow label="Revenue" value={formatMoney(result.revenue)} />
+          <StatRow label="Cost" value={formatMoney(result.costOfGoods)} />
+          {result.rent > 0 && (
+            <StatRow
+              label="Rent"
+              value={`-${formatMoney(result.rent)}`}
+              color={C.red}
+            />
+          )}
+          <StatRow
+            label="Net Profit"
+            value={formatMoney(result.profit)}
+            highlight
+            color={profitColor}
+          />
+        </View>
+
+        {/* Overnight Report */}
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>OVERNIGHT</Text>
+          <StatRow label="Reputation" value={repChangeStr} color={repColor} />
+          {result.iceMelted > 0 && (
+            <StatRow
+              label="Ice Melted"
+              value={`-${result.iceMelted}`}
+              color={C.red}
+            />
+          )}
+          {hasSpoilage && (
+            <>
+              {result.spoiledSupplies.lemons > 0 && (
+                <StatRow
+                  label="Lemons Spoiled"
+                  value={`-${result.spoiledSupplies.lemons}`}
+                  color={C.red}
+                />
+              )}
+              {result.spoiledSupplies.sugar > 0 && (
+                <StatRow
+                  label="Sugar Spoiled"
+                  value={`-${result.spoiledSupplies.sugar}`}
+                  color={C.red}
+                />
+              )}
+              {result.spoiledSupplies.cups > 0 && (
+                <StatRow
+                  label="Cups Spoiled"
+                  value={`-${result.spoiledSupplies.cups}`}
+                  color={C.red}
+                />
+              )}
+            </>
+          )}
+          <StatRow
+            label="Balance"
+            value={formatMoney(money)}
+            highlight
+            color={C.green}
+          />
+        </View>
+
+        {/* Achievements */}
+        {hasAchievements && (
+          <View style={styles.achievementCard}>
+            <Text style={styles.cardTitle}>ACHIEVEMENTS!</Text>
+            {result.achievementsUnlocked.map((id) => {
+              const def = ACHIEVEMENT_DEFINITIONS[id];
+              return (
+                <View key={id} style={styles.achievementRow}>
+                  <PixelIcon emoji={def.emoji} size={22} />
+                  <View style={styles.achievementInfo}>
+                    <Text style={styles.achievementName}>{def.name}</Text>
+                    <Text style={styles.achievementDesc}>
+                      {def.description}
+                    </Text>
+                  </View>
+                </View>
+              );
+            })}
+          </View>
+        )}
+
+        {/* Next Day */}
+        <GameButton
+          title="START NEXT DAY"
+          onPress={handleNextDay}
+          style={styles.nextBtn}
+        />
+      </ScrollView>
     </StripedBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-  },
   scroll: {
     flex: 1,
   },

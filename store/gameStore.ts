@@ -91,13 +91,17 @@ export const useGameStore = create<GameStore>((set, get) => ({
       0,
     );
 
-    if (totalInventory + totalUnits > maxInv) {
+    if (totalInventory >= maxInv) {
       return false;
     }
+
+    // Keep only what fits — player still pays full price
+    const spaceLeft = maxInv - totalInventory;
+    const unitsKept = Math.min(totalUnits, spaceLeft);
     const currentAmount = state.inventory[supplyId];
 
     // Add batch tracking
-    const newBatch = { amount: totalUnits, purchasedOnDay: state.day };
+    const newBatch = { amount: unitsKept, purchasedOnDay: state.day };
     const updatedBatches = {
       ...state.inventoryBatches,
       [supplyId]: [...state.inventoryBatches[supplyId], newBatch],
@@ -107,7 +111,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       money: Math.round((state.money - totalCost) * 100) / 100,
       inventory: {
         ...state.inventory,
-        [supplyId]: currentAmount + totalUnits,
+        [supplyId]: currentAmount + unitsKept,
       },
       inventoryBatches: updatedBatches,
       totalSpentToday:
