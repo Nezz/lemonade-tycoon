@@ -16,7 +16,7 @@
 
 ### TypeScript and code style
 
-- TypeScript, ESM. No `require` in TS.
+- TypeScript, ESM. No `require` in TS except for assets.
 - Explicit return types for exported functions.
 - Follow ESLint + Prettier setup; avoid disabling rules.
 - Don't create index.ts for exports.
