@@ -53,6 +53,27 @@ interface GameActions {
 
 export type GameStore = GameState & GameActions;
 
+function getSerializableState(state: GameStore): GameState {
+  return {
+    day: state.day,
+    money: state.money,
+    inventory: state.inventory,
+    inventoryBatches: state.inventoryBatches,
+    recipe: state.recipe,
+    pricePerCup: state.pricePerCup,
+    weather: state.weather,
+    forecast: state.forecast,
+    reputation: state.reputation,
+    upgrades: state.upgrades,
+    plannedEvent: state.plannedEvent,
+    surpriseEvents: state.surpriseEvents,
+    achievements: state.achievements,
+    stats: state.stats,
+    phase: state.phase,
+    freePlay: state.freePlay,
+  };
+}
+
 export const useGameStore = create<GameStore>((set, get) => ({
   ...INITIAL_GAME_STATE,
   totalSpentToday: 0,
@@ -281,27 +302,6 @@ export const useGameStore = create<GameStore>((set, get) => ({
       set({ phase: "gameover" });
     }
 
-    // Auto-save
-    const updatedState = get();
-    saveGame({
-      day: updatedState.day,
-      money: updatedState.money,
-      inventory: updatedState.inventory,
-      inventoryBatches: updatedState.inventoryBatches,
-      recipe: updatedState.recipe,
-      pricePerCup: updatedState.pricePerCup,
-      weather: updatedState.weather,
-      forecast: updatedState.forecast,
-      reputation: updatedState.reputation,
-      upgrades: updatedState.upgrades,
-      plannedEvent: updatedState.plannedEvent,
-      surpriseEvents: updatedState.surpriseEvents,
-      achievements: updatedState.achievements,
-      stats: updatedState.stats,
-      phase: updatedState.phase,
-      freePlay: updatedState.freePlay,
-    });
-
     return result;
   },
 
@@ -401,3 +401,15 @@ export const useGameStore = create<GameStore>((set, get) => ({
     set({ freePlay: true, phase: "results" });
   },
 }));
+
+// ── Auto-save: debounce writes so rapid mutations coalesce ────────────
+let saveTimeout: ReturnType<typeof setTimeout> | null = null;
+
+useGameStore.subscribe((state) => {
+  if (saveTimeout) {
+    clearTimeout(saveTimeout);
+  }
+  saveTimeout = setTimeout(() => {
+    saveGame(getSerializableState(state));
+  }, 500);
+});
