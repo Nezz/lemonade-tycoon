@@ -188,6 +188,9 @@ const styles = StyleSheet.create({
   scrollContent: {
     padding: 12,
     paddingBottom: 32,
+    maxWidth: 800,
+    width: '100%',
+    alignSelf: 'center',
   },
   header: {
     marginBottom: 6,
