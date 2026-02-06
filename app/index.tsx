@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { View, Text, StyleSheet, Animated } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import GameButton from "@/components/GameButton";
@@ -8,6 +8,93 @@ import { useGameStore } from "@/store/gameStore";
 import { hasSavedGame, loadGame } from "@/utils/storage";
 import { C, PIXEL_FONT, F } from "@/theme/pixel";
 import StripedBackground from "@/components/StripedBackground";
+
+// ── Floating emoji config ────────────────────────────────────────────────────
+
+const FLOAT_EMOJIS = ["🍋", "🥤", "💰", "☀️", "🧊", "🍬", "💸", "👤"];
+const FLOAT_DURATION = 3500;
+const SPAWN_INTERVAL = 600;
+const ICON_SIZE = 32;
+
+interface FloatingIcon {
+  id: number;
+  emoji: string;
+  x: number;
+  translateY: Animated.Value;
+  opacity: Animated.Value;
+}
+
+function FloatingEmojis() {
+  const [icons, setIcons] = useState<FloatingIcon[]>([]);
+  const nextId = useRef(0);
+  const containerHeight = useRef(500);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const id = nextId.current++;
+      const emoji = FLOAT_EMOJIS[id % FLOAT_EMOJIS.length];
+      const x = 5 + Math.random() * 90;
+      const translateY = new Animated.Value(0);
+      const opacity = new Animated.Value(0);
+
+      const icon: FloatingIcon = { id, emoji, x, translateY, opacity };
+      setIcons((prev) => [...prev, icon]);
+
+      Animated.parallel([
+        Animated.timing(translateY, {
+          toValue: -containerHeight.current,
+          duration: FLOAT_DURATION,
+          useNativeDriver: true,
+        }),
+        Animated.sequence([
+          Animated.timing(opacity, {
+            toValue: 1,
+            duration: 400,
+            useNativeDriver: true,
+          }),
+          Animated.delay(FLOAT_DURATION - 1000),
+          Animated.timing(opacity, {
+            toValue: 0,
+            duration: 600,
+            useNativeDriver: true,
+          }),
+        ]),
+      ]).start(() => {
+        setIcons((prev) => prev.filter((i) => i.id !== id));
+      });
+    }, SPAWN_INTERVAL);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <View
+      style={styles.floatLayer}
+      pointerEvents="none"
+      onLayout={(e) => {
+        containerHeight.current = e.nativeEvent.layout.height;
+      }}
+    >
+      {icons.map((icon) => (
+        <Animated.View
+          key={icon.id}
+          style={[
+            styles.floatingIcon,
+            {
+              left: `${icon.x}%`,
+              transform: [{ translateY: icon.translateY }],
+              opacity: icon.opacity,
+            },
+          ]}
+        >
+          <PixelIcon emoji={icon.emoji} size={ICON_SIZE} />
+        </Animated.View>
+      ))}
+    </View>
+  );
+}
+
+// ── Title Screen ─────────────────────────────────────────────────────────────
 
 export default function TitleScreen() {
   const router = useRouter();
@@ -46,6 +133,7 @@ export default function TitleScreen() {
 
   return (
     <StripedBackground>
+      <FloatingEmojis />
       <SafeAreaView style={styles.container}>
         <View style={styles.titleSection}>
           <PixelIcon emoji="🍋" size={64} />
@@ -128,5 +216,15 @@ const styles = StyleSheet.create({
     fontFamily: PIXEL_FONT,
     fontSize: F.tiny,
     color: C.textMuted,
+  },
+  // Floating emoji layer
+  floatLayer: {
+    ...StyleSheet.absoluteFillObject,
+    overflow: "hidden",
+  },
+  floatingIcon: {
+    position: "absolute",
+    bottom: 0,
+    marginLeft: -ICON_SIZE / 2,
   },
 });
