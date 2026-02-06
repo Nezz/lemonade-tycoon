@@ -58,15 +58,15 @@ export default function TitleScreen() {
 
         <View style={styles.buttonSection}>
           <GameButton
-            title="NEW GAME"
-            onPress={handleNewGame}
+            title="CONTINUE"
+            onPress={handleContinue}
+            disabled={checking || !saveExists}
             style={styles.button}
           />
           <GameButton
-            title="CONTINUE"
-            onPress={handleContinue}
+            title="NEW GAME"
+            onPress={handleNewGame}
             variant="secondary"
-            disabled={checking || !saveExists}
             style={styles.button}
           />
         </View>
