@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useGameStore } from '../../store/gameStore';
 import MoneyDisplay from '../../components/MoneyDisplay';
 import InventoryBar from '../../components/InventoryBar';
@@ -33,7 +32,6 @@ export default function ShopScreen() {
 
   return (
     <StripedBackground>
-    <SafeAreaView style={styles.safeArea} edges={['bottom']}>
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={styles.content}
@@ -120,15 +118,11 @@ export default function ShopScreen() {
           })}
         </View>
       </ScrollView>
-    </SafeAreaView>
     </StripedBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-  },
   scroll: {
     flex: 1,
   },

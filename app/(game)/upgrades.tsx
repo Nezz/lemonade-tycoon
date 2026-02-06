@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from 'react';
 import { ScrollView, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useGameStore } from '../../store/gameStore';
 import MoneyDisplay from '../../components/MoneyDisplay';
 import UpgradeCard from '../../components/UpgradeCard';
@@ -77,7 +76,6 @@ export default function UpgradesScreen() {
 
   return (
     <StripedBackground>
-    <SafeAreaView style={styles.safeArea} edges={['bottom']}>
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={styles.content}
@@ -143,15 +141,11 @@ export default function UpgradesScreen() {
           );
         })}
       </ScrollView>
-    </SafeAreaView>
     </StripedBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-  },
   scroll: {
     flex: 1,
   },

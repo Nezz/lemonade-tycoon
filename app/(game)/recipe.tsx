@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useGameStore } from '../../store/gameStore';
 import RecipeSlider from '../../components/RecipeSlider';
 import Slider from '../../components/Slider';
@@ -40,7 +39,6 @@ export default function RecipeScreen() {
 
   return (
     <StripedBackground>
-    <SafeAreaView style={styles.safeArea} edges={['bottom']}>
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={styles.content}
@@ -138,15 +136,11 @@ export default function RecipeScreen() {
           </View>
         </View>
       </ScrollView>
-    </SafeAreaView>
     </StripedBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-  },
   scroll: {
     flex: 1,
   },

@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useGameStore } from '../../store/gameStore';
 import StatRow from '../../components/StatRow';
 import MiniBarChart from '../../components/MiniBarChart';
@@ -40,7 +39,6 @@ export default function StatsScreen() {
 
   return (
     <StripedBackground>
-    <SafeAreaView style={styles.safeArea} edges={['bottom']}>
       <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
         {/* Profit Chart */}
         <View style={styles.card}>
@@ -94,15 +92,11 @@ export default function StatsScreen() {
           )}
         </View>
       </ScrollView>
-    </SafeAreaView>
     </StripedBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-  },
   scroll: {
     flex: 1,
   },

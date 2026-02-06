@@ -1,7 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
 import { useRouter } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useGameStore } from "../../store/gameStore";
 import StandPlaceholder from "../../components/StandPlaceholder";
 import WeatherBadge from "../../components/WeatherBadge";
@@ -55,7 +54,6 @@ export default function DayScreen() {
 
   return (
     <StripedBackground>
-    <SafeAreaView style={styles.safeArea} edges={["bottom"]}>
       {/* Achievement Toast */}
       <AchievementToast achievementIds={newlyUnlockedAchievements} />
 
@@ -177,15 +175,11 @@ export default function DayScreen() {
           />
         </View>
       </ScrollView>
-    </SafeAreaView>
     </StripedBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-  },
   scroll: {
     flex: 1,
   },

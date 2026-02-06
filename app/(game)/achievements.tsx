@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useGameStore } from '../../store/gameStore';
 import { ACHIEVEMENT_DEFINITIONS, ACHIEVEMENT_IDS } from '../../engine/achievements';
 import { C, PIXEL_FONT, F, pixelPanel, pixelBevel, pixelTrack, pixelFill } from '../../theme/pixel';
@@ -14,7 +13,6 @@ export default function AchievementsScreen() {
 
   return (
     <StripedBackground>
-    <SafeAreaView style={styles.safeArea} edges={['bottom']}>
       <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
         {/* Progress */}
         <View style={styles.progressCard}>
@@ -77,15 +75,11 @@ export default function AchievementsScreen() {
           </View>
         )}
       </ScrollView>
-    </SafeAreaView>
     </StripedBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-  },
   scroll: {
     flex: 1,
   },
