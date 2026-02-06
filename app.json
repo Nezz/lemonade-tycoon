@@ -12,6 +12,10 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "experiments": {
+      "reactCompiler": true,
+      "typedRoutes": true
+    },
     "ios": {
       "supportsTablet": true
     },
