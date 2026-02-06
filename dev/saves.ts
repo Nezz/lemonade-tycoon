@@ -252,7 +252,7 @@ const stacked: DevSave = {
       "standGardenBooth",
       "standCornerShop",
       "standDowntownStore",
-      "standFoodTruckFleet",
+      "standSupercellSuperstore",
       // Signage
       "signCardboardSign",
       "signChalkboardSign",

@@ -56,11 +56,15 @@ export default function UpgradeCard({
       ]}
     >
       <View style={styles.left}>
-        {locked ? (
-          <Text style={[styles.emoji, styles.emojiLocked]}>?</Text>
-        ) : (
-          <PixelIcon emoji={def.emoji} size={22} style={styles.iconMargin} />
-        )}
+        <PixelIcon
+          emoji={def.emoji}
+          size={30}
+          style={
+            locked
+              ? { marginRight: 10, tintColor: C.textMuted, opacity: 0.5 }
+              : styles.iconMargin
+          }
+        />
         <View style={styles.info}>
           <View style={styles.nameRow}>
             <Text
@@ -153,13 +157,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     flex: 1,
-  },
-  emoji: {
-    fontSize: 22,
-    marginRight: 10,
-  },
-  emojiLocked: {
-    opacity: 0.4,
   },
   iconMargin: {
     marginRight: 10,

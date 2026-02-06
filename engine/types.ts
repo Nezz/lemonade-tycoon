@@ -135,7 +135,7 @@ export type UpgradeId =
   | "standGardenBooth"
   | "standCornerShop"
   | "standDowntownStore"
-  | "standFoodTruckFleet"
+  | "standSupercellSuperstore"
 
   // ── Signage Chain ──
   | "signCardboardSign"

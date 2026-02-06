@@ -1125,9 +1125,9 @@ export const UPGRADE_DEFINITIONS: Record<UpgradeId, UpgradeDefinition> = {
   // ════════════════════════════════════════════════════════════════════════════
 
   // Stand
-  standFoodTruckFleet: def(
-    "standFoodTruckFleet",
-    "Food Truck Fleet",
+  standSupercellSuperstore: def(
+    "standSupercellSuperstore",
+    "Supercell Superstore",
     "Go big! Unlocks the Supercell Superstore. Rent: $24/day",
     500,
     "🚐",
@@ -1330,7 +1330,7 @@ export const UPGRADE_DEFINITIONS: Record<UpgradeId, UpgradeDefinition> = {
     "🏟️",
     7,
     "signage",
-    ["standFoodTruckFleet", "signDigitalBillboard"],
+    ["standSupercellSuperstore", "signDigitalBillboard"],
     { awareness: 0.2 },
   ),
   // Cooling
@@ -1342,7 +1342,7 @@ export const UPGRADE_DEFINITIONS: Record<UpgradeId, UpgradeDefinition> = {
     "🥶",
     7,
     "cooling",
-    ["standFoodTruckFleet", "coolColdStorage"],
+    ["standSupercellSuperstore", "coolColdStorage"],
     { iceShelfBonus: 1, lemonShelfBonus: 1, sugarShelfBonus: 1 },
   ),
   // Storage
@@ -1354,7 +1354,7 @@ export const UPGRADE_DEFINITIONS: Record<UpgradeId, UpgradeDefinition> = {
     "🏰",
     7,
     "storage",
-    ["standFoodTruckFleet", "storDistributionHub"],
+    ["standSupercellSuperstore", "storDistributionHub"],
     { inventoryBonus: 300 },
   ),
   // Recipe
@@ -1366,7 +1366,7 @@ export const UPGRADE_DEFINITIONS: Record<UpgradeId, UpgradeDefinition> = {
     "⚗️",
     7,
     "recipe",
-    ["standFoodTruckFleet", "recpMasterRecipe"],
+    ["standSupercellSuperstore", "recpMasterRecipe"],
     { recipeQuality: 0.18 },
   ),
   // Weather
@@ -1378,7 +1378,7 @@ export const UPGRADE_DEFINITIONS: Record<UpgradeId, UpgradeDefinition> = {
     "🧖",
     7,
     "weather",
-    ["standFoodTruckFleet", "weatIndoorSeating"],
+    ["standSupercellSuperstore", "weatIndoorSeating"],
     { rainReduction: 0.15, coldReduction: 0.15 },
   ),
   // Marketing
@@ -1390,7 +1390,7 @@ export const UPGRADE_DEFINITIONS: Record<UpgradeId, UpgradeDefinition> = {
     "📡",
     7,
     "marketing",
-    ["standFoodTruckFleet", "mktgTvCommercial"],
+    ["standSupercellSuperstore", "mktgTvCommercial"],
     { awareness: 0.22 },
   ),
   // Experience
@@ -1402,7 +1402,7 @@ export const UPGRADE_DEFINITIONS: Record<UpgradeId, UpgradeDefinition> = {
     "🏆",
     7,
     "experience",
-    ["standFoodTruckFleet", "expPremiumService"],
+    ["standSupercellSuperstore", "expPremiumService"],
     { satisfaction: 0.18 },
   ),
   // Supply
@@ -1414,7 +1414,7 @@ export const UPGRADE_DEFINITIONS: Record<UpgradeId, UpgradeDefinition> = {
     "🌾",
     7,
     "supply",
-    ["standFoodTruckFleet", "supImportDeal"],
+    ["standSupercellSuperstore", "supImportDeal"],
     { costReduction: 0.08, freeLemons: 15 },
   ),
   // Speed
@@ -1426,7 +1426,7 @@ export const UPGRADE_DEFINITIONS: Record<UpgradeId, UpgradeDefinition> = {
     "💨",
     7,
     "speed",
-    ["standFoodTruckFleet", "spdDriveThrough"],
+    ["standSupercellSuperstore", "spdDriveThrough"],
     { maxServedBonus: 0.22 },
   ),
   // Staff
@@ -1438,7 +1438,7 @@ export const UPGRADE_DEFINITIONS: Record<UpgradeId, UpgradeDefinition> = {
     "⚔️",
     7,
     "staff",
-    ["standFoodTruckFleet", "stfFullCrew"],
+    ["standSupercellSuperstore", "stfFullCrew"],
     { awareness: 0.15, maxServedBonus: 0.15 },
   ),
   // Technology
@@ -1450,7 +1450,7 @@ export const UPGRADE_DEFINITIONS: Record<UpgradeId, UpgradeDefinition> = {
     "🤖",
     7,
     "technology",
-    ["standFoodTruckFleet", "techAiForecasting"],
+    ["standSupercellSuperstore", "techAiForecasting"],
     { revenueBonus: 0.08, forecastAccuracy: 0.97 },
   ),
   // Decor
@@ -1462,7 +1462,7 @@ export const UPGRADE_DEFINITIONS: Record<UpgradeId, UpgradeDefinition> = {
     "⭐",
     7,
     "decor",
-    ["standFoodTruckFleet", "decoFlagshipDesign"],
+    ["standSupercellSuperstore", "decoFlagshipDesign"],
     { satisfaction: 0.15, reputationGain: 0.12 },
   ),
 
@@ -1475,7 +1475,7 @@ export const UPGRADE_DEFINITIONS: Record<UpgradeId, UpgradeDefinition> = {
     "🏅",
     7,
     "special",
-    ["standFoodTruckFleet"],
+    ["standSupercellSuperstore"],
     { reputationGain: 0.2 },
   ),
   specWorldRecord: def(
@@ -1486,7 +1486,7 @@ export const UPGRADE_DEFINITIONS: Record<UpgradeId, UpgradeDefinition> = {
     "🌍",
     7,
     "special",
-    ["standFoodTruckFleet"],
+    ["standSupercellSuperstore"],
     { awareness: 0.18 },
   ),
   specLemonadeEmpire: def(
@@ -1497,7 +1497,7 @@ export const UPGRADE_DEFINITIONS: Record<UpgradeId, UpgradeDefinition> = {
     "💎",
     7,
     "special",
-    ["standFoodTruckFleet"],
+    ["standSupercellSuperstore"],
     {
       awareness: 0.15,
       satisfaction: 0.1,
