@@ -37,13 +37,14 @@ export function useDevSaves() {
     }
 
     if (isDevBuild) {
-      const { registerDevMenuItems } = require("expo-dev-client");
-      registerDevMenuItems(
-        DEV_SAVES.map((save) => ({
-          name: save.label,
-          callback: () => loadSave(save.label, save.description, save.state),
-        })),
-      );
+      import("expo-dev-client").then(({ registerDevMenuItems }) => {
+        registerDevMenuItems(
+          DEV_SAVES.map((save) => ({
+            name: save.label,
+            callback: () => loadSave(save.label, save.description, save.state),
+          })),
+        );
+      });
     } else {
       for (const save of DEV_SAVES) {
         DevSettings.addMenuItem(save.label, () => {

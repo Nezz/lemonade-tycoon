@@ -28,7 +28,6 @@ export default function DayScreen() {
   const upgrades = useGameStore((s) => s.upgrades);
   const activeEvent = useGameStore((s) => s.activeEvent);
   const startDay = useGameStore((s) => s.startDay);
-  const phase = useGameStore((s) => s.phase);
   const newlyUnlockedAchievements = useGameStore(
     (s) => s.newlyUnlockedAchievements,
   );
@@ -41,7 +40,7 @@ export default function DayScreen() {
   const freeLemons = Math.floor(effects.freeLemons);
 
   const handleStartDay = () => {
-    const result = startDay();
+    startDay();
     const currentPhase = useGameStore.getState().phase;
     if (currentPhase === "victory") {
       router.push("/(game)/victory");

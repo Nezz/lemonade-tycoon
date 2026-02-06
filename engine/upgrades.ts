@@ -1,4 +1,4 @@
-import { UpgradeId, UpgradeEffects } from "@/engine/types";
+import { UpgradeId } from "@/engine/types";
 import { UPGRADE_IDS, UPGRADE_DEFINITIONS } from "@/engine/constants";
 
 /**

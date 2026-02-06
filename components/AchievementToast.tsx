@@ -29,7 +29,7 @@ export default function AchievementToast({
         }),
       ]).start();
     }
-  }, [achievementIds]);
+  }, [achievementIds, opacity]);
 
   if (achievementIds.length === 0) {
     return null;

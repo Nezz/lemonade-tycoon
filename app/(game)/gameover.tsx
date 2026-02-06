@@ -7,7 +7,7 @@ import StatRow from "@/components/StatRow";
 import GameButton from "@/components/GameButton";
 import { formatMoney } from "@/utils/format";
 import { deleteSave } from "@/utils/storage";
-import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from "@/theme/pixel";
+import { C, PIXEL_FONT, F, pixelPanel } from "@/theme/pixel";
 import StripedBackground from "@/components/StripedBackground";
 
 export default function GameOverScreen() {

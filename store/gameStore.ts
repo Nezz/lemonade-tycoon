@@ -19,7 +19,7 @@ import {
 } from "@/engine/constants";
 import { generateWeather, generateForecast } from "@/engine/weather";
 import { rollEvent, getEventDefinition } from "@/engine/events";
-import { runDay, batchTotal, inventoryFromBatches } from "@/engine/simulation";
+import { runDay } from "@/engine/simulation";
 import { checkAchievements } from "@/engine/achievements";
 import { aggregateEffects } from "@/engine/upgrades";
 import { saveGame } from "@/utils/storage";

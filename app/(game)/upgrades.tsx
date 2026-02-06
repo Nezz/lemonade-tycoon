@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import {
   ScrollView,
   View,
@@ -36,34 +36,28 @@ export default function UpgradesScreen() {
 
   const tiers = Array.from({ length: TIER_COUNT }, (_, i) => i + 1);
 
-  const tierGroups = useMemo(() => {
-    const groups: Record<number, UpgradeId[]> = {};
-    for (const tier of tiers) {
-      const tierIds = UPGRADE_IDS.filter(
-        (id) => UPGRADE_DEFINITIONS[id].tier === tier,
-      );
-      const standIds = tierIds.filter(
-        (id) => UPGRADE_DEFINITIONS[id].category === "stand",
-      );
-      const otherIds = tierIds.filter(
-        (id) => UPGRADE_DEFINITIONS[id].category !== "stand",
-      );
-      groups[tier] = [...otherIds, ...standIds];
-    }
-    return groups;
-  }, []);
+  const tierGroups: Record<number, UpgradeId[]> = {};
+  for (const tier of tiers) {
+    const tierIds = UPGRADE_IDS.filter(
+      (id) => UPGRADE_DEFINITIONS[id].tier === tier,
+    );
+    const standIds = tierIds.filter(
+      (id) => UPGRADE_DEFINITIONS[id].category === "stand",
+    );
+    const otherIds = tierIds.filter(
+      (id) => UPGRADE_DEFINITIONS[id].category !== "stand",
+    );
+    tierGroups[tier] = [...otherIds, ...standIds];
+  }
 
-  const tierOwnedCounts = useMemo(() => {
-    const counts: Record<number, { owned: number; total: number }> = {};
-    for (const tier of tiers) {
-      const tierIds = tierGroups[tier] || [];
-      counts[tier] = {
-        owned: tierIds.filter((id) => upgrades[id]).length,
-        total: tierIds.length,
-      };
-    }
-    return counts;
-  }, [upgrades, tierGroups]);
+  const tierOwnedCounts: Record<number, { owned: number; total: number }> = {};
+  for (const tier of tiers) {
+    const tierIds = tierGroups[tier] || [];
+    tierOwnedCounts[tier] = {
+      owned: tierIds.filter((id) => upgrades[id]).length,
+      total: tierIds.length,
+    };
+  }
 
   const ownedCount = UPGRADE_IDS.filter((id) => upgrades[id]).length;
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from "@/theme/pixel";
+import { C, PIXEL_FONT, F, pixelBevel } from "@/theme/pixel";
 
 /**
  * Placeholder component for the lemonade stand visualization — pixel art style.
