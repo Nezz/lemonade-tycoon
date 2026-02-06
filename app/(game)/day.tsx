@@ -125,7 +125,7 @@ export default function DayScreen() {
                   </>
                 ) : (
                   <>
-                    <PixelIcon emoji="❓" size={14} />
+                    <PixelIcon emoji="❓" size={20} />
                     <Text style={styles.forecastDetailTextLocked}>
                       Tomorrow: ???
                     </Text>
@@ -142,7 +142,7 @@ export default function DayScreen() {
                   </>
                 ) : (
                   <>
-                    <PixelIcon emoji="❓" size={14} />
+                    <PixelIcon emoji="❓" size={20} />
                     <Text style={styles.forecastDetailTextLocked}>
                       Day after: ???
                     </Text>

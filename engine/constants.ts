@@ -1618,6 +1618,37 @@ export const DEFAULT_ACHIEVEMENTS: Record<AchievementId, boolean> = {
   lemonKing: false,
   comebackKid: false,
   fullHouse: false,
+  // Milestones
+  thousandaire: false,
+  lemonEmperor: false,
+  marathon: false,
+  centenarian: false,
+  fatCat: false,
+  // Reputation
+  fiveStars: false,
+  rockBottom: false,
+  // Weather & Recipe
+  stormChaser: false,
+  sugarRush: false,
+  sourPower: false,
+  mostlyWater: false,
+  allWeatherPro: false,
+  // Events
+  famousLemonade: false,
+  doubleWhammy: false,
+  healthNut: false,
+  // Funny
+  highwayRobbery: false,
+  bargainBin: false,
+  frozenAssets: false,
+  ghostStand: false,
+  spoilAlert: false,
+  byAThread: false,
+  // Skill / Streaks
+  hotStreak: false,
+  crowdPleaser: false,
+  zeroWaste: false,
+  profitMachine: false,
 };
 
 export const INITIAL_GAME_STATE: GameState = {

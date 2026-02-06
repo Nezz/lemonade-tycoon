@@ -82,7 +82,11 @@ export default function AchievementsScreen() {
                   <View
                     style={[styles.achievementIconWrap, styles.lockedIconWrap]}
                   >
-                    <Text style={styles.lockedEmoji}>?</Text>
+                    <PixelIcon
+                      emoji={def.emoji}
+                      size={40}
+                      style={{ tintColor: C.textMuted }}
+                    />
                   </View>
                   <View style={styles.achievementInfo}>
                     <Text style={[styles.achievementName, styles.lockedText]}>
@@ -166,11 +170,6 @@ const styles = StyleSheet.create({
   },
   lockedIconWrap: {
     opacity: 0.5,
-  },
-  lockedEmoji: {
-    fontFamily: PIXEL_FONT,
-    color: C.textMuted,
-    fontSize: F.heading,
   },
   achievementInfo: {
     flex: 1,

@@ -379,7 +379,38 @@ export type AchievementId =
   | "bigSpender"
   | "lemonKing"
   | "comebackKid"
-  | "fullHouse";
+  | "fullHouse"
+  // Milestones
+  | "thousandaire"
+  | "lemonEmperor"
+  | "marathon"
+  | "centenarian"
+  | "fatCat"
+  // Reputation
+  | "fiveStars"
+  | "rockBottom"
+  // Weather & Recipe
+  | "stormChaser"
+  | "sugarRush"
+  | "sourPower"
+  | "mostlyWater"
+  | "allWeatherPro"
+  // Events
+  | "famousLemonade"
+  | "doubleWhammy"
+  | "healthNut"
+  // Funny
+  | "highwayRobbery"
+  | "bargainBin"
+  | "frozenAssets"
+  | "ghostStand"
+  | "spoilAlert"
+  | "byAThread"
+  // Skill / Streaks
+  | "hotStreak"
+  | "crowdPleaser"
+  | "zeroWaste"
+  | "profitMachine";
 
 export interface AchievementDefinition {
   id: AchievementId;

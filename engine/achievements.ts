@@ -5,7 +5,7 @@ import {
   DayResult,
   UpgradeId,
 } from "@/engine/types";
-import { UPGRADE_IDS } from "@/engine/constants";
+import { UPGRADE_IDS, WEATHER_TYPES } from "@/engine/constants";
 
 export const ACHIEVEMENT_DEFINITIONS: Record<
   AchievementId,
@@ -100,6 +100,174 @@ export const ACHIEVEMENT_DEFINITIONS: Record<
     name: "Full House",
     description: "Sell every cup you could make (20+ cups)",
     emoji: "🏠",
+  },
+
+  // ── Milestones ──────────────────────────────────────────────────────────────
+
+  thousandaire: {
+    id: "thousandaire",
+    name: "Thousandaire",
+    description: "Accumulate $1,000 lifetime revenue",
+    emoji: "💰",
+  },
+  lemonEmperor: {
+    id: "lemonEmperor",
+    name: "Lemon Emperor",
+    description: "Sell 1,000 cups lifetime",
+    emoji: "👸",
+  },
+  marathon: {
+    id: "marathon",
+    name: "Marathon Runner",
+    description: "Reach day 50",
+    emoji: "🏃",
+  },
+  centenarian: {
+    id: "centenarian",
+    name: "Centenarian",
+    description: "Reach day 100",
+    emoji: "🎂",
+  },
+  fatCat: {
+    id: "fatCat",
+    name: "Fat Cat",
+    description: "Have $250+ in savings",
+    emoji: "🐱",
+  },
+
+  // ── Reputation ──────────────────────────────────────────────────────────────
+
+  fiveStars: {
+    id: "fiveStars",
+    name: "Five Stars",
+    description: "Reach max reputation",
+    emoji: "⭐",
+  },
+  rockBottom: {
+    id: "rockBottom",
+    name: "Rock Bottom",
+    description: "Hit 0 reputation",
+    emoji: "📉",
+  },
+
+  // ── Weather & Recipe ────────────────────────────────────────────────────────
+
+  stormChaser: {
+    id: "stormChaser",
+    name: "Storm Chaser",
+    description: "Sell 20+ cups on a stormy day",
+    emoji: "🌪️",
+  },
+  sugarRush: {
+    id: "sugarRush",
+    name: "Sugar Rush",
+    description: "Serve lemonade with max sugar (6/cup) and sell some",
+    emoji: "🍬",
+  },
+  sourPower: {
+    id: "sourPower",
+    name: "Sour Power",
+    description: "Serve with 6 lemons per cup and sell 10+ cups",
+    emoji: "😖",
+  },
+  mostlyWater: {
+    id: "mostlyWater",
+    name: "Mostly Water",
+    description: "Serve with 1 lemon, 1 sugar, and 6 ice per cup",
+    emoji: "💧",
+  },
+  allWeatherPro: {
+    id: "allWeatherPro",
+    name: "All-Weather Pro",
+    description: "Profit in all 6 weather types",
+    emoji: "🌈",
+  },
+
+  // ── Events ──────────────────────────────────────────────────────────────────
+
+  famousLemonade: {
+    id: "famousLemonade",
+    name: "Famous",
+    description: "Get a celebrity sighting or newspaper feature",
+    emoji: "📸",
+  },
+  doubleWhammy: {
+    id: "doubleWhammy",
+    name: "Double Whammy",
+    description: "Experience 2+ surprise events in one day",
+    emoji: "⚡",
+  },
+  healthNut: {
+    id: "healthNut",
+    name: "Clean Bill of Health",
+    description: "Pass the health inspector with 80+ satisfaction",
+    emoji: "✅",
+  },
+
+  // ── Funny ───────────────────────────────────────────────────────────────────
+
+  highwayRobbery: {
+    id: "highwayRobbery",
+    name: "Highway Robbery",
+    description: "Sell lemonade at $5/cup and still find a buyer",
+    emoji: "🤑",
+  },
+  bargainBin: {
+    id: "bargainBin",
+    name: "Practically Free",
+    description: "Sell lemonade at $0.25 per cup",
+    emoji: "🏷️",
+  },
+  frozenAssets: {
+    id: "frozenAssets",
+    name: "Frozen Assets",
+    description: "Have 100+ ice in inventory",
+    emoji: "🧊",
+  },
+  ghostStand: {
+    id: "ghostStand",
+    name: "Ghost Stand",
+    description: "Open shop and somehow sell nothing",
+    emoji: "👻",
+  },
+  spoilAlert: {
+    id: "spoilAlert",
+    name: "Spoil Alert",
+    description: "Lose 20+ supplies to spoilage in one day",
+    emoji: "🤢",
+  },
+  byAThread: {
+    id: "byAThread",
+    name: "By a Thread",
+    description: "Start a day with less than $5 and still profit",
+    emoji: "🪶",
+  },
+
+  // ── Skill / Streaks ─────────────────────────────────────────────────────────
+
+  hotStreak: {
+    id: "hotStreak",
+    name: "Hot Streak",
+    description: "10 consecutive profitable days",
+    emoji: "🔥",
+  },
+  crowdPleaser: {
+    id: "crowdPleaser",
+    name: "Crowd Pleaser",
+    description: "5 consecutive days with 80+ satisfaction",
+    emoji: "😊",
+  },
+  zeroWaste: {
+    id: "zeroWaste",
+    name: "Zero Waste",
+    description: "Complete a day with no spoilage (after day 5)",
+    emoji: "♻️",
+  },
+  profitMachine: {
+    id: "profitMachine",
+    name: "Profit Machine",
+    description: "Earn $100+ profit in a single day",
+    emoji: "🏧",
   },
 };
 
@@ -201,6 +369,141 @@ export function checkAchievements(
     "fullHouse",
     result.cupsSold >= 20 && result.cupsSold >= result.maxDemand,
   );
+
+  // ── Milestones ──────────────────────────────────────────────────────────────
+
+  // Thousandaire: $1,000 lifetime revenue
+  check("thousandaire", stats.totalRevenue + result.revenue >= 1000);
+
+  // Lemon Emperor: 1,000 cups lifetime
+  check("lemonEmperor", stats.totalCupsSold + result.cupsSold >= 1000);
+
+  // Marathon Runner: reach day 50
+  check("marathon", result.day >= 50);
+
+  // Centenarian: reach day 100
+  check("centenarian", result.day >= 100);
+
+  // Fat Cat: $250+ in savings (post-day balance)
+  check("fatCat", money + result.profit >= 250);
+
+  // ── Reputation ──────────────────────────────────────────────────────────────
+
+  const newReputation = state.reputation + result.reputationChange;
+
+  // Five Stars: hit max reputation
+  check("fiveStars", newReputation >= 100);
+
+  // Rock Bottom: hit 0 reputation
+  check("rockBottom", newReputation <= 0);
+
+  // ── Weather & Recipe ────────────────────────────────────────────────────────
+
+  // Storm Chaser: sell 20+ cups on a stormy day
+  check("stormChaser", result.weather === "stormy" && result.cupsSold >= 20);
+
+  // Sugar Rush: max sugar per cup and sold some
+  check("sugarRush", state.recipe.sugarPerCup >= 6 && result.cupsSold > 0);
+
+  // Sour Power: 6 lemons per cup and sold 10+
+  check("sourPower", state.recipe.lemonsPerCup >= 6 && result.cupsSold >= 10);
+
+  // Mostly Water: 1 lemon, 1 sugar, 6 ice and sold some
+  check(
+    "mostlyWater",
+    state.recipe.lemonsPerCup === 1 &&
+      state.recipe.sugarPerCup === 1 &&
+      state.recipe.icePerCup >= 6 &&
+      result.cupsSold > 0,
+  );
+
+  // All-Weather Pro: profit in all 6 weather types
+  const profitableWeathers = new Set<string>();
+  for (const r of allResults) {
+    if (r.profit > 0) {
+      profitableWeathers.add(r.weather);
+    }
+  }
+  check(
+    "allWeatherPro",
+    WEATHER_TYPES.every((w) => profitableWeathers.has(w)),
+  );
+
+  // ── Events ──────────────────────────────────────────────────────────────────
+
+  // Famous: celebrity sighting or newspaper feature
+  const hasFameEvent = allEvents.some(
+    (e) => e.id === "celebritySighting" || e.id === "newspaperFeature",
+  );
+  check("famousLemonade", hasFameEvent);
+
+  // Double Whammy: 2+ surprise events in one day
+  check("doubleWhammy", result.surpriseEvents.length >= 2);
+
+  // Clean Bill of Health: pass health inspector with 80+ satisfaction
+  const hasHealthInspector = result.surpriseEvents.some(
+    (e) => e.id === "healthInspector",
+  );
+  check("healthNut", hasHealthInspector && result.satisfaction >= 80);
+
+  // ── Funny ───────────────────────────────────────────────────────────────────
+
+  // Highway Robbery: sell at max price ($5) and still get buyers
+  check("highwayRobbery", state.pricePerCup >= 5.0 && result.cupsSold > 0);
+
+  // Practically Free: sell at min price ($0.25)
+  check("bargainBin", state.pricePerCup <= 0.25 && result.cupsSold > 0);
+
+  // Frozen Assets: 100+ ice in inventory
+  check("frozenAssets", state.inventory.ice >= 100);
+
+  // Ghost Stand: sell nothing (after day 1)
+  check("ghostStand", result.cupsSold === 0 && result.day > 1);
+
+  // Spoil Alert: 20+ supplies lost to spoilage
+  const totalSpoiled =
+    result.spoiledSupplies.lemons +
+    result.spoiledSupplies.sugar +
+    result.spoiledSupplies.ice +
+    result.spoiledSupplies.cups;
+  check("spoilAlert", totalSpoiled >= 20);
+
+  // By a Thread: start day with < $5 and still profit
+  check("byAThread", money < 5 && result.profit > 0);
+
+  // ── Skill / Streaks ─────────────────────────────────────────────────────────
+
+  // Hot Streak: 10 consecutive profitable days
+  if (allResults.length >= 10) {
+    const last10 = allResults.slice(-10);
+    check(
+      "hotStreak",
+      last10.every((r) => r.profit > 0),
+    );
+  }
+
+  // Crowd Pleaser: 5 consecutive days with 80+ satisfaction
+  if (allResults.length >= 5) {
+    const last5 = allResults.slice(-5);
+    check(
+      "crowdPleaser",
+      last5.every((r) => r.satisfaction >= 80),
+    );
+  }
+
+  // Zero Waste: no spoilage on a day (after day 5)
+  check(
+    "zeroWaste",
+    result.day > 5 &&
+      result.iceMelted === 0 &&
+      result.spoiledSupplies.lemons === 0 &&
+      result.spoiledSupplies.sugar === 0 &&
+      result.spoiledSupplies.ice === 0 &&
+      result.spoiledSupplies.cups === 0,
+  );
+
+  // Profit Machine: $100+ profit in one day
+  check("profitMachine", result.profit >= 100);
 
   return newly;
 }
