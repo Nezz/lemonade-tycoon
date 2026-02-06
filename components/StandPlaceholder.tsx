@@ -1,13 +1,17 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, type ViewStyle } from "react-native";
 import { C, PIXEL_FONT, F, pixelBevel } from "@/theme/pixel";
+
+interface StandPlaceholderProps {
+  style?: ViewStyle;
+}
 
 /**
  * Placeholder component for the lemonade stand visualization — pixel art style.
  */
-export default function StandPlaceholder() {
+export default function StandPlaceholder({ style }: StandPlaceholderProps) {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]}>
       <Text style={styles.label}>YOUR LEMONADE STAND</Text>
       <Text style={styles.hint}>* Build your stand here *</Text>
     </View>

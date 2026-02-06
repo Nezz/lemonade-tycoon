@@ -88,6 +88,15 @@ export default function GameLayout() {
         options={{ title: "ACHIEVEMENTS", ...modalOptions }}
       />
       <Stack.Screen
+        name="simulation"
+        options={{
+          title: "SIMULATION",
+          headerShown: false,
+          gestureEnabled: false,
+          animation: "fade",
+        }}
+      />
+      <Stack.Screen
         name="gameover"
         options={{
           title: "GAME OVER",

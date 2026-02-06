@@ -42,14 +42,7 @@ export default function DayScreen() {
 
   const handleStartDay = () => {
     startDay();
-    const currentPhase = useGameStore.getState().phase;
-    if (currentPhase === "victory") {
-      router.push("/(game)/victory");
-    } else if (currentPhase === "gameover") {
-      router.push("/(game)/gameover");
-    } else {
-      router.push("/(game)/results");
-    }
+    router.push("/(game)/simulation");
   };
 
   return (
