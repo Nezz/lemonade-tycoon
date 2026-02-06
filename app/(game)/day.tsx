@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useGameStore } from "../../store/gameStore";
@@ -69,7 +69,15 @@ export default function DayScreen() {
         {/* Day & Weather Header */}
         <View style={styles.header}>
           <View style={styles.dayInfo}>
-            <Text style={styles.dayLabel}>DAY {day}</Text>
+            <View style={styles.dayLeft}>
+              <Pressable
+                onPress={() => router.push("/(game)/achievements")}
+                style={styles.trophyBtn}
+              >
+                <Text style={styles.trophyIcon}>🏆</Text>
+              </Pressable>
+              <Text style={styles.dayLabel}>DAY {day}</Text>
+            </View>
             <MoneyDisplay amount={money} />
           </View>
           <View style={styles.weatherRow}>
@@ -97,8 +105,8 @@ export default function DayScreen() {
           </View>
           <View style={styles.summaryDivider} />
           <View style={styles.summaryItem}>
-            <Text style={styles.summaryLabel}>CUPS</Text>
-            <Text style={styles.summaryValue}>{cupsMakeable}</Text>
+            <Text style={styles.summaryLabel}>CAN MAKE</Text>
+            <Text style={styles.summaryValue}>{cupsMakeable} cups</Text>
           </View>
           {rent > 0 && (
             <>
@@ -162,12 +170,6 @@ export default function DayScreen() {
             />
           </View>
           <GameButton
-            title="ACHIEVEMENTS"
-            onPress={() => router.push("/(game)/achievements")}
-            variant="secondary"
-            style={styles.fullBtn}
-          />
-          <GameButton
             title={canStart ? "OPEN FOR BUSINESS!" : "NEED SUPPLIES!"}
             onPress={handleStartDay}
             disabled={!canStart}
@@ -207,6 +209,20 @@ const styles = StyleSheet.create({
     fontFamily: PIXEL_FONT,
     fontSize: F.heading,
     color: C.gold,
+  },
+  dayLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  trophyBtn: {
+    ...pixelPanel,
+    ...pixelBevel,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+  },
+  trophyIcon: {
+    fontSize: 16,
   },
   weatherRow: {
     flexDirection: "row",

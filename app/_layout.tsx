@@ -3,11 +3,15 @@ import { StatusBar } from 'expo-status-bar';
 import { View, ActivityIndicator } from 'react-native';
 import { useFonts, VT323_400Regular } from '@expo-google-fonts/vt323';
 import { C } from '../theme/pixel';
+import { useDevSaves } from '../dev/useDevSaves';
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
     VT323_400Regular,
   });
+
+  // Register dev menu save states (no-op in production)
+  useDevSaves();
 
   if (!fontsLoaded) {
     return (

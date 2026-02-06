@@ -34,7 +34,11 @@ export default function GameLayout() {
         headerShown: true,
         headerStyle: { backgroundColor: C.headerBg },
         headerTintColor: C.text,
-        headerTitleStyle: { fontFamily: PIXEL_FONT, fontSize: F.small, color: C.text },
+        headerTitleStyle: {
+          fontFamily: PIXEL_FONT,
+          fontSize: F.small,
+          color: C.text,
+        },
         contentStyle: { backgroundColor: C.bg },
         animation: "slide_from_right",
         headerShadowVisible: false,
@@ -50,7 +54,7 @@ export default function GameLayout() {
               <Text style={styles.headerTitleText}>LEMONADE TYCOON</Text>
             </View>
           ),
-          headerTitleAlign: 'center',
+          headerTitleAlign: "center",
         }}
       />
       <Stack.Screen
@@ -71,7 +75,7 @@ export default function GameLayout() {
           title: "DAY RESULTS",
           headerBackVisible: false,
           gestureEnabled: false,
-          headerTitleAlign: 'center',
+          headerTitleAlign: "center",
         }}
       />
       <Stack.Screen
@@ -104,8 +108,8 @@ export default function GameLayout() {
 
 const styles = StyleSheet.create({
   headerTitle: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 8,
   },
   headerEmoji: {
@@ -117,8 +121,7 @@ const styles = StyleSheet.create({
     color: C.text,
   },
   closeBtn: {
-    paddingLeft: 16,
-    paddingVertical: 4,
+    paddingLeft: 2,
   },
   closeText: {
     fontFamily: PIXEL_FONT,
