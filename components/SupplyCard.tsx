@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
   cost: {
     fontFamily: PIXEL_FONT,
     fontSize: F.body,
-    color: C.greenDark,
+    color: C.gold,
   },
   costRed: {
     color: C.red,

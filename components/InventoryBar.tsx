@@ -16,7 +16,7 @@ export default function InventoryBar({ inventory }: InventoryBarProps) {
         const def = SUPPLY_DEFINITIONS[id];
         return (
           <View key={id} style={styles.item}>
-            <PixelIcon emoji={def.emoji} size={18} />
+            <PixelIcon emoji={def.emoji} size={38} />
             <Text style={styles.count}>{inventory[id]}</Text>
           </View>
         );
@@ -31,12 +31,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     ...pixelPanel,
     ...pixelBevel,
-    paddingVertical: 8,
+    paddingVertical: 10,
     paddingHorizontal: 6,
   },
   item: {
     alignItems: "center",
-    gap: 2,
+    gap: 4,
   },
   count: {
     fontFamily: PIXEL_FONT,

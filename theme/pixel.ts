@@ -54,8 +54,8 @@ export const C = {
   lockedPanel: "#58A858",
   lockedBorder: "#309830",
 
-  warning: "#2E7D18",
-  warningBorder: "#4A9928",
+  warning: "#3A8F28",
+  warningBorder: "#5AB838",
 };
 
 // ── Font Sizes (VT323 is more readable, can use larger sizes) ─

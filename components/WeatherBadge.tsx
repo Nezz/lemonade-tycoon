@@ -20,7 +20,7 @@ export default function WeatherBadge({
 
   return (
     <View style={[styles.badge, small && styles.badgeSmall]}>
-      <PixelIcon emoji={info.emoji} size={small ? 12 : 16} />
+      <PixelIcon emoji={info.emoji} size={small ? 16 : 28} />
       <Text style={[styles.text, small && styles.textSmall]}>
         {label ?? info.label}
       </Text>

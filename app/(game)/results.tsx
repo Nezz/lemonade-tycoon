@@ -8,6 +8,8 @@ import EventBanner from "@/components/EventBanner";
 import StatRow from "@/components/StatRow";
 import GameButton from "@/components/GameButton";
 import { formatMoney } from "@/utils/format";
+import { ACHIEVEMENT_DEFINITIONS } from "@/engine/achievements";
+import PixelIcon from "@/components/PixelIcon";
 import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from "@/theme/pixel";
 import StripedBackground from "@/components/StripedBackground";
 
@@ -185,11 +187,20 @@ export default function ResultsScreen() {
           {hasAchievements && (
             <View style={styles.achievementCard}>
               <Text style={styles.cardTitle}>ACHIEVEMENTS!</Text>
-              {result.achievementsUnlocked.map((id) => (
-                <Text key={id} style={styles.achievementText}>
-                  {id}
-                </Text>
-              ))}
+              {result.achievementsUnlocked.map((id) => {
+                const def = ACHIEVEMENT_DEFINITIONS[id];
+                return (
+                  <View key={id} style={styles.achievementRow}>
+                    <PixelIcon emoji={def.emoji} size={22} />
+                    <View style={styles.achievementInfo}>
+                      <Text style={styles.achievementName}>{def.name}</Text>
+                      <Text style={styles.achievementDesc}>
+                        {def.description}
+                      </Text>
+                    </View>
+                  </View>
+                );
+              })}
             </View>
           )}
 
@@ -261,11 +272,25 @@ const styles = StyleSheet.create({
     borderBottomColor: C.borderDark,
     borderRightColor: C.borderDark,
   },
-  achievementText: {
+  achievementRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    paddingVertical: 4,
+  },
+  achievementInfo: {
+    flex: 1,
+  },
+  achievementName: {
     fontFamily: PIXEL_FONT,
-    fontSize: F.small,
+    fontSize: F.body,
     color: C.text,
-    paddingVertical: 2,
+  },
+  achievementDesc: {
+    fontFamily: PIXEL_FONT,
+    fontSize: F.tiny,
+    color: C.textMuted,
+    marginTop: 1,
   },
   nextBtn: {
     marginTop: 4,
