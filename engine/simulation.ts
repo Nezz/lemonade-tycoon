@@ -319,6 +319,7 @@ export function runDay(state: GameState): {
     weather,
     cupsSold,
     maxDemand,
+    maxSellable: makeable,
     revenue: Math.round(revenue * 100) / 100,
     costOfGoods: Math.round(cogs * 100) / 100,
     rent: Math.round(rent * 100) / 100,

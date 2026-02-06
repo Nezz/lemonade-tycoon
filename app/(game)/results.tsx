@@ -120,7 +120,7 @@ export default function ResultsScreen() {
             <Text style={styles.cardTitle}>SALES REPORT</Text>
             <StatRow
               label="Cups Sold"
-              value={`${result.cupsSold}/${result.maxDemand}`}
+              value={`${result.cupsSold}/${result.maxSellable}`}
             />
             <StatRow label="Revenue" value={formatMoney(result.revenue)} />
             <StatRow label="Cost" value={formatMoney(result.costOfGoods)} />

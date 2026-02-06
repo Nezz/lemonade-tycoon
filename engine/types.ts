@@ -351,6 +351,7 @@ export interface DayResult {
   weather: WeatherType;
   cupsSold: number;
   maxDemand: number;
+  maxSellable: number;
   revenue: number;
   costOfGoods: number;
   rent: number;
