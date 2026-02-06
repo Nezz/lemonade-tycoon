@@ -37,7 +37,7 @@ export default function AchievementToast({
   }
 
   return (
-    <Animated.View style={[styles.container, { opacity }]}>
+    <Animated.View style={[styles.container, { opacity }]} pointerEvents="none">
       {achievementIds.map((id) => {
         const def = ACHIEVEMENT_DEFINITIONS[id];
         return (

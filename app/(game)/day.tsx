@@ -72,7 +72,7 @@ export default function DayScreen() {
                 onPress={() => router.push("/(game)/achievements")}
                 style={styles.trophyBtn}
               >
-                <PixelIcon emoji="🏆" size={16} />
+                <PixelIcon emoji="🏆" size={22} />
               </Pressable>
               <Text style={styles.dayLabel}>DAY {day}</Text>
             </View>
@@ -212,8 +212,9 @@ const styles = StyleSheet.create({
   trophyBtn: {
     ...pixelPanel,
     ...pixelBevel,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    cursor: "pointer" as any,
   },
   weatherRow: {
     flexDirection: "row",
