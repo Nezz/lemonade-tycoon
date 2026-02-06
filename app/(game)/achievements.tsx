@@ -53,7 +53,7 @@ export default function AchievementsScreen() {
               return (
                 <View key={id} style={styles.achievementCard}>
                   <View style={styles.achievementIconWrap}>
-                    <PixelIcon emoji={def.emoji} size={20} />
+                    <PixelIcon emoji={def.emoji} size={40} />
                   </View>
                   <View style={styles.achievementInfo}>
                     <Text style={styles.achievementName}>{def.name}</Text>
@@ -61,7 +61,7 @@ export default function AchievementsScreen() {
                       {def.description}
                     </Text>
                   </View>
-                  <Text style={styles.checkmark}>[OK]</Text>
+                  <Text style={styles.checkmark}>✓</Text>
                 </View>
               );
             })}
@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
   },
   checkmark: {
     fontFamily: PIXEL_FONT,
-    fontSize: F.small,
+    fontSize: F.title,
     color: C.green,
   },
 });
