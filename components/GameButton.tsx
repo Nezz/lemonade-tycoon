@@ -6,6 +6,7 @@ import {
   ViewStyle,
   TextStyle,
 } from 'react-native';
+import { C, PIXEL_FONT, F } from '../theme/pixel';
 
 interface GameButtonProps {
   title: string;
@@ -26,25 +27,45 @@ export default function GameButton({
   textStyle,
   small = false,
 }: GameButtonProps) {
-  const bgColor =
+  const bg =
     variant === 'primary'
-      ? '#84CC16'
+      ? C.btnPrimary
       : variant === 'danger'
-        ? '#EF4444'
-        : '#F5F5F4';
+        ? C.btnDanger
+        : C.btnSecondary;
+
+  const hi =
+    variant === 'primary'
+      ? C.btnPrimaryHi
+      : variant === 'danger'
+        ? C.btnDangerHi
+        : C.btnSecHi;
+
+  const lo =
+    variant === 'primary'
+      ? C.btnPrimaryLo
+      : variant === 'danger'
+        ? C.btnDangerLo
+        : C.btnSecLo;
 
   const txtColor =
-    variant === 'secondary' ? '#44403C' : '#FFFFFF';
+    variant === 'secondary' ? C.text : C.white;
 
   return (
     <TouchableOpacity
       onPress={onPress}
       disabled={disabled}
-      activeOpacity={0.7}
+      activeOpacity={0.8}
       style={[
         styles.button,
         small && styles.buttonSmall,
-        { backgroundColor: bgColor },
+        {
+          backgroundColor: bg,
+          borderTopColor: hi,
+          borderLeftColor: hi,
+          borderBottomColor: lo,
+          borderRightColor: lo,
+        },
         disabled && styles.disabled,
         style,
       ]}
@@ -65,25 +86,26 @@ export default function GameButton({
 
 const styles = StyleSheet.create({
   button: {
-    paddingVertical: 14,
-    paddingHorizontal: 24,
-    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 0,
+    borderWidth: 3,
     alignItems: 'center',
     justifyContent: 'center',
   },
   buttonSmall: {
     paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 8,
+    paddingHorizontal: 12,
+    borderWidth: 2,
   },
   disabled: {
-    opacity: 0.45,
+    opacity: 0.4,
   },
   text: {
-    fontSize: 17,
-    fontWeight: '700',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.body,
   },
   textSmall: {
-    fontSize: 14,
+    fontSize: F.small,
   },
 });

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
 import { AchievementId } from '../engine/types';
 import { ACHIEVEMENT_DEFINITIONS } from '../engine/achievements';
+import { C, PIXEL_FONT, F } from '../theme/pixel';
 
 interface AchievementToastProps {
   achievementIds: AchievementId[];
@@ -38,7 +39,7 @@ export default function AchievementToast({ achievementIds }: AchievementToastPro
           <View key={id} style={styles.toast}>
             <Text style={styles.emoji}>{def.emoji}</Text>
             <View style={styles.textContainer}>
-              <Text style={styles.unlocked}>Achievement Unlocked!</Text>
+              <Text style={styles.unlocked}>ACHIEVEMENT!</Text>
               <Text style={styles.name}>{def.name}</Text>
             </View>
           </View>
@@ -52,42 +53,40 @@ const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     top: 8,
-    left: 16,
-    right: 16,
+    left: 12,
+    right: 12,
     zIndex: 100,
     gap: 6,
   },
   toast: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FEF9C3',
-    borderRadius: 12,
-    padding: 12,
-    borderWidth: 1,
-    borderColor: '#FDE047',
-    gap: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 4,
+    backgroundColor: C.warning,
+    borderRadius: 0,
+    padding: 10,
+    borderWidth: 3,
+    borderTopColor: '#FFE070',
+    borderLeftColor: '#FFE070',
+    borderBottomColor: '#A07818',
+    borderRightColor: '#A07818',
+    gap: 8,
   },
   emoji: {
-    fontSize: 28,
+    fontSize: 22,
   },
   textContainer: {
     flex: 1,
   },
   unlocked: {
-    fontSize: 11,
-    fontWeight: '600',
-    color: '#A16207',
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
+    fontFamily: PIXEL_FONT,
+    fontSize: F.tiny,
+    color: C.gold,
+    letterSpacing: 1,
   },
   name: {
-    fontSize: 16,
-    fontWeight: '800',
-    color: '#78350F',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.body,
+    color: C.text,
+    marginTop: 2,
   },
 });

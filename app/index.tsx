@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import GameButton from '../components/GameButton';
 import { useGameStore } from '../store/gameStore';
 import { hasSavedGame, loadGame } from '../utils/storage';
+import { C, PIXEL_FONT, F } from '../theme/pixel';
 
 export default function TitleScreen() {
   const router = useRouter();
@@ -43,26 +43,25 @@ export default function TitleScreen() {
   };
 
   return (
-    <LinearGradient
-      colors={['#FDE047', '#FEF9C3', '#FFFBEB']}
-      style={styles.gradient}
-    >
+    <View style={styles.bg}>
       <SafeAreaView style={styles.container}>
         <View style={styles.titleSection}>
           <Text style={styles.emoji}>🍋</Text>
-          <Text style={styles.title}>Lemonade</Text>
-          <Text style={styles.subtitle}>Tycoon</Text>
-          <Text style={styles.tagline}>Build your lemonade empire!</Text>
+          <Text style={styles.title}>LEMONADE</Text>
+          <Text style={styles.subtitle}>TYCOON</Text>
+          <View style={styles.taglineBox}>
+            <Text style={styles.tagline}>Build your lemonade empire!</Text>
+          </View>
         </View>
 
         <View style={styles.buttonSection}>
           <GameButton
-            title="New Game"
+            title="NEW GAME"
             onPress={handleNewGame}
             style={styles.button}
           />
           <GameButton
-            title="Continue"
+            title="CONTINUE"
             onPress={handleContinue}
             variant="secondary"
             disabled={checking || !saveExists}
@@ -72,13 +71,14 @@ export default function TitleScreen() {
 
         <Text style={styles.version}>v1.0</Text>
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  gradient: {
+  bg: {
     flex: 1,
+    backgroundColor: C.bg,
   },
   container: {
     flex: 1,
@@ -91,30 +91,38 @@ const styles = StyleSheet.create({
     marginBottom: 60,
   },
   emoji: {
-    fontSize: 72,
-    marginBottom: 8,
+    fontSize: 64,
+    marginBottom: 12,
   },
   title: {
+    fontFamily: PIXEL_FONT,
     fontSize: 48,
-    fontWeight: '900',
-    color: '#78350F',
-    letterSpacing: -1,
+    color: C.goldBright,
+    letterSpacing: 4,
   },
   subtitle: {
+    fontFamily: PIXEL_FONT,
     fontSize: 36,
-    fontWeight: '800',
-    color: '#92400E',
-    marginTop: -6,
+    color: C.gold,
+    marginTop: 4,
+  },
+  taglineBox: {
+    marginTop: 16,
+    borderWidth: 2,
+    borderColor: C.border,
+    backgroundColor: C.bgLight,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
   },
   tagline: {
-    fontSize: 16,
-    color: '#A16207',
-    marginTop: 12,
-    fontWeight: '500',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.small,
+    color: C.panel,
+    textAlign: 'center',
   },
   buttonSection: {
     width: '100%',
-    gap: 14,
+    gap: 12,
   },
   button: {
     width: '100%',
@@ -122,7 +130,8 @@ const styles = StyleSheet.create({
   version: {
     position: 'absolute',
     bottom: 40,
-    fontSize: 12,
-    color: '#D4D4D4',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.tiny,
+    color: C.textMuted,
   },
 });

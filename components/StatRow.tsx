@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { C, PIXEL_FONT, F } from '../theme/pixel';
 
 interface StatRowProps {
   label: string;
@@ -30,32 +31,33 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 16,
+    paddingVertical: 6,
+    paddingHorizontal: 4,
     borderBottomWidth: 1,
-    borderBottomColor: '#F5F5F4',
+    borderBottomColor: C.border,
   },
   rowHighlight: {
-    backgroundColor: '#F0FDF4',
-    borderRadius: 10,
+    backgroundColor: C.greenDark,
     borderBottomWidth: 0,
     marginTop: 4,
+    padding: 6,
   },
   label: {
-    fontSize: 15,
-    color: '#57534E',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.small,
+    color: C.textLight,
+    flex: 1,
   },
   labelHighlight: {
-    fontWeight: '700',
-    color: '#1C1917',
+    color: C.white,
   },
   value: {
-    fontSize: 15,
-    fontWeight: '600',
-    color: '#1C1917',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.small,
+    color: C.text,
   },
   valueHighlight: {
-    fontSize: 18,
-    fontWeight: '800',
+    fontSize: F.body,
+    color: C.greenLight,
   },
 });

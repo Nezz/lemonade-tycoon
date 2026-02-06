@@ -2,12 +2,12 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useGameStore } from '../../store/gameStore';
 import StatRow from '../../components/StatRow';
 import GameButton from '../../components/GameButton';
 import { formatMoney } from '../../utils/format';
 import { deleteSave } from '../../utils/storage';
+import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from '../../theme/pixel';
 
 export default function GameOverScreen() {
   const router = useRouter();
@@ -28,19 +28,19 @@ export default function GameOverScreen() {
   };
 
   return (
-    <LinearGradient colors={['#FEE2E2', '#FECACA', '#FCA5A5']} style={styles.gradient}>
+    <View style={styles.bg}>
       <SafeAreaView style={styles.container}>
         <View style={styles.titleSection}>
           <Text style={styles.emoji}>💸</Text>
-          <Text style={styles.title}>Bankrupt!</Text>
+          <Text style={styles.title}>BANKRUPT!</Text>
           <Text style={styles.subtitle}>Your lemonade stand has gone out of business.</Text>
         </View>
 
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>Final Stats</Text>
-          <StatRow label="Days Survived" value={`${day}`} />
-          <StatRow label="Total Revenue" value={formatMoney(stats.totalRevenue)} />
-          <StatRow label="Total Cups Sold" value={`${stats.totalCupsSold}`} />
+          <Text style={styles.cardTitle}>FINAL STATS</Text>
+          <StatRow label="Days" value={`${day}`} />
+          <StatRow label="Revenue" value={formatMoney(stats.totalRevenue)} />
+          <StatRow label="Cups Sold" value={`${stats.totalCupsSold}`} />
           {stats.dayResults.length > 0 && (
             <StatRow
               label="Best Day"
@@ -52,56 +52,61 @@ export default function GameOverScreen() {
         </View>
 
         <View style={styles.buttonSection}>
-          <GameButton title="Try Again" onPress={handleRestart} />
-          <GameButton title="Main Menu" onPress={handleMainMenu} variant="secondary" />
+          <GameButton title="TRY AGAIN" onPress={handleRestart} />
+          <GameButton title="MAIN MENU" onPress={handleMainMenu} variant="secondary" />
         </View>
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  gradient: {
+  bg: {
     flex: 1,
+    backgroundColor: C.redDark,
   },
   container: {
     flex: 1,
     padding: 24,
     justifyContent: 'center',
-    gap: 24,
+    gap: 20,
   },
   titleSection: {
     alignItems: 'center',
   },
   emoji: {
-    fontSize: 64,
+    fontSize: 56,
     marginBottom: 8,
   },
   title: {
+    fontFamily: PIXEL_FONT,
     fontSize: 40,
-    fontWeight: '900',
-    color: '#991B1B',
+    color: C.redLight,
   },
   subtitle: {
-    fontSize: 16,
-    color: '#B91C1C',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.small,
+    color: '#FFB0B0',
     textAlign: 'center',
-    marginTop: 8,
+    marginTop: 10,
+    lineHeight: 24,
   },
   card: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 14,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: '#E7E5E4',
+    ...pixelPanel,
+    backgroundColor: '#2A0808',
+    borderColor: C.red,
+    borderTopColor: C.redLight,
+    borderLeftColor: C.redLight,
+    borderBottomColor: '#500000',
+    borderRightColor: '#500000',
   },
   cardTitle: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#1C1917',
-    marginBottom: 8,
+    fontFamily: PIXEL_FONT,
+    fontSize: F.body,
+    color: C.redLight,
+    marginBottom: 6,
   },
   buttonSection: {
-    gap: 12,
+    gap: 10,
   },
 });

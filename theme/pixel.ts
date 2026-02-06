@@ -1,7 +1,7 @@
 import { StyleSheet, ViewStyle, TextStyle } from 'react-native';
 
 // ── Pixel Font ──────────────────────────────────────────────
-export const PIXEL_FONT = 'PressStart2P_400Regular';
+export const PIXEL_FONT = 'VT323_400Regular';
 
 // ── Color Palette ───────────────────────────────────────────
 export const C = {
@@ -58,13 +58,13 @@ export const C = {
   warningBorder:'#D4A017',
 };
 
-// ── Font Sizes (pixel fonts need smaller sizes) ─────────────
+// ── Font Sizes (VT323 is more readable, can use larger sizes) ─
 export const F = {
-  title:   14,
-  heading: 10,
-  body:    8,
-  small:   7,
-  tiny:    6,
+  title:   42,
+  heading: 33,
+  body:    27,
+  small:   23,
+  tiny:    20,
 };
 
 // ── Reusable Style Fragments ────────────────────────────────

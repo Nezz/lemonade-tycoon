@@ -4,6 +4,7 @@ import { UpgradeId, UpgradeCategory } from '../engine/types';
 import { UPGRADE_DEFINITIONS } from '../engine/constants';
 import { formatMoney } from '../utils/format';
 import GameButton from './GameButton';
+import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from '../theme/pixel';
 
 const CATEGORY_LABELS: Record<UpgradeCategory, string> = {
   stand: 'Stand',
@@ -54,8 +55,8 @@ export default function UpgradeCard({
       ]}
     >
       <View style={styles.left}>
-        <Text style={[styles.emoji, locked && styles.emojiLocked, isStand && styles.emojiStand]}>
-          {locked ? '🔒' : def.emoji}
+        <Text style={[styles.emoji, locked && styles.emojiLocked]}>
+          {locked ? '?' : def.emoji}
         </Text>
         <View style={styles.info}>
           <View style={styles.nameRow}>
@@ -71,7 +72,7 @@ export default function UpgradeCard({
           <Text style={[styles.desc, locked && styles.descLocked]}>{def.description}</Text>
           {locked && requiresNames.length > 0 && (
             <Text style={styles.requiresText}>
-              Requires: {requiresNames.join(', ')}
+              Needs: {requiresNames.join(', ')}
             </Text>
           )}
         </View>
@@ -79,7 +80,7 @@ export default function UpgradeCard({
       <View style={styles.right}>
         {owned ? (
           <View style={[styles.ownedBadge, isStand && styles.ownedBadgeStand]}>
-            <Text style={styles.ownedText}>Owned</Text>
+            <Text style={styles.ownedText}>OK</Text>
           </View>
         ) : locked ? (
           <View style={styles.lockedBadge}>
@@ -103,31 +104,29 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 14,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: '#E7E5E4',
-    marginBottom: 10,
+    ...pixelPanel,
+    ...pixelBevel,
+    marginBottom: 6,
+    padding: 10,
   },
   cardOwned: {
-    backgroundColor: '#F0FDF4',
-    borderColor: '#BBF7D0',
+    backgroundColor: C.achievePanel,
+    borderColor: C.greenDark,
   },
   cardLocked: {
-    backgroundColor: '#F5F5F4',
-    borderColor: '#D6D3D1',
-    opacity: 0.75,
+    backgroundColor: C.lockedPanel,
+    borderColor: C.lockedBorder,
+    opacity: 0.65,
   },
   cardStand: {
-    backgroundColor: '#FFFBEB',
-    borderColor: '#FCD34D',
-    borderWidth: 2,
+    backgroundColor: C.warning,
+    borderColor: C.gold,
+    borderWidth: 3,
   },
   cardStandOwned: {
-    backgroundColor: '#FEF3C7',
-    borderColor: '#F59E0B',
-    borderWidth: 2,
+    backgroundColor: '#E8D8A0',
+    borderColor: C.gold,
+    borderWidth: 3,
   },
   left: {
     flexDirection: 'row',
@@ -135,14 +134,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   emoji: {
-    fontSize: 28,
-    marginRight: 12,
+    fontSize: 22,
+    marginRight: 10,
   },
   emojiLocked: {
-    opacity: 0.5,
-  },
-  emojiStand: {
-    fontSize: 32,
+    opacity: 0.4,
   },
   info: {
     flex: 1,
@@ -154,75 +150,84 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   name: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: '#1C1917',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.small,
+    color: C.text,
   },
   nameLocked: {
-    color: '#78716C',
+    color: C.textMuted,
   },
   nameStand: {
-    fontSize: 16,
-    fontWeight: '800',
-    color: '#92400E',
+    fontSize: F.body,
+    color: C.gold,
   },
   categoryBadge: {
-    backgroundColor: '#F5F5F4',
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 4,
+    backgroundColor: C.panelDark,
+    paddingHorizontal: 4,
+    paddingVertical: 1,
+    borderWidth: 1,
+    borderColor: C.border,
+    borderRadius: 0,
   },
   categoryBadgeStand: {
-    backgroundColor: '#FEF3C7',
+    backgroundColor: C.warning,
+    borderColor: C.gold,
   },
   categoryText: {
-    fontSize: 10,
-    fontWeight: '600',
-    color: '#78716C',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.tiny,
+    color: C.textMuted,
   },
   categoryTextStand: {
-    color: '#92400E',
+    color: C.gold,
   },
   desc: {
-    fontSize: 12,
-    color: '#78716C',
-    marginTop: 2,
+    fontFamily: PIXEL_FONT,
+    fontSize: F.tiny,
+    color: C.textLight,
+    marginTop: 3,
+    lineHeight: 20,
   },
   descLocked: {
-    color: '#A8A29E',
+    color: C.textMuted,
   },
   requiresText: {
-    fontSize: 11,
-    color: '#DC2626',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.tiny,
+    color: C.red,
     marginTop: 3,
-    fontStyle: 'italic',
   },
   right: {
-    marginLeft: 12,
+    marginLeft: 8,
   },
   ownedBadge: {
-    backgroundColor: '#DCFCE7',
-    paddingVertical: 6,
-    paddingHorizontal: 14,
-    borderRadius: 8,
+    backgroundColor: C.greenDark,
+    paddingVertical: 4,
+    paddingHorizontal: 10,
+    borderWidth: 2,
+    borderColor: C.green,
+    borderRadius: 0,
   },
   ownedBadgeStand: {
-    backgroundColor: '#FEF3C7',
+    backgroundColor: C.gold,
+    borderColor: C.btnPrimaryLo,
   },
   ownedText: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: '#166534',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.small,
+    color: C.white,
   },
   lockedBadge: {
-    backgroundColor: '#E7E5E4',
-    paddingVertical: 6,
-    paddingHorizontal: 14,
-    borderRadius: 8,
+    backgroundColor: C.lockedPanel,
+    paddingVertical: 4,
+    paddingHorizontal: 10,
+    borderWidth: 2,
+    borderColor: C.lockedBorder,
+    borderRadius: 0,
   },
   lockedText: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#A8A29E',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.small,
+    color: C.textMuted,
   },
 });

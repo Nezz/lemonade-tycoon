@@ -17,6 +17,7 @@ import {
   WEATHER_DATA,
 } from '../../engine/constants';
 import { aggregateEffects } from '../../engine/upgrades';
+import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from '../../theme/pixel';
 
 export default function RecipeScreen() {
   const recipe = useGameStore((s) => s.recipe);
@@ -46,7 +47,7 @@ export default function RecipeScreen() {
 
         {/* Recipe Sliders */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Ingredients per Cup</Text>
+          <Text style={styles.sectionTitle}>INGREDIENTS/CUP</Text>
 
           <RecipeSlider
             label="Lemons"
@@ -54,7 +55,7 @@ export default function RecipeScreen() {
             value={recipe.lemonsPerCup}
             min={MIN_INGREDIENT}
             max={MAX_INGREDIENT}
-            unit="per cup"
+            unit="/cup"
             hint={
               hasRecipeHints
                 ? `Ideal: ${weatherInfo.idealLemons[0]}-${weatherInfo.idealLemons[1]}`
@@ -69,7 +70,7 @@ export default function RecipeScreen() {
             value={recipe.sugarPerCup}
             min={MIN_INGREDIENT}
             max={MAX_INGREDIENT}
-            unit="per cup"
+            unit="/cup"
             hint={
               hasRecipeHints
                 ? `Ideal: ${weatherInfo.idealSugar[0]}-${weatherInfo.idealSugar[1]}`
@@ -84,7 +85,7 @@ export default function RecipeScreen() {
             value={recipe.icePerCup}
             min={MIN_INGREDIENT}
             max={MAX_INGREDIENT}
-            unit="per cup"
+            unit="/cup"
             hint={
               hasRecipeHints
                 ? `Ideal: ${weatherInfo.idealIce[0]}-${weatherInfo.idealIce[1]}`
@@ -96,7 +97,7 @@ export default function RecipeScreen() {
 
         {/* Price */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Price per Cup</Text>
+          <Text style={styles.sectionTitle}>PRICE PER CUP</Text>
           <View style={styles.priceRow}>
             <Text style={styles.priceValue}>{formatMoney(pricePerCup)}</Text>
           </View>
@@ -112,16 +113,16 @@ export default function RecipeScreen() {
         {/* Summary */}
         <View style={styles.summaryCard}>
           <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>Ingredient cost</Text>
+            <Text style={styles.summaryLabel}>Cost</Text>
             <Text style={styles.summaryValue}>{formatMoney(ingredientCost)}</Text>
           </View>
           {showProfitPerCup && (
             <View style={styles.summaryRow}>
-              <Text style={styles.summaryLabel}>Profit per cup</Text>
+              <Text style={styles.summaryLabel}>Profit/cup</Text>
               <Text
                 style={[
                   styles.summaryValue,
-                  { color: profit > 0 ? '#166534' : '#DC2626' },
+                  { color: profit > 0 ? C.green : C.red },
                 ]}
               >
                 {formatMoney(profit)}
@@ -130,7 +131,7 @@ export default function RecipeScreen() {
           )}
           <View style={styles.divider} />
           <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabelBig}>Cups makeable</Text>
+            <Text style={styles.summaryLabelBig}>CUPS MAKEABLE</Text>
             <Text style={styles.summaryValueBig}>{cupsMakeable}</Text>
           </View>
         </View>
@@ -142,72 +143,67 @@ export default function RecipeScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FFFBEB',
+    backgroundColor: C.bg,
   },
   scroll: {
     flex: 1,
   },
   content: {
-    padding: 16,
+    padding: 12,
     paddingBottom: 32,
-    gap: 16,
+    gap: 10,
   },
   section: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 14,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: '#E7E5E4',
+    ...pixelPanel,
+    ...pixelBevel,
   },
   sectionTitle: {
-    fontSize: 17,
-    fontWeight: '700',
-    color: '#1C1917',
-    marginBottom: 16,
+    fontFamily: PIXEL_FONT,
+    fontSize: F.body,
+    color: C.text,
+    marginBottom: 12,
   },
   priceRow: {
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 10,
   },
   priceValue: {
-    fontSize: 32,
-    fontWeight: '900',
-    color: '#166534',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.title,
+    color: C.green,
   },
   summaryCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 14,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: '#E7E5E4',
+    ...pixelPanel,
+    ...pixelBevel,
   },
   summaryRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 6,
+    paddingVertical: 4,
   },
   summaryLabel: {
-    fontSize: 14,
-    color: '#78716C',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.small,
+    color: C.textLight,
   },
   summaryValue: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: '#1C1917',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.small,
+    color: C.text,
   },
   divider: {
-    height: 1,
-    backgroundColor: '#E7E5E4',
-    marginVertical: 8,
+    height: 2,
+    backgroundColor: C.border,
+    marginVertical: 6,
   },
   summaryLabelBig: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1C1917',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.body,
+    color: C.text,
   },
   summaryValueBig: {
-    fontSize: 20,
-    fontWeight: '800',
-    color: '#84CC16',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.heading,
+    color: C.green,
   },
 });

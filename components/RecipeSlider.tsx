@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Slider from './Slider';
+import { C, PIXEL_FONT, F } from '../theme/pixel';
 
 interface RecipeSliderProps {
   label: string;
@@ -48,7 +49,7 @@ export default function RecipeSlider({
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 20,
+    marginBottom: 16,
   },
   header: {
     flexDirection: 'row',
@@ -56,27 +57,27 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   emoji: {
-    fontSize: 20,
-    marginRight: 8,
+    fontSize: 16,
+    marginRight: 6,
   },
   label: {
     flex: 1,
-    fontSize: 15,
-    fontWeight: '600',
-    color: '#1C1917',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.body,
+    color: C.text,
   },
   value: {
-    fontSize: 16,
-    fontWeight: '800',
-    color: '#84CC16',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.body,
+    color: C.green,
     minWidth: 40,
     textAlign: 'right',
   },
   hint: {
-    fontSize: 12,
-    color: '#84CC16',
-    fontWeight: '500',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.tiny,
+    color: C.green,
     marginBottom: 4,
-    marginLeft: 28,
+    marginLeft: 22,
   },
 });

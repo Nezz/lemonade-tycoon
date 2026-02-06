@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { C, PIXEL_FONT, F } from '../theme/pixel';
 
 interface MiniBarChartProps {
   data: { label: string; value: number }[];
@@ -10,7 +11,7 @@ export default function MiniBarChart({ data, height = 120 }: MiniBarChartProps) 
   if (data.length === 0) {
     return (
       <View style={[styles.container, { height }]}>
-        <Text style={styles.emptyText}>No data yet</Text>
+        <Text style={styles.emptyText}>NO DATA YET</Text>
       </View>
     );
   }
@@ -32,7 +33,7 @@ export default function MiniBarChart({ data, height = 120 }: MiniBarChartProps) 
                     styles.bar,
                     {
                       height: Math.max(barHeight, 2),
-                      backgroundColor: isNegative ? '#FCA5A5' : '#BBF7D0',
+                      backgroundColor: isNegative ? C.red : C.green,
                     },
                   ]}
                 />
@@ -53,7 +54,7 @@ const styles = StyleSheet.create({
   chartArea: {
     flexDirection: 'row',
     alignItems: 'flex-end',
-    gap: 4,
+    gap: 3,
   },
   barColumn: {
     flex: 1,
@@ -67,17 +68,19 @@ const styles = StyleSheet.create({
   },
   bar: {
     width: '70%',
-    borderRadius: 4,
-    minWidth: 8,
+    borderRadius: 0,
+    minWidth: 6,
   },
   barLabel: {
-    fontSize: 9,
-    color: '#78716C',
-    marginTop: 4,
+    fontFamily: PIXEL_FONT,
+    fontSize: F.tiny,
+    color: C.textMuted,
+    marginTop: 3,
   },
   emptyText: {
-    color: '#A8A29E',
-    fontSize: 14,
+    fontFamily: PIXEL_FONT,
+    color: C.textMuted,
+    fontSize: F.body,
     textAlign: 'center',
   },
 });

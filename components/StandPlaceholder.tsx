@@ -1,15 +1,15 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from '../theme/pixel';
 
 /**
- * Empty placeholder area where the user will implement
- * their own lemonade stand visualization.
+ * Placeholder component for the lemonade stand visualization — pixel art style.
  */
 export default function StandPlaceholder() {
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Your Lemonade Stand</Text>
-      <Text style={styles.hint}>Implement your stand view here</Text>
+      <Text style={styles.label}>YOUR LEMONADE STAND</Text>
+      <Text style={styles.hint}>* Build your stand here *</Text>
     </View>
   );
 }
@@ -17,24 +17,25 @@ export default function StandPlaceholder() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    minHeight: 200,
-    borderWidth: 2,
-    borderColor: '#D4D4D4',
-    borderStyle: 'dashed',
-    borderRadius: 16,
+    minHeight: 180,
+    borderWidth: 3,
+    borderColor: C.border,
+    borderRadius: 0,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#FAFAF9',
-    marginVertical: 12,
+    backgroundColor: C.bgLight,
+    marginVertical: 8,
+    ...pixelBevel,
   },
   label: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#A8A29E',
-    marginBottom: 4,
+    fontFamily: PIXEL_FONT,
+    fontSize: F.body,
+    color: C.gold,
+    marginBottom: 6,
   },
   hint: {
-    fontSize: 13,
-    color: '#D6D3D1',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.tiny,
+    color: C.textMuted,
   },
 });

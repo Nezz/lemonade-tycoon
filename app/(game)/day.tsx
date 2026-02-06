@@ -14,6 +14,7 @@ import { cupsFromInventory } from '../../engine/customers';
 import { getRentForDay } from '../../engine/constants';
 import { formatMoney } from '../../utils/format';
 import { aggregateEffects } from '../../engine/upgrades';
+import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from '../../theme/pixel';
 
 export default function DayScreen() {
   const router = useRouter();
@@ -64,7 +65,7 @@ export default function DayScreen() {
         {/* Day & Weather Header */}
         <View style={styles.header}>
           <View style={styles.dayInfo}>
-            <Text style={styles.dayLabel}>Day {day}</Text>
+            <Text style={styles.dayLabel}>DAY {day}</Text>
             <MoneyDisplay amount={money} />
           </View>
           <View style={styles.weatherRow}>
@@ -82,19 +83,19 @@ export default function DayScreen() {
         {/* Current Settings Summary */}
         <View style={styles.summary}>
           <View style={styles.summaryItem}>
-            <Text style={styles.summaryLabel}>Price/Cup</Text>
+            <Text style={styles.summaryLabel}>PRICE</Text>
             <Text style={styles.summaryValue}>${pricePerCup.toFixed(2)}</Text>
           </View>
           <View style={styles.summaryDivider} />
           <View style={styles.summaryItem}>
-            <Text style={styles.summaryLabel}>Can Make</Text>
-            <Text style={styles.summaryValue}>{cupsMakeable} cups</Text>
+            <Text style={styles.summaryLabel}>CUPS</Text>
+            <Text style={styles.summaryValue}>{cupsMakeable}</Text>
           </View>
           {rent > 0 && (
             <>
               <View style={styles.summaryDivider} />
               <View style={styles.summaryItem}>
-                <Text style={styles.summaryLabel}>Daily Rent</Text>
+                <Text style={styles.summaryLabel}>RENT</Text>
                 <Text style={styles.summaryValueRent}>{formatMoney(rent)}</Text>
               </View>
             </>
@@ -103,7 +104,7 @@ export default function DayScreen() {
             <>
               <View style={styles.summaryDivider} />
               <View style={styles.summaryItem}>
-                <Text style={styles.summaryLabel}>Passive $</Text>
+                <Text style={styles.summaryLabel}>PASSIVE</Text>
                 <Text style={styles.summaryValueGreen}>+{formatMoney(passiveIncome)}</Text>
               </View>
             </>
@@ -112,8 +113,8 @@ export default function DayScreen() {
             <>
               <View style={styles.summaryDivider} />
               <View style={styles.summaryItem}>
-                <Text style={styles.summaryLabel}>Free 🍋</Text>
-                <Text style={styles.summaryValueGreen}>+{freeLemons}/day</Text>
+                <Text style={styles.summaryLabel}>FREE</Text>
+                <Text style={styles.summaryValueGreen}>+{freeLemons}</Text>
               </View>
             </>
           )}
@@ -123,13 +124,13 @@ export default function DayScreen() {
         <View style={styles.actions}>
           <View style={styles.actionRow}>
             <GameButton
-              title="Supply Shop"
+              title="SHOP"
               onPress={() => router.push('/(game)/shop')}
               variant="secondary"
               style={styles.actionBtn}
             />
             <GameButton
-              title="Recipe Lab"
+              title="RECIPE"
               onPress={() => router.push('/(game)/recipe')}
               variant="secondary"
               style={styles.actionBtn}
@@ -137,26 +138,26 @@ export default function DayScreen() {
           </View>
           <View style={styles.actionRow}>
             <GameButton
-              title="Upgrades"
+              title="UPGRADES"
               onPress={() => router.push('/(game)/upgrades')}
               variant="secondary"
               style={styles.actionBtn}
             />
             <GameButton
-              title="Stats"
+              title="STATS"
               onPress={() => router.push('/(game)/stats')}
               variant="secondary"
               style={styles.actionBtn}
             />
           </View>
           <GameButton
-            title="Achievements"
+            title="ACHIEVEMENTS"
             onPress={() => router.push('/(game)/achievements')}
             variant="secondary"
             style={styles.fullBtn}
           />
           <GameButton
-            title={canStart ? 'Open for Business!' : 'Need Supplies!'}
+            title={canStart ? 'OPEN FOR BUSINESS!' : 'NEED SUPPLIES!'}
             onPress={handleStartDay}
             disabled={!canStart}
             style={styles.fullBtn}
@@ -170,80 +171,78 @@ export default function DayScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FFFBEB',
+    backgroundColor: C.bg,
   },
   scroll: {
     flex: 1,
   },
   scrollContent: {
-    padding: 16,
+    padding: 12,
     paddingBottom: 32,
   },
   header: {
-    marginBottom: 8,
+    marginBottom: 6,
   },
   dayInfo: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 8,
   },
   dayLabel: {
-    fontSize: 24,
-    fontWeight: '800',
-    color: '#78350F',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.heading,
+    color: C.gold,
   },
   weatherRow: {
     flexDirection: 'row',
-    gap: 8,
+    gap: 6,
   },
   summary: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    padding: 14,
-    marginTop: 12,
-    borderWidth: 1,
-    borderColor: '#E7E5E4',
+    ...pixelPanel,
+    ...pixelBevel,
+    marginTop: 8,
+    padding: 10,
   },
   summaryItem: {
     flex: 1,
     alignItems: 'center',
   },
   summaryDivider: {
-    width: 1,
-    height: 30,
-    backgroundColor: '#E7E5E4',
+    width: 2,
+    height: 24,
+    backgroundColor: C.border,
   },
   summaryLabel: {
-    fontSize: 11,
-    fontWeight: '600',
-    color: '#78716C',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.tiny,
+    color: C.textMuted,
     marginBottom: 2,
   },
   summaryValue: {
-    fontSize: 16,
-    fontWeight: '800',
-    color: '#1C1917',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.body,
+    color: C.text,
   },
   summaryValueRent: {
-    fontSize: 16,
-    fontWeight: '800',
-    color: '#DC2626',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.body,
+    color: C.red,
   },
   summaryValueGreen: {
-    fontSize: 16,
-    fontWeight: '800',
-    color: '#166534',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.body,
+    color: C.green,
   },
   actions: {
-    marginTop: 16,
-    gap: 10,
+    marginTop: 12,
+    gap: 8,
   },
   actionRow: {
     flexDirection: 'row',
-    gap: 10,
+    gap: 8,
   },
   actionBtn: {
     flex: 1,

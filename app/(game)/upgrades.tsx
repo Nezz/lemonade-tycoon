@@ -6,15 +6,16 @@ import MoneyDisplay from '../../components/MoneyDisplay';
 import UpgradeCard from '../../components/UpgradeCard';
 import { UPGRADE_IDS, UPGRADE_DEFINITIONS, TIER_NAMES, TIER_COUNT } from '../../engine/constants';
 import { UpgradeId } from '../../engine/types';
+import { C, PIXEL_FONT, F, pixelTrack, pixelFill } from '../../theme/pixel';
 
 const TIER_COLORS: Record<number, string> = {
-  1: '#A8A29E',
-  2: '#60A5FA',
-  3: '#A78BFA',
-  4: '#F59E0B',
-  5: '#EF4444',
-  6: '#8B5CF6',
-  7: '#EC4899',
+  1: C.tierGray,
+  2: C.tierBlue,
+  3: C.tierPurple,
+  4: C.tierOrange,
+  5: C.tierRed,
+  6: C.tierViolet,
+  7: C.tierPink,
 };
 
 export default function UpgradesScreen() {
@@ -22,13 +23,11 @@ export default function UpgradesScreen() {
   const upgrades = useGameStore((s) => s.upgrades);
   const buyUpgrade = useGameStore((s) => s.buyUpgrade);
 
-  // Group upgrades by tier
   const tiers = Array.from({ length: TIER_COUNT }, (_, i) => i + 1);
 
   const tierGroups = useMemo(() => {
     const groups: Record<number, UpgradeId[]> = {};
     for (const tier of tiers) {
-      // Put stand upgrade first, then the rest
       const tierIds = UPGRADE_IDS.filter((id) => UPGRADE_DEFINITIONS[id].tier === tier);
       const standIds = tierIds.filter((id) => UPGRADE_DEFINITIONS[id].category === 'stand');
       const otherIds = tierIds.filter((id) => UPGRADE_DEFINITIONS[id].category !== 'stand');
@@ -37,7 +36,6 @@ export default function UpgradesScreen() {
     return groups;
   }, []);
 
-  // Count owned per tier
   const tierOwnedCounts = useMemo(() => {
     const counts: Record<number, { owned: number; total: number }> = {};
     for (const tier of tiers) {
@@ -50,27 +48,12 @@ export default function UpgradesScreen() {
     return counts;
   }, [upgrades, tierGroups]);
 
-  // Total owned
   const ownedCount = UPGRADE_IDS.filter((id) => upgrades[id]).length;
 
-  // Find the current tier (highest tier where the stand is owned, or 1 if none)
-  const currentTier = useMemo(() => {
-    let highest = 1;
-    for (const tier of tiers) {
-      const tierIds = tierGroups[tier] || [];
-      const standId = tierIds.find((id) => UPGRADE_DEFINITIONS[id].category === 'stand');
-      if (standId && upgrades[standId]) {
-        highest = tier + 1; // next tier is "current" (what they're working towards)
-      }
-    }
-    return Math.min(highest, TIER_COUNT);
-  }, [upgrades, tierGroups]);
-
-  // Collapsible state: current tier starts expanded
   const [expandedTiers, setExpandedTiers] = useState<Record<number, boolean>>(() => {
     const initial: Record<number, boolean> = {};
     for (const tier of tiers) {
-      initial[tier] = tier <= 2; // expand tier 1 and 2 by default
+      initial[tier] = tier <= 2;
     }
     return initial;
   });
@@ -79,13 +62,11 @@ export default function UpgradesScreen() {
     setExpandedTiers((prev) => ({ ...prev, [tier]: !prev[tier] }));
   };
 
-  // Check if an upgrade is locked (prerequisites not met)
   const isLocked = (upgradeId: UpgradeId): boolean => {
     const def = UPGRADE_DEFINITIONS[upgradeId];
     return def.requires.some((reqId) => !upgrades[reqId]);
   };
 
-  // Get missing prerequisite names
   const getMissingPrereqNames = (upgradeId: UpgradeId): string[] => {
     const def = UPGRADE_DEFINITIONS[upgradeId];
     return def.requires
@@ -127,7 +108,7 @@ export default function UpgradesScreen() {
           return (
             <View key={tier} style={styles.tierSection}>
               <TouchableOpacity
-                style={styles.tierHeader}
+                style={[styles.tierHeader, { borderColor: TIER_COLORS[tier] }]}
                 onPress={() => toggleTier(tier)}
                 activeOpacity={0.7}
               >
@@ -141,7 +122,7 @@ export default function UpgradesScreen() {
                   <Text style={[styles.tierProgress, allOwned && styles.tierProgressComplete]}>
                     {owned}/{total}
                   </Text>
-                  <Text style={styles.chevron}>{isExpanded ? '▼' : '▶'}</Text>
+                  <Text style={styles.chevron}>{isExpanded ? 'v' : '>'}</Text>
                 </View>
               </TouchableOpacity>
 
@@ -167,49 +148,48 @@ export default function UpgradesScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FFFBEB',
+    backgroundColor: C.bg,
   },
   scroll: {
     flex: 1,
   },
   content: {
-    padding: 16,
+    padding: 12,
     paddingBottom: 32,
   },
   progressContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
-    marginTop: 12,
-    marginBottom: 16,
+    gap: 8,
+    marginTop: 10,
+    marginBottom: 12,
   },
   progressBarBg: {
+    ...pixelTrack,
     flex: 1,
-    height: 8,
-    backgroundColor: '#E7E5E4',
-    borderRadius: 4,
-    overflow: 'hidden',
   },
   progressBarFill: {
-    height: '100%',
-    backgroundColor: '#F59E0B',
-    borderRadius: 4,
+    ...pixelFill,
+    backgroundColor: C.gold,
   },
   progressText: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#78716C',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.small,
+    color: C.panel,
   },
   tierSection: {
-    marginBottom: 12,
+    marginBottom: 8,
   },
   tierHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 10,
-    paddingHorizontal: 4,
+    paddingVertical: 8,
+    paddingHorizontal: 6,
     marginBottom: 4,
+    borderWidth: 2,
+    borderRadius: 0,
+    backgroundColor: C.bgLight,
   },
   tierHeaderLeft: {
     flexDirection: 'row',
@@ -222,32 +202,33 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   tierBadge: {
-    width: 26,
-    height: 26,
-    borderRadius: 13,
+    width: 22,
+    height: 22,
+    borderRadius: 0,
     alignItems: 'center',
     justifyContent: 'center',
   },
   tierBadgeText: {
-    fontSize: 13,
-    fontWeight: '800',
-    color: '#FFFFFF',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.small,
+    color: C.white,
   },
   tierTitle: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#44403C',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.small,
+    color: C.panel,
   },
   tierProgress: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#78716C',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.small,
+    color: C.textMuted,
   },
   tierProgressComplete: {
-    color: '#166534',
+    color: C.greenLight,
   },
   chevron: {
-    fontSize: 12,
-    color: '#A8A29E',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.small,
+    color: C.textMuted,
   },
 });

@@ -3,6 +3,7 @@ import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useGameStore } from '../../store/gameStore';
 import { ACHIEVEMENT_DEFINITIONS, ACHIEVEMENT_IDS } from '../../engine/achievements';
+import { C, PIXEL_FONT, F, pixelPanel, pixelBevel, pixelTrack, pixelFill } from '../../theme/pixel';
 
 export default function AchievementsScreen() {
   const achievements = useGameStore((s) => s.achievements);
@@ -16,9 +17,9 @@ export default function AchievementsScreen() {
         {/* Progress */}
         <View style={styles.progressCard}>
           <Text style={styles.progressText}>
-            {unlocked.length} / {ACHIEVEMENT_IDS.length}
+            {unlocked.length}/{ACHIEVEMENT_IDS.length}
           </Text>
-          <Text style={styles.progressLabel}>Achievements Unlocked</Text>
+          <Text style={styles.progressLabel}>ACHIEVEMENTS</Text>
           <View style={styles.progressBar}>
             <View
               style={[
@@ -34,7 +35,7 @@ export default function AchievementsScreen() {
         {/* Unlocked */}
         {unlocked.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Unlocked</Text>
+            <Text style={styles.sectionTitle}>UNLOCKED</Text>
             {unlocked.map((id) => {
               const def = ACHIEVEMENT_DEFINITIONS[id];
               return (
@@ -44,7 +45,7 @@ export default function AchievementsScreen() {
                     <Text style={styles.achievementName}>{def.name}</Text>
                     <Text style={styles.achievementDesc}>{def.description}</Text>
                   </View>
-                  <Text style={styles.checkmark}>✓</Text>
+                  <Text style={styles.checkmark}>[OK]</Text>
                 </View>
               );
             })}
@@ -54,7 +55,7 @@ export default function AchievementsScreen() {
         {/* Locked */}
         {locked.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Locked</Text>
+            <Text style={styles.sectionTitle}>LOCKED</Text>
             {locked.map((id) => {
               const def = ACHIEVEMENT_DEFINITIONS[id];
               return (
@@ -81,98 +82,95 @@ export default function AchievementsScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FFFBEB',
+    backgroundColor: C.bg,
   },
   scroll: {
     flex: 1,
   },
   content: {
-    padding: 16,
+    padding: 12,
     paddingBottom: 32,
-    gap: 14,
+    gap: 10,
   },
   progressCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 14,
-    padding: 20,
+    ...pixelPanel,
+    ...pixelBevel,
+    padding: 16,
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#E7E5E4',
   },
   progressText: {
-    fontSize: 32,
-    fontWeight: '900',
-    color: '#78350F',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.title,
+    color: C.gold,
   },
   progressLabel: {
-    fontSize: 14,
-    color: '#78716C',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.small,
+    color: C.textMuted,
     marginTop: 4,
-    marginBottom: 12,
+    marginBottom: 10,
   },
   progressBar: {
+    ...pixelTrack,
     width: '100%',
-    height: 8,
-    backgroundColor: '#F5F5F4',
-    borderRadius: 4,
-    overflow: 'hidden',
   },
   progressFill: {
-    height: '100%',
-    backgroundColor: '#84CC16',
-    borderRadius: 4,
+    ...pixelFill,
   },
   section: {
-    gap: 8,
+    gap: 6,
   },
   sectionTitle: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#1C1917',
-    marginBottom: 4,
+    fontFamily: PIXEL_FONT,
+    fontSize: F.body,
+    color: C.panel,
+    marginBottom: 2,
   },
   achievementCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F0FDF4',
-    borderRadius: 12,
-    padding: 14,
-    borderWidth: 1,
-    borderColor: '#BBF7D0',
-    gap: 12,
+    backgroundColor: C.achievePanel,
+    borderRadius: 0,
+    padding: 10,
+    borderWidth: 2,
+    borderColor: C.greenDark,
+    gap: 10,
   },
   lockedCard: {
-    backgroundColor: '#F5F5F4',
-    borderColor: '#E7E5E4',
+    backgroundColor: C.lockedPanel,
+    borderColor: C.lockedBorder,
   },
   achievementEmoji: {
-    fontSize: 24,
-    width: 36,
+    fontSize: 20,
+    width: 28,
     textAlign: 'center',
   },
   lockedEmoji: {
-    color: '#A8A29E',
-    fontSize: 20,
+    fontFamily: PIXEL_FONT,
+    color: C.textMuted,
+    fontSize: F.heading,
   },
   achievementInfo: {
     flex: 1,
   },
   achievementName: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: '#1C1917',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.small,
+    color: C.text,
   },
   achievementDesc: {
-    fontSize: 12,
-    color: '#57534E',
-    marginTop: 2,
+    fontFamily: PIXEL_FONT,
+    fontSize: F.tiny,
+    color: C.textLight,
+    marginTop: 3,
+    lineHeight: 20,
   },
   lockedText: {
-    color: '#A8A29E',
+    color: C.textMuted,
   },
   checkmark: {
-    fontSize: 18,
-    fontWeight: '800',
-    color: '#16A34A',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.small,
+    color: C.green,
   },
 });

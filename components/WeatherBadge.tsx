@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { WeatherType } from '../engine/types';
 import { WEATHER_DATA } from '../engine/constants';
+import { C, PIXEL_FONT, F } from '../theme/pixel';
 
 interface WeatherBadgeProps {
   weather: WeatherType;
@@ -26,28 +27,30 @@ const styles = StyleSheet.create({
   badge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FEF9C3',
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 20,
+    backgroundColor: C.panel,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 0,
+    borderWidth: 2,
+    borderColor: C.border,
     gap: 6,
   },
   badgeSmall: {
-    paddingVertical: 4,
-    paddingHorizontal: 8,
+    paddingVertical: 3,
+    paddingHorizontal: 6,
   },
   emoji: {
-    fontSize: 20,
+    fontSize: 16,
   },
   emojiSmall: {
-    fontSize: 14,
+    fontSize: 12,
   },
   text: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#92400E',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.small,
+    color: C.text,
   },
   textSmall: {
-    fontSize: 12,
+    fontSize: F.tiny,
   },
 });

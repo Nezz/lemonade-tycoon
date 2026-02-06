@@ -9,6 +9,7 @@ import EventBanner from '../../components/EventBanner';
 import { SUPPLY_IDS, SUPPLY_DEFINITIONS, MAX_INVENTORY_BASE } from '../../engine/constants';
 import { getEventDefinition } from '../../engine/events';
 import { aggregateEffects } from '../../engine/upgrades';
+import { C, PIXEL_FONT, F, pixelPanel, pixelBevel, pixelTrack, pixelFill } from '../../theme/pixel';
 
 export default function ShopScreen() {
   const money = useGameStore((s) => s.money);
@@ -21,7 +22,6 @@ export default function ShopScreen() {
   const effects = aggregateEffects(upgrades);
   const maxInventory = MAX_INVENTORY_BASE + effects.inventoryBonus;
 
-  // Check if there's a supply cost event
   const hasSupplyEvent = activeEvent
     ? getEventDefinition(activeEvent.id).supplyCostMultiplier !== 1.0
     : false;
@@ -45,9 +45,9 @@ export default function ShopScreen() {
         {/* Total Capacity Bar */}
         <View style={styles.capacityCard}>
           <View style={styles.capacityHeader}>
-            <Text style={styles.capacityLabel}>📦 Storage</Text>
+            <Text style={styles.capacityLabel}>STORAGE</Text>
             <Text style={[styles.capacityCount, isFull && styles.capacityFull]}>
-              {totalInventory} / {maxInventory}
+              {totalInventory}/{maxInventory}
             </Text>
           </View>
           <View style={styles.capacityTrack}>
@@ -75,7 +75,7 @@ export default function ShopScreen() {
           return (
             <View key={`spoil-${id}`} style={styles.spoilWarning}>
               <Text style={styles.spoilText}>
-                {def.emoji} {expiringAmount} {def.unit} expiring soon!
+                {def.emoji} {expiringAmount} {def.unit} EXPIRING!
               </Text>
             </View>
           );
@@ -95,7 +95,7 @@ export default function ShopScreen() {
 
         {/* Shelf life info */}
         <View style={styles.infoCard}>
-          <Text style={styles.infoTitle}>Shelf Life</Text>
+          <Text style={styles.infoTitle}>SHELF LIFE</Text>
           {SUPPLY_IDS.map((id) => {
             const def = SUPPLY_DEFINITIONS[id];
             let lifeText: string;
@@ -125,22 +125,20 @@ export default function ShopScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FFFBEB',
+    backgroundColor: C.bg,
   },
   scroll: {
     flex: 1,
   },
   content: {
-    padding: 16,
-    gap: 12,
+    padding: 12,
+    gap: 8,
     paddingBottom: 32,
   },
   capacityCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    padding: 12,
-    borderWidth: 1,
-    borderColor: '#E7E5E4',
+    ...pixelPanel,
+    ...pixelBevel,
+    padding: 10,
   },
   capacityHeader: {
     flexDirection: 'row',
@@ -149,59 +147,51 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   capacityLabel: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#57534E',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.small,
+    color: C.text,
   },
   capacityCount: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: '#1C1917',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.small,
+    color: C.text,
   },
   capacityFull: {
-    color: '#DC2626',
+    color: C.red,
   },
   capacityTrack: {
-    height: 8,
-    backgroundColor: '#F5F5F4',
-    borderRadius: 4,
-    overflow: 'hidden',
+    ...pixelTrack,
   },
   capacityFill: {
-    height: '100%',
-    backgroundColor: '#65A30D',
-    borderRadius: 4,
+    ...pixelFill,
   },
   capacityFillWarn: {
-    backgroundColor: '#F59E0B',
+    backgroundColor: C.gold,
   },
   capacityFillFull: {
-    backgroundColor: '#DC2626',
+    backgroundColor: C.red,
   },
   spoilWarning: {
-    backgroundColor: '#FEF3C7',
-    borderRadius: 10,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: '#FCD34D',
+    backgroundColor: C.redDark,
+    borderRadius: 0,
+    padding: 8,
+    borderWidth: 2,
+    borderColor: C.red,
   },
   spoilText: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#92400E',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.small,
+    color: C.redLight,
     textAlign: 'center',
   },
   infoCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 14,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: '#E7E5E4',
+    ...pixelPanel,
+    ...pixelBevel,
   },
   infoTitle: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: '#1C1917',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.body,
+    color: C.text,
     marginBottom: 8,
   },
   infoRow: {
@@ -210,12 +200,13 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   infoLabel: {
-    fontSize: 13,
-    color: '#57534E',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.tiny,
+    color: C.textLight,
   },
   infoValue: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#78716C',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.tiny,
+    color: C.textMuted,
   },
 });

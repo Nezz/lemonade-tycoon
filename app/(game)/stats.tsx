@@ -5,6 +5,7 @@ import { useGameStore } from '../../store/gameStore';
 import StatRow from '../../components/StatRow';
 import MiniBarChart from '../../components/MiniBarChart';
 import { formatMoney } from '../../utils/format';
+import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from '../../theme/pixel';
 
 export default function StatsScreen() {
   const stats = useGameStore((s) => s.stats);
@@ -14,13 +15,11 @@ export default function StatsScreen() {
 
   const results = stats.dayResults;
 
-  // Profit chart: last 14 days
   const chartData = results.slice(-14).map((r) => ({
     label: `D${r.day}`,
     value: r.profit,
   }));
 
-  // Best and worst days
   const bestDay = results.length > 0
     ? results.reduce((best, r) => (r.profit > best.profit ? r : best))
     : null;
@@ -28,14 +27,12 @@ export default function StatsScreen() {
     ? results.reduce((worst, r) => (r.profit < worst.profit ? r : worst))
     : null;
 
-  // Consecutive profit streak
   let currentStreak = 0;
   for (let i = results.length - 1; i >= 0; i--) {
     if (results[i].profit > 0) currentStreak++;
     else break;
   }
 
-  // Average satisfaction
   const avgSatisfaction = results.length > 0
     ? Math.round(results.reduce((sum, r) => sum + r.satisfaction, 0) / results.length)
     : 0;
@@ -45,41 +42,33 @@ export default function StatsScreen() {
       <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
         {/* Profit Chart */}
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>Profit History</Text>
-          <MiniBarChart data={chartData} height={140} />
+          <Text style={styles.cardTitle}>PROFIT HISTORY</Text>
+          <MiniBarChart data={chartData} height={130} />
         </View>
 
         {/* All-time Stats */}
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>All-Time Stats</Text>
-          <StatRow label="Days Played" value={`${day}`} />
-          <StatRow label="Total Revenue" value={formatMoney(stats.totalRevenue)} />
-          <StatRow label="Total Cups Sold" value={`${stats.totalCupsSold}`} />
-          <StatRow label="Current Balance" value={formatMoney(money)} />
-          <StatRow label="Reputation" value={`${reputation}/100`} />
-          <StatRow label="Avg Satisfaction" value={`${avgSatisfaction}/100`} />
-          <StatRow label="Profit Streak" value={`${currentStreak} days`} />
+          <Text style={styles.cardTitle}>ALL-TIME STATS</Text>
+          <StatRow label="Days" value={`${day}`} />
+          <StatRow label="Revenue" value={formatMoney(stats.totalRevenue)} />
+          <StatRow label="Cups Sold" value={`${stats.totalCupsSold}`} />
+          <StatRow label="Balance" value={formatMoney(money)} />
+          <StatRow label="Rep" value={`${reputation}/100`} />
+          <StatRow label="Avg Sat." value={`${avgSatisfaction}/100`} />
+          <StatRow label="Streak" value={`${currentStreak} days`} />
           {bestDay && (
-            <StatRow
-              label="Best Day"
-              value={`Day ${bestDay.day}: ${formatMoney(bestDay.profit)}`}
-              color="#166534"
-            />
+            <StatRow label="Best Day" value={`D${bestDay.day}: ${formatMoney(bestDay.profit)}`} color={C.green} />
           )}
           {worstDay && (
-            <StatRow
-              label="Worst Day"
-              value={`Day ${worstDay.day}: ${formatMoney(worstDay.profit)}`}
-              color="#DC2626"
-            />
+            <StatRow label="Worst Day" value={`D${worstDay.day}: ${formatMoney(worstDay.profit)}`} color={C.red} />
           )}
         </View>
 
         {/* Day-by-Day Log */}
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>Day-by-Day Log</Text>
+          <Text style={styles.cardTitle}>DAY LOG</Text>
           {results.length === 0 ? (
-            <Text style={styles.emptyText}>No days completed yet</Text>
+            <Text style={styles.emptyText}>NO DATA YET</Text>
           ) : (
             [...results].reverse().map((r) => (
               <View key={r.day} style={styles.logRow}>
@@ -93,7 +82,7 @@ export default function StatsScreen() {
                 <Text
                   style={[
                     styles.logProfit,
-                    { color: r.profit >= 0 ? '#166534' : '#DC2626' },
+                    { color: r.profit >= 0 ? C.green : C.red },
                   ]}
                 >
                   {formatMoney(r.profit)}
@@ -110,58 +99,57 @@ export default function StatsScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FFFBEB',
+    backgroundColor: C.bg,
   },
   scroll: {
     flex: 1,
   },
   content: {
-    padding: 16,
+    padding: 12,
     paddingBottom: 32,
-    gap: 14,
+    gap: 10,
   },
   card: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 14,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: '#E7E5E4',
+    ...pixelPanel,
+    ...pixelBevel,
   },
   cardTitle: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#1C1917',
-    marginBottom: 12,
+    fontFamily: PIXEL_FONT,
+    fontSize: F.body,
+    color: C.text,
+    marginBottom: 10,
   },
   emptyText: {
-    color: '#A8A29E',
-    fontSize: 14,
+    fontFamily: PIXEL_FONT,
+    color: C.textMuted,
+    fontSize: F.body,
     textAlign: 'center',
-    paddingVertical: 16,
+    paddingVertical: 12,
   },
   logRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 8,
+    paddingVertical: 5,
     borderBottomWidth: 1,
-    borderBottomColor: '#F5F5F4',
+    borderBottomColor: C.border,
   },
   logLeft: {
     flex: 1,
   },
   logDay: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#1C1917',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.small,
+    color: C.text,
   },
   logDetail: {
-    fontSize: 12,
-    color: '#78716C',
-    marginTop: 1,
+    fontFamily: PIXEL_FONT,
+    fontSize: F.tiny,
+    color: C.textMuted,
+    marginTop: 2,
   },
   logProfit: {
-    fontSize: 15,
-    fontWeight: '700',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.small,
   },
 });

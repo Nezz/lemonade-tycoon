@@ -4,6 +4,7 @@ import { SupplyId } from '../engine/types';
 import { SUPPLY_DEFINITIONS } from '../engine/constants';
 import { formatMoney } from '../utils/format';
 import GameButton from './GameButton';
+import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from '../theme/pixel';
 
 interface SupplyCardProps {
   supplyId: SupplyId;
@@ -42,12 +43,12 @@ export default function SupplyCard({
         <View style={styles.headerText}>
           <Text style={styles.name}>{def.label}</Text>
           <Text style={styles.packInfo}>
-            {def.packSize} {def.unit} / pack
+            {def.packSize} {def.unit}/pack
           </Text>
         </View>
-        <Text style={styles.stock}>
-          {currentStock}
-        </Text>
+        <View style={styles.stockBadge}>
+          <Text style={styles.stock}>{currentStock}</Text>
+        </View>
       </View>
 
       <View style={styles.controls}>
@@ -56,14 +57,14 @@ export default function SupplyCard({
             style={styles.qtyBtn}
             onPress={() => setPacks(Math.max(1, packs - 1))}
           >
-            <Text style={styles.qtyBtnText}>-</Text>
+            <Text style={styles.qtyBtnText}>[-]</Text>
           </TouchableOpacity>
           <Text style={styles.qtyText}>{packs}</Text>
           <TouchableOpacity
             style={styles.qtyBtn}
             onPress={() => setPacks(packs + 1)}
           >
-            <Text style={styles.qtyBtnText}>+</Text>
+            <Text style={styles.qtyBtnText}>[+]</Text>
           </TouchableOpacity>
         </View>
 
@@ -77,7 +78,7 @@ export default function SupplyCard({
         </View>
 
         <GameButton
-          title={isFull ? 'Full' : wouldExceedMax ? 'Over' : 'Buy'}
+          title={isFull ? 'FULL' : wouldExceedMax ? 'OVER' : 'BUY'}
           onPress={handleBuy}
           disabled={!canAfford || wouldExceedMax}
           small
@@ -90,72 +91,70 @@ export default function SupplyCard({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 14,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: '#E7E5E4',
-    marginBottom: 12,
+    ...pixelPanel,
+    ...pixelBevel,
+    marginBottom: 8,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 10,
   },
   emoji: {
-    fontSize: 28,
-    marginRight: 12,
+    fontSize: 22,
+    marginRight: 10,
   },
   headerText: {
     flex: 1,
   },
   name: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#1C1917',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.body,
+    color: C.text,
   },
   packInfo: {
-    fontSize: 12,
-    color: '#78716C',
-    marginTop: 1,
+    fontFamily: PIXEL_FONT,
+    fontSize: F.tiny,
+    color: C.textMuted,
+    marginTop: 2,
+  },
+  stockBadge: {
+    backgroundColor: C.panelDark,
+    borderWidth: 2,
+    borderColor: C.border,
+    borderRadius: 0,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
   },
   stock: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#57534E',
-    backgroundColor: '#F5F5F4',
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 8,
+    fontFamily: PIXEL_FONT,
+    fontSize: F.body,
+    color: C.text,
   },
   controls: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: 10,
   },
   quantityRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F5F5F4',
-    borderRadius: 8,
-    overflow: 'hidden',
+    gap: 2,
   },
   qtyBtn: {
-    width: 36,
-    height: 36,
-    alignItems: 'center',
-    justifyContent: 'center',
+    paddingHorizontal: 4,
+    paddingVertical: 4,
   },
   qtyBtnText: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#44403C',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.small,
+    color: C.text,
   },
   qtyText: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#1C1917',
-    minWidth: 28,
+    fontFamily: PIXEL_FONT,
+    fontSize: F.body,
+    color: C.text,
+    minWidth: 20,
     textAlign: 'center',
   },
   costInfo: {
@@ -163,18 +162,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   costLabel: {
-    fontSize: 12,
-    color: '#78716C',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.tiny,
+    color: C.textMuted,
   },
   cost: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#166534',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.body,
+    color: C.greenDark,
   },
   costRed: {
-    color: '#DC2626',
+    color: C.red,
   },
   buyBtn: {
-    minWidth: 64,
+    minWidth: 60,
   },
 });

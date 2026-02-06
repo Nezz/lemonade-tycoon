@@ -1,12 +1,12 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { View, ActivityIndicator } from 'react-native';
-import { useFonts, PressStart2P_400Regular } from '@expo-google-fonts/press-start-2p';
+import { useFonts, VT323_400Regular } from '@expo-google-fonts/vt323';
 import { C } from '../theme/pixel';
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
-    PressStart2P_400Regular,
+    VT323_400Regular,
   });
 
   if (!fontsLoaded) {

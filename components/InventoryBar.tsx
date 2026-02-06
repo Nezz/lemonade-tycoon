@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Inventory } from '../engine/types';
 import { SUPPLY_DEFINITIONS, SUPPLY_IDS } from '../engine/constants';
+import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from '../theme/pixel';
 
 interface InventoryBarProps {
   inventory: Inventory;
@@ -27,23 +28,21 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    paddingVertical: 10,
-    paddingHorizontal: 8,
-    borderWidth: 1,
-    borderColor: '#E7E5E4',
+    ...pixelPanel,
+    ...pixelBevel,
+    paddingVertical: 8,
+    paddingHorizontal: 6,
   },
   item: {
     alignItems: 'center',
     gap: 2,
   },
   emoji: {
-    fontSize: 20,
+    fontSize: 18,
   },
   count: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: '#44403C',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.body,
+    color: C.text,
   },
 });

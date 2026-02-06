@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { formatMoney } from '../utils/format';
+import { C, PIXEL_FONT, F } from '../theme/pixel';
 
 interface MoneyDisplayProps {
   amount: number;
@@ -9,7 +10,7 @@ interface MoneyDisplayProps {
 export default function MoneyDisplay({ amount }: MoneyDisplayProps) {
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Balance</Text>
+      <Text style={styles.label}>BALANCE</Text>
       <Text style={styles.amount}>{formatMoney(amount)}</Text>
     </View>
   );
@@ -20,15 +21,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   label: {
-    fontSize: 11,
-    fontWeight: '600',
-    color: '#78716C',
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
+    fontFamily: PIXEL_FONT,
+    fontSize: F.tiny,
+    color: C.textMuted,
+    letterSpacing: 1,
   },
   amount: {
-    fontSize: 22,
-    fontWeight: '800',
-    color: '#166534',
+    fontFamily: PIXEL_FONT,
+    fontSize: F.title,
+    color: C.greenLight,
+    marginTop: 2,
   },
 });
