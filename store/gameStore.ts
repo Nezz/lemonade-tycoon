@@ -63,6 +63,7 @@ function getSerializableState(state: GameStore): GameState {
     pricePerCup: state.pricePerCup,
     weather: state.weather,
     forecast: state.forecast,
+    forecastExtended: state.forecastExtended,
     reputation: state.reputation,
     upgrades: state.upgrades,
     plannedEvent: state.plannedEvent,
@@ -318,7 +319,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
         : FORECAST_ACCURACY;
 
     const newWeather = generateWeather(state.forecast, accuracy);
-    const newForecast = generateForecast();
+    const newForecast = state.forecastExtended;
+    const newForecastExtended = generateForecast();
     const newPlannedEvent = rollPlannedEvent();
 
     // Add free lemons from lemon garden / vertical farm
@@ -341,6 +343,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       day: state.day + 1,
       weather: newWeather,
       forecast: newForecast,
+      forecastExtended: newForecastExtended,
       plannedEvent: newPlannedEvent,
       surpriseEvents: [],
       phase: "planning",
@@ -356,6 +359,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
   resetGame: () => {
     const weather = generateWeather(null);
     const forecast = generateForecast();
+    const forecastExtended = generateForecast();
     const plannedEvent = rollPlannedEvent();
 
     set({
@@ -375,6 +379,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       stats: { totalRevenue: 0, totalCupsSold: 0, dayResults: [] },
       weather,
       forecast,
+      forecastExtended,
       freePlay: false,
       totalSpentToday: 0,
       newlyUnlockedAchievements: [],

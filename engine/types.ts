@@ -105,6 +105,7 @@ export interface UpgradeEffects {
   showRecipeHints?: boolean; // show ideal recipe ranges
   showProfitPerCup?: boolean; // show profit per cup
   showForecast?: boolean; // show tomorrow's weather forecast
+  showExtendedForecast?: boolean; // show day-after-tomorrow forecast
 }
 
 // ── Upgrade Categories ──────────────────────────────────────────────────────
@@ -232,6 +233,7 @@ export type UpgradeId =
   | "techPriceBoard"
   | "techWeatherApp"
   | "techPosSystem"
+  | "techExtendedForecast"
   | "techAnalyticsDashboard"
   | "techAiForecasting"
   | "techMarketIntelligence"
@@ -427,6 +429,7 @@ export interface GameState {
   pricePerCup: number;
   weather: WeatherType;
   forecast: WeatherType;
+  forecastExtended: WeatherType;
   reputation: number;
   upgrades: Record<UpgradeId, boolean>;
   plannedEvent: ActiveEvent;

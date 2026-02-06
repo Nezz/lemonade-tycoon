@@ -13,6 +13,7 @@
 
 - Use style sheets for more than one line of style.
 - Avoid duplicating styles; prefer shared components.
+- Whenever you use an emoji, ensure that it's in export-emojis.html.
 
 ### TypeScript and code style
 

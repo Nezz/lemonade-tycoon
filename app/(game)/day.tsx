@@ -1,17 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
 import { useRouter } from "expo-router";
 import { useGameStore } from "@/store/gameStore";
 import StandPlaceholder from "@/components/StandPlaceholder";
-import WeatherBadge from "@/components/WeatherBadge";
+
 import MoneyDisplay from "@/components/MoneyDisplay";
 import InventoryBar from "@/components/InventoryBar";
 import GameButton from "@/components/GameButton";
-import EventBanner from "@/components/EventBanner";
 import AchievementToast from "@/components/AchievementToast";
 import StripedBackground from "@/components/StripedBackground";
 import { cupsFromInventory } from "@/engine/customers";
-import { getRentForDay } from "@/engine/constants";
+import { WEATHER_DATA, getRentForDay } from "@/engine/constants";
 import { formatMoney } from "@/utils/format";
 import { aggregateEffects } from "@/engine/upgrades";
 import PixelIcon from "@/components/PixelIcon";
@@ -23,6 +22,7 @@ export default function DayScreen() {
   const money = useGameStore((s) => s.money);
   const weather = useGameStore((s) => s.weather);
   const forecast = useGameStore((s) => s.forecast);
+  const forecastExtended = useGameStore((s) => s.forecastExtended);
   const inventory = useGameStore((s) => s.inventory);
   const recipe = useGameStore((s) => s.recipe);
   const pricePerCup = useGameStore((s) => s.pricePerCup);
@@ -33,12 +33,19 @@ export default function DayScreen() {
     (s) => s.newlyUnlockedAchievements,
   );
 
+  const weatherInfo = WEATHER_DATA[weather];
+  const forecastInfo = WEATHER_DATA[forecast];
+  const forecastExtendedInfo = WEATHER_DATA[forecastExtended];
   const cupsMakeable = cupsFromInventory(inventory, recipe);
   const canStart = cupsMakeable > 0;
   const rent = getRentForDay(day, upgrades);
   const effects = aggregateEffects(upgrades);
   const passiveIncome = effects.passiveIncome;
   const freeLemons = Math.floor(effects.freeLemons);
+
+  const [expanded, setExpanded] = useState<"weather" | "event" | null>(null);
+  const toggleExpanded = (panel: "weather" | "event") =>
+    setExpanded((v) => (v === panel ? null : panel));
 
   const handleStartDay = () => {
     startDay();
@@ -54,9 +61,6 @@ export default function DayScreen() {
         style={styles.scroll}
         contentContainerStyle={styles.scrollContent}
       >
-        {/* Event Banner — always one planned event */}
-        <EventBanner event={plannedEvent} />
-
         {/* Day & Weather Header */}
         <View style={styles.header}>
           <View style={styles.dayInfo}>
@@ -72,14 +76,96 @@ export default function DayScreen() {
             <MoneyDisplay amount={money} />
           </View>
           <View style={styles.weatherRow}>
-            <WeatherBadge
-              weather={weather}
-              label={`Today: ${weather.charAt(0).toUpperCase() + weather.slice(1)}`}
-            />
-            {effects.showForecast && (
-              <WeatherBadge weather={forecast} label="Tomorrow" small />
-            )}
+            {/* Weather tile — always tappable */}
+            <Pressable
+              onPress={() => toggleExpanded("weather")}
+              style={[
+                styles.weatherTile,
+                expanded === "weather" && styles.weatherTileActive,
+              ]}
+            >
+              <PixelIcon emoji={weatherInfo.emoji} size={28} />
+              <Text style={styles.weatherTileText}>
+                {weather.charAt(0).toUpperCase() + weather.slice(1)}
+              </Text>
+            </Pressable>
+            {/* Event tile */}
+            <Pressable
+              onPress={() => toggleExpanded("event")}
+              style={[
+                styles.eventTile,
+                expanded === "event" && styles.eventTileActive,
+              ]}
+            >
+              <PixelIcon emoji={plannedEvent.emoji} size={16} />
+              <Text style={styles.eventTileText} numberOfLines={1}>
+                {plannedEvent.name}
+              </Text>
+            </Pressable>
           </View>
+          {/* Expanded weather details */}
+          {expanded === "weather" && (
+            <Pressable
+              onPress={() => setExpanded(null)}
+              style={styles.forecastDetail}
+            >
+              <View style={styles.forecastRow}>
+                <PixelIcon emoji={weatherInfo.emoji} size={20} />
+                <Text style={styles.forecastDetailText}>
+                  Today: {weatherInfo.label}
+                </Text>
+              </View>
+              <View style={styles.forecastRow}>
+                {effects.showForecast ? (
+                  <>
+                    <PixelIcon emoji={forecastInfo.emoji} size={20} />
+                    <Text style={styles.forecastDetailText}>
+                      Tomorrow: {forecastInfo.label}
+                    </Text>
+                  </>
+                ) : (
+                  <>
+                    <PixelIcon emoji="❓" size={14} />
+                    <Text style={styles.forecastDetailTextLocked}>
+                      Tomorrow: ???
+                    </Text>
+                  </>
+                )}
+              </View>
+              <View style={styles.forecastRow}>
+                {effects.showExtendedForecast ? (
+                  <>
+                    <PixelIcon emoji={forecastExtendedInfo.emoji} size={20} />
+                    <Text style={styles.forecastDetailText}>
+                      Day after: {forecastExtendedInfo.label}
+                    </Text>
+                  </>
+                ) : (
+                  <>
+                    <PixelIcon emoji="❓" size={14} />
+                    <Text style={styles.forecastDetailTextLocked}>
+                      Day after: ???
+                    </Text>
+                  </>
+                )}
+              </View>
+            </Pressable>
+          )}
+          {/* Expanded event details */}
+          {expanded === "event" && (
+            <Pressable
+              onPress={() => setExpanded(null)}
+              style={styles.eventDetail}
+            >
+              <PixelIcon emoji={plannedEvent.emoji} size={20} />
+              <View style={styles.eventDetailText}>
+                <Text style={styles.eventDetailName}>{plannedEvent.name}</Text>
+                <Text style={styles.eventDetailDesc}>
+                  {plannedEvent.description}
+                </Text>
+              </View>
+            </Pressable>
+          )}
         </View>
 
         {/* Lemonade Stand Placeholder */}
@@ -212,6 +298,107 @@ const styles = StyleSheet.create({
   weatherRow: {
     flexDirection: "row",
     gap: 6,
+    flexWrap: "wrap",
+  },
+  weatherTile: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: C.panel,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderWidth: 2,
+    borderColor: C.border,
+    gap: 6,
+    cursor: "pointer" as any,
+  },
+  weatherTileActive: {
+    borderColor: C.gold,
+  },
+  weatherTileText: {
+    fontFamily: PIXEL_FONT,
+    fontSize: F.small,
+    color: C.text,
+  },
+  forecastDetail: {
+    backgroundColor: C.panel,
+    padding: 10,
+    marginTop: 6,
+    borderWidth: 3,
+    borderColor: C.border,
+    ...pixelBevel,
+    borderTopColor: C.borderLight,
+    borderLeftColor: C.borderLight,
+    borderBottomColor: C.borderDark,
+    borderRightColor: C.borderDark,
+    gap: 6,
+    cursor: "pointer" as any,
+  },
+  forecastRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  forecastDetailText: {
+    fontFamily: PIXEL_FONT,
+    fontSize: F.small,
+    color: C.text,
+  },
+  forecastDetailTextLocked: {
+    fontFamily: PIXEL_FONT,
+    fontSize: F.small,
+    color: C.textMuted,
+  },
+  eventTile: {
+    flexDirection: "row",
+    alignItems: "center",
+    flexShrink: 1,
+    backgroundColor: C.warning,
+    paddingVertical: 3,
+    paddingHorizontal: 8,
+    borderWidth: 2,
+    borderColor: C.warningBorder,
+    gap: 4,
+    cursor: "pointer" as any,
+  },
+  eventTileActive: {
+    borderColor: C.gold,
+  },
+  eventTileText: {
+    fontFamily: PIXEL_FONT,
+    fontSize: F.tiny,
+    color: C.text,
+    flexShrink: 1,
+  },
+  eventDetail: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: C.warning,
+    padding: 10,
+    marginTop: 6,
+    borderWidth: 3,
+    borderColor: C.warningBorder,
+    ...pixelBevel,
+    borderTopColor: C.borderLight,
+    borderLeftColor: C.borderLight,
+    borderBottomColor: C.borderDark,
+    borderRightColor: C.borderDark,
+    gap: 8,
+    cursor: "pointer" as any,
+  },
+  eventDetailText: {
+    flex: 1,
+  },
+  eventDetailName: {
+    fontFamily: PIXEL_FONT,
+    fontSize: F.small,
+    color: C.text,
+  },
+  eventDetailDesc: {
+    fontFamily: PIXEL_FONT,
+    fontSize: F.tiny,
+    color: C.textLight,
+    marginTop: 3,
+    lineHeight: 24,
   },
   summary: {
     flexDirection: "row",

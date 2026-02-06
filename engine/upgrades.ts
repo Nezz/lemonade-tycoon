@@ -43,6 +43,7 @@ export interface AggregatedEffects {
   showRecipeHints: boolean;
   showProfitPerCup: boolean;
   showForecast: boolean;
+  showExtendedForecast: boolean;
 }
 
 // Caps for continuous effects
@@ -80,6 +81,7 @@ export function aggregateEffects(
     showRecipeHints: false,
     showProfitPerCup: false,
     showForecast: false,
+    showExtendedForecast: false,
   };
 
   for (const id of UPGRADE_IDS) {
@@ -161,6 +163,9 @@ export function aggregateEffects(
     }
     if (fx.showForecast) {
       agg.showForecast = true;
+    }
+    if (fx.showExtendedForecast) {
+      agg.showExtendedForecast = true;
     }
   }
 

@@ -864,6 +864,17 @@ export const UPGRADE_DEFINITIONS: Record<UpgradeId, UpgradeDefinition> = {
     ["standGardenBooth", "techWeatherApp"],
     { revenueBonus: 0.03 },
   ),
+  techExtendedForecast: def(
+    "techExtendedForecast",
+    "Satellite Dish",
+    "See the weather two days ahead",
+    35,
+    "📡",
+    4,
+    "technology",
+    ["standGardenBooth", "techWeatherApp"],
+    { showExtendedForecast: true },
+  ),
   // Decor
   decoThemedDecor: def(
     "decoThemedDecor",
@@ -1618,6 +1629,7 @@ export const INITIAL_GAME_STATE: GameState = {
   pricePerCup: 1.0,
   weather: "sunny",
   forecast: "warm",
+  forecastExtended: "sunny",
   reputation: STARTING_REPUTATION,
   upgrades: { ...DEFAULT_UPGRADES },
   plannedEvent: rollPlannedEvent(),
