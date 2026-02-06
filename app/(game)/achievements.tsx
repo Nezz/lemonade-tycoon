@@ -5,6 +5,7 @@ import {
   ACHIEVEMENT_DEFINITIONS,
   ACHIEVEMENT_IDS,
 } from "@/engine/achievements";
+import PixelIcon from "@/components/PixelIcon";
 import {
   C,
   PIXEL_FONT,
@@ -51,7 +52,9 @@ export default function AchievementsScreen() {
               const def = ACHIEVEMENT_DEFINITIONS[id];
               return (
                 <View key={id} style={styles.achievementCard}>
-                  <Text style={styles.achievementEmoji}>{def.emoji}</Text>
+                  <View style={styles.achievementIconWrap}>
+                    <PixelIcon emoji={def.emoji} size={20} />
+                  </View>
                   <View style={styles.achievementInfo}>
                     <Text style={styles.achievementName}>{def.name}</Text>
                     <Text style={styles.achievementDesc}>
@@ -76,9 +79,11 @@ export default function AchievementsScreen() {
                   key={id}
                   style={[styles.achievementCard, styles.lockedCard]}
                 >
-                  <Text style={[styles.achievementEmoji, styles.lockedEmoji]}>
-                    ?
-                  </Text>
+                  <View
+                    style={[styles.achievementIconWrap, styles.lockedIconWrap]}
+                  >
+                    <Text style={styles.lockedEmoji}>?</Text>
+                  </View>
                   <View style={styles.achievementInfo}>
                     <Text style={[styles.achievementName, styles.lockedText]}>
                       {def.name}
@@ -154,10 +159,13 @@ const styles = StyleSheet.create({
     backgroundColor: C.lockedPanel,
     borderColor: C.lockedBorder,
   },
-  achievementEmoji: {
-    fontSize: 20,
+  achievementIconWrap: {
     width: 28,
-    textAlign: "center",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  lockedIconWrap: {
+    opacity: 0.5,
   },
   lockedEmoji: {
     fontFamily: PIXEL_FONT,

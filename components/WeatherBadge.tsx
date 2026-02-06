@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { WeatherType } from "@/engine/types";
 import { WEATHER_DATA } from "@/engine/constants";
+import PixelIcon from "@/components/PixelIcon";
 import { C, PIXEL_FONT, F } from "@/theme/pixel";
 
 interface WeatherBadgeProps {
@@ -19,9 +20,7 @@ export default function WeatherBadge({
 
   return (
     <View style={[styles.badge, small && styles.badgeSmall]}>
-      <Text style={[styles.emoji, small && styles.emojiSmall]}>
-        {info.emoji}
-      </Text>
+      <PixelIcon emoji={info.emoji} size={small ? 12 : 16} />
       <Text style={[styles.text, small && styles.textSmall]}>
         {label ?? info.label}
       </Text>
@@ -44,12 +43,6 @@ const styles = StyleSheet.create({
   badgeSmall: {
     paddingVertical: 3,
     paddingHorizontal: 6,
-  },
-  emoji: {
-    fontSize: 16,
-  },
-  emojiSmall: {
-    fontSize: 12,
   },
   text: {
     fontFamily: PIXEL_FONT,

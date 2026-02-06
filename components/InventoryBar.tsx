@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Inventory } from "@/engine/types";
 import { SUPPLY_DEFINITIONS, SUPPLY_IDS } from "@/engine/constants";
+import PixelIcon from "@/components/PixelIcon";
 import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from "@/theme/pixel";
 
 interface InventoryBarProps {
@@ -15,7 +16,7 @@ export default function InventoryBar({ inventory }: InventoryBarProps) {
         const def = SUPPLY_DEFINITIONS[id];
         return (
           <View key={id} style={styles.item}>
-            <Text style={styles.emoji}>{def.emoji}</Text>
+            <PixelIcon emoji={def.emoji} size={18} />
             <Text style={styles.count}>{inventory[id]}</Text>
           </View>
         );
@@ -36,9 +37,6 @@ const styles = StyleSheet.create({
   item: {
     alignItems: "center",
     gap: 2,
-  },
-  emoji: {
-    fontSize: 18,
   },
   count: {
     fontFamily: PIXEL_FONT,

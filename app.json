@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "lemonade-opus",
-    "slug": "lemonade-opus",
+    "name": "lemonade-tycoon",
+    "slug": "lemonade-tycoon",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

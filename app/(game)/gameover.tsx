@@ -7,6 +7,7 @@ import StatRow from "@/components/StatRow";
 import GameButton from "@/components/GameButton";
 import { formatMoney } from "@/utils/format";
 import { deleteSave } from "@/utils/storage";
+import PixelIcon from "@/components/PixelIcon";
 import { C, PIXEL_FONT, F, pixelPanel } from "@/theme/pixel";
 import StripedBackground from "@/components/StripedBackground";
 
@@ -32,7 +33,7 @@ export default function GameOverScreen() {
     <StripedBackground color1={C.redDark} color2="#8B1A1A">
       <SafeAreaView style={styles.container}>
         <View style={styles.titleSection}>
-          <Text style={styles.emoji}>💸</Text>
+          <PixelIcon emoji="💸" size={56} />
           <Text style={styles.title}>BANKRUPT!</Text>
           <Text style={styles.subtitle}>
             Your lemonade stand has gone out of business.
@@ -76,10 +77,6 @@ const styles = StyleSheet.create({
   },
   titleSection: {
     alignItems: "center",
-  },
-  emoji: {
-    fontSize: 56,
-    marginBottom: 8,
   },
   title: {
     fontFamily: PIXEL_FONT,

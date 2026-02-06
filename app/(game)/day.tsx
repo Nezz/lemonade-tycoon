@@ -14,6 +14,7 @@ import { cupsFromInventory } from "@/engine/customers";
 import { getRentForDay } from "@/engine/constants";
 import { formatMoney } from "@/utils/format";
 import { aggregateEffects } from "@/engine/upgrades";
+import PixelIcon from "@/components/PixelIcon";
 import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from "@/theme/pixel";
 
 export default function DayScreen() {
@@ -71,7 +72,7 @@ export default function DayScreen() {
                 onPress={() => router.push("/(game)/achievements")}
                 style={styles.trophyBtn}
               >
-                <Text style={styles.trophyIcon}>🏆</Text>
+                <PixelIcon emoji="🏆" size={16} />
               </Pressable>
               <Text style={styles.dayLabel}>DAY {day}</Text>
             </View>
@@ -213,9 +214,6 @@ const styles = StyleSheet.create({
     ...pixelBevel,
     paddingHorizontal: 8,
     paddingVertical: 4,
-  },
-  trophyIcon: {
-    fontSize: 16,
   },
   weatherRow: {
     flexDirection: "row",

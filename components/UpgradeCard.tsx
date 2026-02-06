@@ -4,6 +4,7 @@ import { UpgradeId, UpgradeCategory } from "@/engine/types";
 import { UPGRADE_DEFINITIONS } from "@/engine/constants";
 import { formatMoney } from "@/utils/format";
 import GameButton from "@/components/GameButton";
+import PixelIcon from "@/components/PixelIcon";
 import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from "@/theme/pixel";
 
 const CATEGORY_LABELS: Record<UpgradeCategory, string> = {
@@ -55,9 +56,11 @@ export default function UpgradeCard({
       ]}
     >
       <View style={styles.left}>
-        <Text style={[styles.emoji, locked && styles.emojiLocked]}>
-          {locked ? "?" : def.emoji}
-        </Text>
+        {locked ? (
+          <Text style={[styles.emoji, styles.emojiLocked]}>?</Text>
+        ) : (
+          <PixelIcon emoji={def.emoji} size={22} style={styles.iconMargin} />
+        )}
         <View style={styles.info}>
           <View style={styles.nameRow}>
             <Text
@@ -157,6 +160,9 @@ const styles = StyleSheet.create({
   },
   emojiLocked: {
     opacity: 0.4,
+  },
+  iconMargin: {
+    marginRight: 10,
   },
   info: {
     flex: 1,

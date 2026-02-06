@@ -4,6 +4,7 @@ import { SupplyId } from "@/engine/types";
 import { SUPPLY_DEFINITIONS } from "@/engine/constants";
 import { formatMoney } from "@/utils/format";
 import GameButton from "@/components/GameButton";
+import PixelIcon from "@/components/PixelIcon";
 import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from "@/theme/pixel";
 
 interface SupplyCardProps {
@@ -41,7 +42,7 @@ export default function SupplyCard({
   return (
     <View style={styles.card}>
       <View style={styles.header}>
-        <Text style={styles.emoji}>{def.emoji}</Text>
+        <PixelIcon emoji={def.emoji} size={22} style={styles.iconMargin} />
         <View style={styles.headerText}>
           <Text style={styles.name}>{def.label}</Text>
           <Text style={styles.packInfo}>
@@ -102,8 +103,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 10,
   },
-  emoji: {
-    fontSize: 22,
+  iconMargin: {
     marginRight: 10,
   },
   headerText: {

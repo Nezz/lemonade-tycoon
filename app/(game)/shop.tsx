@@ -12,6 +12,7 @@ import {
 } from "@/engine/constants";
 import { getEventDefinition } from "@/engine/events";
 import { aggregateEffects } from "@/engine/upgrades";
+import PixelIcon from "@/components/PixelIcon";
 import {
   C,
   PIXEL_FONT,
@@ -93,9 +94,12 @@ export default function ShopScreen() {
           }
           return (
             <View key={`spoil-${id}`} style={styles.spoilWarning}>
-              <Text style={styles.spoilText}>
-                {def.emoji} {expiringAmount} {def.unit} EXPIRING!
-              </Text>
+              <View style={styles.spoilRow}>
+                <PixelIcon emoji={def.emoji} size={14} />
+                <Text style={styles.spoilText}>
+                  {expiringAmount} {def.unit} EXPIRING!
+                </Text>
+              </View>
             </View>
           );
         })}
@@ -134,9 +138,10 @@ export default function ShopScreen() {
             }
             return (
               <View key={id} style={styles.infoRow}>
-                <Text style={styles.infoLabel}>
-                  {def.emoji} {def.label}
-                </Text>
+                <View style={styles.infoLabelRow}>
+                  <PixelIcon emoji={def.emoji} size={14} />
+                  <Text style={styles.infoLabel}>{def.label}</Text>
+                </View>
                 <Text style={styles.infoValue}>{lifeText}</Text>
               </View>
             );
@@ -199,6 +204,12 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: C.red,
   },
+  spoilRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 4,
+  },
   spoilText: {
     fontFamily: PIXEL_FONT,
     fontSize: F.small,
@@ -218,7 +229,13 @@ const styles = StyleSheet.create({
   infoRow: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
     paddingVertical: 4,
+  },
+  infoLabelRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
   },
   infoLabel: {
     fontFamily: PIXEL_FONT,

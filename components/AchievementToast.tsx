@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Animated } from "react-native";
 import { AchievementId } from "@/engine/types";
 import { ACHIEVEMENT_DEFINITIONS } from "@/engine/achievements";
+import PixelIcon from "@/components/PixelIcon";
 import { C, PIXEL_FONT, F } from "@/theme/pixel";
 
 interface AchievementToastProps {
@@ -41,7 +42,7 @@ export default function AchievementToast({
         const def = ACHIEVEMENT_DEFINITIONS[id];
         return (
           <View key={id} style={styles.toast}>
-            <Text style={styles.emoji}>{def.emoji}</Text>
+            <PixelIcon emoji={def.emoji} size={22} />
             <View style={styles.textContainer}>
               <Text style={styles.unlocked}>ACHIEVEMENT!</Text>
               <Text style={styles.name}>{def.name}</Text>
@@ -74,9 +75,6 @@ const styles = StyleSheet.create({
     borderBottomColor: C.borderDark,
     borderRightColor: C.borderDark,
     gap: 8,
-  },
-  emoji: {
-    fontSize: 22,
   },
   textContainer: {
     flex: 1,

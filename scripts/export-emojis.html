@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Emoji → PNG Exporter</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body { font-family: system-ui, sans-serif; background: #1a1a2e; color: #eee; padding: 2rem; }
+      h1 { margin-bottom: 0.5rem; }
+      .controls { display: flex; gap: 1rem; align-items: center; margin: 1rem 0; }
+      .controls label { font-size: 0.9rem; }
+      .controls select, .controls button {
+        padding: 0.5rem 1rem; border-radius: 6px; border: none; font-size: 0.9rem; cursor: pointer;
+      }
+      .controls button { background: #e2b714; color: #1a1a2e; font-weight: 700; }
+      .controls button:hover { background: #f0c930; }
+      .grid {
+        display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 0.75rem; margin-top: 1rem;
+      }
+      .card {
+        background: #16213e; border-radius: 8px; padding: 0.5rem;
+        display: flex; flex-direction: column; align-items: center; gap: 0.25rem;
+      }
+      .card canvas { image-rendering: pixelated; border-radius: 4px; background: transparent; }
+      .card span { font-size: 0.7rem; color: #8888aa; word-break: break-all; text-align: center; }
+      #status { font-size: 0.85rem; color: #8888aa; margin-left: 1rem; }
+    </style>
+  </head>
+  <body>
+    <h1>Lemonade Tycoon — Emoji Exporter</h1>
+    <p style="color:#8888aa">Renders each emoji natively then exports as PNG.</p>
+
+    <div class="controls">
+      <label>Size:
+        <select id="sizeSelect">
+          <option value="32">32 × 32</option>
+          <option value="64">64 × 64</option>
+          <option value="128" selected>128 × 128</option>
+          <option value="256">256 × 256</option>
+        </select>
+      </label>
+      <button id="renderBtn">Re-render</button>
+      <button id="downloadBtn">⬇ Download ZIP</button>
+      <span id="status"></span>
+    </div>
+
+    <div class="grid" id="grid"></div>
+
+    <script>
+      const EMOJIS = [
+        // Weather
+        { emoji: "🔥", name: "fire" },
+        { emoji: "☀️", name: "sunny" },
+        { emoji: "🌤️", name: "partly-cloudy" },
+        { emoji: "☁️", name: "cloudy" },
+        { emoji: "🌧️", name: "rainy" },
+        { emoji: "⛈️", name: "stormy" },
+        { emoji: "🌦️", name: "mixed-weather" },
+        { emoji: "🌡️", name: "thermometer" },
+        { emoji: "❄️", name: "snowflake" },
+        { emoji: "🥶", name: "freezing" },
+
+        // Ingredients & Recipe
+        { emoji: "🍋", name: "lemon" },
+        { emoji: "🍬", name: "sugar" },
+        { emoji: "🧊", name: "ice" },
+        { emoji: "🥤", name: "cup" },
+        { emoji: "🍯", name: "honey" },
+        { emoji: "🫗", name: "pouring" },
+
+        // Events
+        { emoji: "🎪", name: "carnival" },
+        { emoji: "🚧", name: "construction-event" },
+        { emoji: "🔬", name: "science" },
+        { emoji: "📈", name: "trending-up" },
+        { emoji: "📰", name: "news" },
+        { emoji: "⚡", name: "lightning" },
+        { emoji: "🎒", name: "backpack" },
+        { emoji: "🏪", name: "shop" },
+        { emoji: "🏷️", name: "price-tag" },
+
+        // Upgrades
+        { emoji: "🔨", name: "hammer" },
+        { emoji: "🗂️", name: "card-dividers" },
+        { emoji: "🏢", name: "office" },
+        { emoji: "🪧", name: "sign" },
+        { emoji: "📦", name: "package" },
+        { emoji: "🗃️", name: "file-box" },
+        { emoji: "📓", name: "notebook" },
+        { emoji: "🧥", name: "coat" },
+        { emoji: "📄", name: "paper" },
+        { emoji: "🧻", name: "roll" },
+        { emoji: "📋", name: "clipboard" },
+        { emoji: "🔪", name: "knife" },
+        { emoji: "🫙", name: "jar" },
+        { emoji: "📻", name: "radio" },
+        { emoji: "🧮", name: "abacus" },
+        { emoji: "🎨", name: "art" },
+        { emoji: "🛒", name: "cart" },
+        { emoji: "🖊️", name: "pen" },
+        { emoji: "🗄️", name: "cabinet" },
+        { emoji: "☂️", name: "umbrella" },
+        { emoji: "💼", name: "briefcase" },
+        { emoji: "🍽️", name: "dining" },
+        { emoji: "📝", name: "memo" },
+        { emoji: "📊", name: "bar-chart" },
+        { emoji: "🌸", name: "blossom" },
+        { emoji: "🎀", name: "ribbon" },
+        { emoji: "⛺", name: "tent" },
+        { emoji: "🪵", name: "log" },
+        { emoji: "🏕️", name: "camping" },
+        { emoji: "🪑", name: "chair" },
+        { emoji: "🌾", name: "wheat" },
+        { emoji: "🏺", name: "vase" },
+        { emoji: "👤", name: "person" },
+        { emoji: "📱", name: "phone" },
+        { emoji: "💡", name: "lightbulb" },
+        { emoji: "🌳", name: "tree" },
+        { emoji: "💳", name: "credit-card" },
+        { emoji: "🏭", name: "factory" },
+        { emoji: "🏠", name: "house" },
+        { emoji: "💎", name: "diamond" },
+        { emoji: "🔊", name: "speaker" },
+        { emoji: "👷", name: "worker" },
+        { emoji: "💻", name: "laptop" },
+        { emoji: "🎭", name: "theater" },
+        { emoji: "🛡️", name: "shield" },
+        { emoji: "🎉", name: "party" },
+        { emoji: "🤫", name: "secret" },
+        { emoji: "🏬", name: "dept-store" },
+        { emoji: "📺", name: "tv" },
+        { emoji: "🤳", name: "selfie" },
+        { emoji: "🎖️", name: "medal" },
+        { emoji: "🚚", name: "truck" },
+        { emoji: "🤖", name: "robot" },
+        { emoji: "👔", name: "tie" },
+        { emoji: "🏆", name: "trophy" },
+        { emoji: "📲", name: "mobile" },
+        { emoji: "📜", name: "scroll" },
+        { emoji: "🚐", name: "van" },
+        { emoji: "🖥️", name: "desktop" },
+        { emoji: "🏔️", name: "mountain" },
+        { emoji: "👨‍🍳", name: "chef" },
+        { emoji: "🌍", name: "globe" },
+        { emoji: "🚗", name: "car" },
+        { emoji: "👥", name: "people" },
+        { emoji: "🛵", name: "scooter" },
+        { emoji: "🌟", name: "star" },
+        { emoji: "🏟️", name: "stadium" },
+        { emoji: "🏰", name: "castle" },
+        { emoji: "⚗️", name: "alchemy" },
+        { emoji: "🧖", name: "spa" },
+        { emoji: "📡", name: "satellite" },
+        { emoji: "💨", name: "wind" },
+        { emoji: "⚔️", name: "swords" },
+
+        // Tier 6 (no dedicated icon)
+        { emoji: "⭐", name: "star-solid" },
+
+        // Achievements
+        { emoji: "💯", name: "hundred" },
+        { emoji: "🏦", name: "bank" },
+        { emoji: "💪", name: "strong" },
+        { emoji: "👑", name: "crown" },
+        { emoji: "🪙", name: "coin" },
+        { emoji: "📅", name: "calendar" },
+
+        // UI / Misc
+        { emoji: "💸", name: "money-flying" },
+        { emoji: "🏅", name: "sports-medal" },
+      ];
+
+      const grid = document.getElementById("grid");
+      const status = document.getElementById("status");
+
+      function render() {
+        const size = parseInt(document.getElementById("sizeSelect").value);
+        grid.innerHTML = "";
+
+        for (const { emoji, name } of EMOJIS) {
+          const canvas = document.createElement("canvas");
+          canvas.width = size;
+          canvas.height = size;
+          canvas.dataset.name = name;
+
+          const ctx = canvas.getContext("2d");
+          ctx.clearRect(0, 0, size, size);
+          ctx.font = `${size * 0.8}px serif`;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText(emoji, size / 2, size / 2 + size * 0.05);
+
+          const card = document.createElement("div");
+          card.className = "card";
+
+          const display = document.createElement("canvas");
+          display.width = size;
+          display.height = size;
+          display.style.width = "64px";
+          display.style.height = "64px";
+          display.getContext("2d").drawImage(canvas, 0, 0);
+
+          const label = document.createElement("span");
+          label.textContent = `${emoji} ${name}`;
+
+          card.appendChild(display);
+          card.appendChild(label);
+          grid.appendChild(card);
+
+          // store full-res canvas for export
+          card._canvas = canvas;
+        }
+
+        status.textContent = `${EMOJIS.length} emojis rendered at ${size}×${size}`;
+      }
+
+      document.getElementById("renderBtn").addEventListener("click", render);
+
+      document.getElementById("downloadBtn").addEventListener("click", async () => {
+        status.textContent = "Packing ZIP…";
+        const zip = new JSZip();
+
+        for (const card of grid.children) {
+          const canvas = card._canvas;
+          const name = canvas.dataset.name;
+          const blob = await new Promise((r) => canvas.toBlob(r, "image/png"));
+          zip.file(`${name}.png`, blob);
+        }
+
+        const content = await zip.generateAsync({ type: "blob" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(content);
+        a.download = "lemonade-emojis.zip";
+        a.click();
+        URL.revokeObjectURL(a.href);
+        status.textContent = "Done — check your downloads!";
+      });
+
+      render();
+    </script>
+  </body>
+</html>

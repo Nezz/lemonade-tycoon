@@ -7,6 +7,7 @@ import StatRow from "@/components/StatRow";
 import GameButton from "@/components/GameButton";
 import { formatMoney } from "@/utils/format";
 import { VICTORY_REVENUE_GOAL } from "@/engine/constants";
+import PixelIcon from "@/components/PixelIcon";
 import { C, PIXEL_FONT, F, pixelPanel } from "@/theme/pixel";
 import StripedBackground from "@/components/StripedBackground";
 
@@ -32,7 +33,7 @@ export default function VictoryScreen() {
     <StripedBackground color1="#007F2E" color2="#006424">
       <SafeAreaView style={styles.container}>
         <View style={styles.titleSection}>
-          <Text style={styles.emoji}>👑</Text>
+          <PixelIcon emoji="👑" size={56} />
           <Text style={styles.title}>TYCOON!</Text>
           <Text style={styles.subtitle}>
             You reached {formatMoney(VICTORY_REVENUE_GOAL)} in total revenue!
@@ -74,10 +75,6 @@ const styles = StyleSheet.create({
   },
   titleSection: {
     alignItems: "center",
-  },
-  emoji: {
-    fontSize: 56,
-    marginBottom: 8,
   },
   title: {
     fontFamily: PIXEL_FONT,

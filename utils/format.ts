@@ -9,7 +9,9 @@ export function formatMoney(amount: number): string {
  * Format a number with + or - prefix for display.
  */
 export function formatChange(value: number): string {
-  if (value > 0) return `+${value}`;
+  if (value > 0) {
+    return `+${value}`;
+  }
   return `${value}`;
 }
 

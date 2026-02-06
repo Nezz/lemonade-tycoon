@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { ActiveEvent } from "@/engine/types";
+import PixelIcon from "@/components/PixelIcon";
 import { C, PIXEL_FONT, F, pixelBevel } from "@/theme/pixel";
 
 interface EventBannerProps {
@@ -10,7 +11,7 @@ interface EventBannerProps {
 export default function EventBanner({ event }: EventBannerProps) {
   return (
     <View style={styles.banner}>
-      <Text style={styles.emoji}>{event.emoji}</Text>
+      <PixelIcon emoji={event.emoji} size={22} />
       <View style={styles.textContainer}>
         <Text style={styles.name}>{event.name}</Text>
         <Text style={styles.description}>{event.description}</Text>
@@ -35,9 +36,6 @@ const styles = StyleSheet.create({
     borderBottomColor: C.borderDark,
     borderRightColor: C.borderDark,
     gap: 8,
-  },
-  emoji: {
-    fontSize: 22,
   },
   textContainer: {
     flex: 1,

@@ -1,7 +1,7 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { GameState } from '../engine/types';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { GameState } from "@/engine/types";
 
-const SAVE_KEY = '@lemonade_tycoon_save';
+const SAVE_KEY = "@lemonade_tycoon_save";
 
 /**
  * Save game state to AsyncStorage.
@@ -11,7 +11,7 @@ export async function saveGame(state: GameState): Promise<void> {
     const json = JSON.stringify(state);
     await AsyncStorage.setItem(SAVE_KEY, json);
   } catch (error) {
-    console.warn('Failed to save game:', error);
+    console.warn("Failed to save game:", error);
   }
 }
 
@@ -26,7 +26,7 @@ export async function loadGame(): Promise<GameState | null> {
     }
     return null;
   } catch (error) {
-    console.warn('Failed to load game:', error);
+    console.warn("Failed to load game:", error);
     return null;
   }
 }
@@ -50,6 +50,6 @@ export async function deleteSave(): Promise<void> {
   try {
     await AsyncStorage.removeItem(SAVE_KEY);
   } catch (error) {
-    console.warn('Failed to delete save:', error);
+    console.warn("Failed to delete save:", error);
   }
 }

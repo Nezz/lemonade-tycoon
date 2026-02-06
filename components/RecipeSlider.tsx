@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import Slider from "@/components/Slider";
+import PixelIcon from "@/components/PixelIcon";
 import { C, PIXEL_FONT, F } from "@/theme/pixel";
 
 interface RecipeSliderProps {
@@ -29,7 +30,7 @@ export default function RecipeSlider({
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.emoji}>{emoji}</Text>
+        <PixelIcon emoji={emoji} size={16} style={styles.iconMargin} />
         <Text style={styles.label}>{label}</Text>
         <Text style={styles.value}>
           {value} {unit}
@@ -56,8 +57,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 4,
   },
-  emoji: {
-    fontSize: 16,
+  iconMargin: {
     marginRight: 6,
   },
   label: {

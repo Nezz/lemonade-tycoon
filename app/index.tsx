@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import GameButton from "@/components/GameButton";
+import PixelIcon from "@/components/PixelIcon";
 import { useGameStore } from "@/store/gameStore";
 import { hasSavedGame, loadGame } from "@/utils/storage";
 import { C, PIXEL_FONT, F } from "@/theme/pixel";
@@ -47,7 +48,7 @@ export default function TitleScreen() {
     <StripedBackground>
       <SafeAreaView style={styles.container}>
         <View style={styles.titleSection}>
-          <Text style={styles.emoji}>🍋</Text>
+          <PixelIcon emoji="🍋" size={64} />
           <Text style={styles.title}>LEMONADE</Text>
           <Text style={styles.subtitle}>TYCOON</Text>
           <View style={styles.taglineBox}>
@@ -86,10 +87,6 @@ const styles = StyleSheet.create({
   titleSection: {
     alignItems: "center",
     marginBottom: 60,
-  },
-  emoji: {
-    fontSize: 64,
-    marginBottom: 12,
   },
   title: {
     fontFamily: PIXEL_FONT,

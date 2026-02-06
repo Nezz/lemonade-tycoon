@@ -1,5 +1,6 @@
 import { Stack, useRouter } from "expo-router";
 import { Pressable, Text, View, StyleSheet } from "react-native";
+import PixelIcon from "@/components/PixelIcon";
 import { C, PIXEL_FONT, F } from "@/theme/pixel";
 
 const modalOptions = {
@@ -50,7 +51,7 @@ export default function GameLayout() {
           headerBackVisible: false,
           headerTitle: () => (
             <View style={styles.headerTitle}>
-              <Text style={styles.headerEmoji}>🍋</Text>
+              <PixelIcon emoji="🍋" size={F.small} />
               <Text style={styles.headerTitleText}>LEMONADE TYCOON</Text>
             </View>
           ),
@@ -111,9 +112,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
-  },
-  headerEmoji: {
-    fontSize: F.small,
   },
   headerTitleText: {
     fontFamily: PIXEL_FONT,
