@@ -8,6 +8,7 @@ import GameButton from "../../components/GameButton";
 import { formatMoney } from "../../utils/format";
 import { VICTORY_REVENUE_GOAL } from "../../engine/constants";
 import { C, PIXEL_FONT, F, pixelPanel } from "../../theme/pixel";
+import StripedBackground from "../../components/StripedBackground";
 
 export default function VictoryScreen() {
   const router = useRouter();
@@ -28,7 +29,7 @@ export default function VictoryScreen() {
   };
 
   return (
-    <View style={styles.bg}>
+    <StripedBackground color1="#007F2E" color2="#006424">
       <SafeAreaView style={styles.container}>
         <View style={styles.titleSection}>
           <Text style={styles.emoji}>👑</Text>
@@ -60,15 +61,11 @@ export default function VictoryScreen() {
           />
         </View>
       </SafeAreaView>
-    </View>
+    </StripedBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  bg: {
-    flex: 1,
-    backgroundColor: '#007F2E',
-  },
   container: {
     flex: 1,
     padding: 24,

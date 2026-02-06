@@ -9,6 +9,7 @@ import StatRow from "../../components/StatRow";
 import GameButton from "../../components/GameButton";
 import { formatMoney } from "../../utils/format";
 import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from "../../theme/pixel";
+import StripedBackground from "../../components/StripedBackground";
 
 function SatisfactionStars({ satisfaction }: { satisfaction: number }) {
   const filled = Math.round(satisfaction / 20);
@@ -58,6 +59,7 @@ export default function ResultsScreen() {
 
   if (!result) {
     return (
+      <StripedBackground>
       <SafeAreaView style={styles.safeArea} edges={["bottom"]}>
         <View style={styles.center}>
           <Text style={styles.noResult}>NO RESULTS YET</Text>
@@ -67,6 +69,7 @@ export default function ResultsScreen() {
           />
         </View>
       </SafeAreaView>
+      </StripedBackground>
     );
   }
 
@@ -90,6 +93,7 @@ export default function ResultsScreen() {
   const hasAchievements = result.achievementsUnlocked.length > 0;
 
   return (
+    <StripedBackground>
     <SafeAreaView style={styles.safeArea} edges={["bottom"]}>
       <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
         {/* Day header */}
@@ -194,13 +198,13 @@ export default function ResultsScreen() {
         />
       </ScrollView>
     </SafeAreaView>
+    </StripedBackground>
   );
 }
 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: C.bg,
   },
   scroll: {
     flex: 1,
@@ -209,6 +213,9 @@ const styles = StyleSheet.create({
     padding: 12,
     paddingBottom: 32,
     gap: 10,
+    maxWidth: 800,
+    width: '100%',
+    alignSelf: 'center',
   },
   center: {
     flex: 1,

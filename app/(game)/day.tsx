@@ -10,6 +10,7 @@ import InventoryBar from "../../components/InventoryBar";
 import GameButton from "../../components/GameButton";
 import EventBanner from "../../components/EventBanner";
 import AchievementToast from "../../components/AchievementToast";
+import StripedBackground from "../../components/StripedBackground";
 import { cupsFromInventory } from "../../engine/customers";
 import { getRentForDay } from "../../engine/constants";
 import { formatMoney } from "../../utils/format";
@@ -53,6 +54,7 @@ export default function DayScreen() {
   };
 
   return (
+    <StripedBackground>
     <SafeAreaView style={styles.safeArea} edges={["bottom"]}>
       {/* Achievement Toast */}
       <AchievementToast achievementIds={newlyUnlockedAchievements} />
@@ -174,13 +176,13 @@ export default function DayScreen() {
         </View>
       </ScrollView>
     </SafeAreaView>
+    </StripedBackground>
   );
 }
 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: C.bg,
   },
   scroll: {
     flex: 1,

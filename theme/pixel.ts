@@ -50,12 +50,12 @@ export const C = {
   tierPink:     '#E068A0',
 
   achieveGreen: '#109F2D',
-  achievePanel: '#A8F080',
+  achievePanel: '#1B8A30',
   lockedPanel:  '#58A858',
   lockedBorder: '#309830',
 
-  warning:      '#D0F878',
-  warningBorder:'#A4D53B',
+  warning:      '#2E7D18',
+  warningBorder:'#4A9928',
 };
 
 // ── Font Sizes (VT323 is more readable, can use larger sizes) ─

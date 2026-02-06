@@ -1,5 +1,5 @@
 import { Stack, useRouter } from "expo-router";
-import { Pressable, Text, StyleSheet } from "react-native";
+import { Pressable, Text, View, StyleSheet } from "react-native";
 import { C, PIXEL_FONT, F } from "../../theme/pixel";
 
 const modalOptions = {
@@ -43,8 +43,14 @@ export default function GameLayout() {
       <Stack.Screen
         name="day"
         options={{
-          title: "LEMONADE TYCOON",
           headerBackVisible: false,
+          headerTitle: () => (
+            <View style={styles.headerTitle}>
+              <Text style={styles.headerEmoji}>🍋</Text>
+              <Text style={styles.headerTitleText}>LEMONADE TYCOON</Text>
+            </View>
+          ),
+          headerTitleAlign: 'center',
         }}
       />
       <Stack.Screen
@@ -65,6 +71,7 @@ export default function GameLayout() {
           title: "DAY RESULTS",
           headerBackVisible: false,
           gestureEnabled: false,
+          headerTitleAlign: 'center',
         }}
       />
       <Stack.Screen
@@ -96,6 +103,19 @@ export default function GameLayout() {
 }
 
 const styles = StyleSheet.create({
+  headerTitle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  headerEmoji: {
+    fontSize: F.small,
+  },
+  headerTitleText: {
+    fontFamily: PIXEL_FONT,
+    fontSize: F.small,
+    color: C.text,
+  },
   closeBtn: {
     paddingLeft: 16,
     paddingVertical: 4,

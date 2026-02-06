@@ -7,6 +7,7 @@ import UpgradeCard from '../../components/UpgradeCard';
 import { UPGRADE_IDS, UPGRADE_DEFINITIONS, TIER_NAMES, TIER_COUNT } from '../../engine/constants';
 import { UpgradeId } from '../../engine/types';
 import { C, PIXEL_FONT, F, pixelTrack, pixelFill } from '../../theme/pixel';
+import StripedBackground from '../../components/StripedBackground';
 
 const TIER_COLORS: Record<number, string> = {
   1: C.tierGray,
@@ -75,6 +76,7 @@ export default function UpgradesScreen() {
   };
 
   return (
+    <StripedBackground>
     <SafeAreaView style={styles.safeArea} edges={['bottom']}>
       <ScrollView
         style={styles.scroll}
@@ -142,13 +144,13 @@ export default function UpgradesScreen() {
         })}
       </ScrollView>
     </SafeAreaView>
+    </StripedBackground>
   );
 }
 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: C.bg,
   },
   scroll: {
     flex: 1,
@@ -175,7 +177,7 @@ const styles = StyleSheet.create({
   progressText: {
     fontFamily: PIXEL_FONT,
     fontSize: F.small,
-    color: C.panel,
+    color: C.textLight,
   },
   tierSection: {
     marginBottom: 8,
@@ -216,7 +218,7 @@ const styles = StyleSheet.create({
   tierTitle: {
     fontFamily: PIXEL_FONT,
     fontSize: F.small,
-    color: C.panel,
+    color: C.textLight,
   },
   tierProgress: {
     fontFamily: PIXEL_FONT,

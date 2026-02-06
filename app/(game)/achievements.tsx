@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useGameStore } from '../../store/gameStore';
 import { ACHIEVEMENT_DEFINITIONS, ACHIEVEMENT_IDS } from '../../engine/achievements';
 import { C, PIXEL_FONT, F, pixelPanel, pixelBevel, pixelTrack, pixelFill } from '../../theme/pixel';
+import StripedBackground from '../../components/StripedBackground';
 
 export default function AchievementsScreen() {
   const achievements = useGameStore((s) => s.achievements);
@@ -12,6 +13,7 @@ export default function AchievementsScreen() {
   const locked = ACHIEVEMENT_IDS.filter((id) => !achievements[id]);
 
   return (
+    <StripedBackground>
     <SafeAreaView style={styles.safeArea} edges={['bottom']}>
       <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
         {/* Progress */}
@@ -76,13 +78,13 @@ export default function AchievementsScreen() {
         )}
       </ScrollView>
     </SafeAreaView>
+    </StripedBackground>
   );
 }
 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: C.bg,
   },
   scroll: {
     flex: 1,
@@ -123,7 +125,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontFamily: PIXEL_FONT,
     fontSize: F.body,
-    color: C.panel,
+    color: C.textLight,
     marginBottom: 2,
   },
   achievementCard: {

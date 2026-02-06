@@ -8,6 +8,7 @@ import GameButton from "../../components/GameButton";
 import { formatMoney } from "../../utils/format";
 import { deleteSave } from "../../utils/storage";
 import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from "../../theme/pixel";
+import StripedBackground from "../../components/StripedBackground";
 
 export default function GameOverScreen() {
   const router = useRouter();
@@ -28,7 +29,7 @@ export default function GameOverScreen() {
   };
 
   return (
-    <View style={styles.bg}>
+    <StripedBackground color1={C.redDark} color2="#8B1A1A">
       <SafeAreaView style={styles.container}>
         <View style={styles.titleSection}>
           <Text style={styles.emoji}>💸</Text>
@@ -62,15 +63,11 @@ export default function GameOverScreen() {
           />
         </View>
       </SafeAreaView>
-    </View>
+    </StripedBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  bg: {
-    flex: 1,
-    backgroundColor: C.redDark,
-  },
   container: {
     flex: 1,
     padding: 24,

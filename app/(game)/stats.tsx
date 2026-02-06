@@ -6,6 +6,7 @@ import StatRow from '../../components/StatRow';
 import MiniBarChart from '../../components/MiniBarChart';
 import { formatMoney } from '../../utils/format';
 import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from '../../theme/pixel';
+import StripedBackground from '../../components/StripedBackground';
 
 export default function StatsScreen() {
   const stats = useGameStore((s) => s.stats);
@@ -38,6 +39,7 @@ export default function StatsScreen() {
     : 0;
 
   return (
+    <StripedBackground>
     <SafeAreaView style={styles.safeArea} edges={['bottom']}>
       <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
         {/* Profit Chart */}
@@ -93,13 +95,13 @@ export default function StatsScreen() {
         </View>
       </ScrollView>
     </SafeAreaView>
+    </StripedBackground>
   );
 }
 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: C.bg,
   },
   scroll: {
     flex: 1,

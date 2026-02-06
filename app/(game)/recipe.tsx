@@ -18,6 +18,7 @@ import {
 } from '../../engine/constants';
 import { aggregateEffects } from '../../engine/upgrades';
 import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from '../../theme/pixel';
+import StripedBackground from '../../components/StripedBackground';
 
 export default function RecipeScreen() {
   const recipe = useGameStore((s) => s.recipe);
@@ -38,6 +39,7 @@ export default function RecipeScreen() {
   const showProfitPerCup = effects.showProfitPerCup;
 
   return (
+    <StripedBackground>
     <SafeAreaView style={styles.safeArea} edges={['bottom']}>
       <ScrollView
         style={styles.scroll}
@@ -137,13 +139,13 @@ export default function RecipeScreen() {
         </View>
       </ScrollView>
     </SafeAreaView>
+    </StripedBackground>
   );
 }
 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: C.bg,
   },
   scroll: {
     flex: 1,

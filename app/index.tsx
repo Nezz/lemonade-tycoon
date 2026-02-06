@@ -6,6 +6,7 @@ import GameButton from "../components/GameButton";
 import { useGameStore } from "../store/gameStore";
 import { hasSavedGame, loadGame } from "../utils/storage";
 import { C, PIXEL_FONT, F } from "../theme/pixel";
+import StripedBackground from "../components/StripedBackground";
 
 export default function TitleScreen() {
   const router = useRouter();
@@ -43,7 +44,7 @@ export default function TitleScreen() {
   };
 
   return (
-    <View style={styles.bg}>
+    <StripedBackground>
       <SafeAreaView style={styles.container}>
         <View style={styles.titleSection}>
           <Text style={styles.emoji}>🍋</Text>
@@ -71,15 +72,11 @@ export default function TitleScreen() {
 
         <Text style={styles.version}>v1.0</Text>
       </SafeAreaView>
-    </View>
+    </StripedBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  bg: {
-    flex: 1,
-    backgroundColor: C.bg,
-  },
   container: {
     flex: 1,
     alignItems: "center",
@@ -117,7 +114,7 @@ const styles = StyleSheet.create({
   tagline: {
     fontFamily: PIXEL_FONT,
     fontSize: F.small,
-    color: C.panel,
+    color: C.textLight,
     textAlign: "center",
   },
   buttonSection: {

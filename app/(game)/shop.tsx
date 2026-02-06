@@ -10,6 +10,7 @@ import { SUPPLY_IDS, SUPPLY_DEFINITIONS, MAX_INVENTORY_BASE } from '../../engine
 import { getEventDefinition } from '../../engine/events';
 import { aggregateEffects } from '../../engine/upgrades';
 import { C, PIXEL_FONT, F, pixelPanel, pixelBevel, pixelTrack, pixelFill } from '../../theme/pixel';
+import StripedBackground from '../../components/StripedBackground';
 
 export default function ShopScreen() {
   const money = useGameStore((s) => s.money);
@@ -31,6 +32,7 @@ export default function ShopScreen() {
   const isFull = totalInventory >= maxInventory;
 
   return (
+    <StripedBackground>
     <SafeAreaView style={styles.safeArea} edges={['bottom']}>
       <ScrollView
         style={styles.scroll}
@@ -119,13 +121,13 @@ export default function ShopScreen() {
         </View>
       </ScrollView>
     </SafeAreaView>
+    </StripedBackground>
   );
 }
 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: C.bg,
   },
   scroll: {
     flex: 1,
