@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { useRouter } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import GameButton from '../components/GameButton';
-import { useGameStore } from '../store/gameStore';
-import { hasSavedGame, loadGame } from '../utils/storage';
-import { C, PIXEL_FONT, F } from '../theme/pixel';
+import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet } from "react-native";
+import { useRouter } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
+import GameButton from "../components/GameButton";
+import { useGameStore } from "../store/gameStore";
+import { hasSavedGame, loadGame } from "../utils/storage";
+import { C, PIXEL_FONT, F } from "../theme/pixel";
 
 export default function TitleScreen() {
   const router = useRouter();
@@ -23,21 +23,21 @@ export default function TitleScreen() {
 
   const handleNewGame = () => {
     resetGame();
-    router.replace('/(game)/day');
+    router.replace("/(game)/day");
   };
 
   const handleContinue = async () => {
     const saved = await loadGame();
     if (saved) {
       loadState(saved);
-      if (saved.phase === 'gameover') {
-        router.replace('/(game)/gameover');
-      } else if (saved.phase === 'victory') {
-        router.replace('/(game)/victory');
-      } else if (saved.phase === 'results') {
-        router.replace('/(game)/results');
+      if (saved.phase === "gameover") {
+        router.replace("/(game)/gameover");
+      } else if (saved.phase === "victory") {
+        router.replace("/(game)/victory");
+      } else if (saved.phase === "results") {
+        router.replace("/(game)/results");
       } else {
-        router.replace('/(game)/day');
+        router.replace("/(game)/day");
       }
     }
   };
@@ -82,12 +82,12 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     paddingHorizontal: 32,
   },
   titleSection: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 60,
   },
   emoji: {
@@ -96,13 +96,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: PIXEL_FONT,
-    fontSize: 48,
+    fontSize: 72,
     color: C.goldBright,
     letterSpacing: 4,
   },
   subtitle: {
     fontFamily: PIXEL_FONT,
-    fontSize: 36,
+    fontSize: 54,
     color: C.gold,
     marginTop: 4,
   },
@@ -118,17 +118,18 @@ const styles = StyleSheet.create({
     fontFamily: PIXEL_FONT,
     fontSize: F.small,
     color: C.panel,
-    textAlign: 'center',
+    textAlign: "center",
   },
   buttonSection: {
-    width: '100%',
+    width: "100%",
+    maxWidth: 400,
     gap: 12,
   },
   button: {
-    width: '100%',
+    width: "100%",
   },
   version: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 40,
     fontFamily: PIXEL_FONT,
     fontSize: F.tiny,

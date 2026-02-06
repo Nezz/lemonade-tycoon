@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: PIXEL_FONT,
-    fontSize: 40,
+    fontSize: 60,
     color: C.redLight,
   },
   subtitle: {
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     color: '#FFB0B0',
     textAlign: 'center',
     marginTop: 10,
-    lineHeight: 24,
+    lineHeight: 36,
   },
   card: {
     ...pixelPanel,

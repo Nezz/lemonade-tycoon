@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
     fontSize: F.tiny,
     color: C.textLight,
     marginTop: 3,
-    lineHeight: 20,
+    lineHeight: 30,
   },
   descLocked: {
     color: C.textMuted,

@@ -1,20 +1,20 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { useRouter } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useGameStore } from '../../store/gameStore';
-import StandPlaceholder from '../../components/StandPlaceholder';
-import WeatherBadge from '../../components/WeatherBadge';
-import MoneyDisplay from '../../components/MoneyDisplay';
-import InventoryBar from '../../components/InventoryBar';
-import GameButton from '../../components/GameButton';
-import EventBanner from '../../components/EventBanner';
-import AchievementToast from '../../components/AchievementToast';
-import { cupsFromInventory } from '../../engine/customers';
-import { getRentForDay } from '../../engine/constants';
-import { formatMoney } from '../../utils/format';
-import { aggregateEffects } from '../../engine/upgrades';
-import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from '../../theme/pixel';
+import React from "react";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { useRouter } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useGameStore } from "../../store/gameStore";
+import StandPlaceholder from "../../components/StandPlaceholder";
+import WeatherBadge from "../../components/WeatherBadge";
+import MoneyDisplay from "../../components/MoneyDisplay";
+import InventoryBar from "../../components/InventoryBar";
+import GameButton from "../../components/GameButton";
+import EventBanner from "../../components/EventBanner";
+import AchievementToast from "../../components/AchievementToast";
+import { cupsFromInventory } from "../../engine/customers";
+import { getRentForDay } from "../../engine/constants";
+import { formatMoney } from "../../utils/format";
+import { aggregateEffects } from "../../engine/upgrades";
+import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from "../../theme/pixel";
 
 export default function DayScreen() {
   const router = useRouter();
@@ -29,7 +29,9 @@ export default function DayScreen() {
   const activeEvent = useGameStore((s) => s.activeEvent);
   const startDay = useGameStore((s) => s.startDay);
   const phase = useGameStore((s) => s.phase);
-  const newlyUnlockedAchievements = useGameStore((s) => s.newlyUnlockedAchievements);
+  const newlyUnlockedAchievements = useGameStore(
+    (s) => s.newlyUnlockedAchievements,
+  );
 
   const cupsMakeable = cupsFromInventory(inventory, recipe);
   const canStart = cupsMakeable > 0;
@@ -41,17 +43,17 @@ export default function DayScreen() {
   const handleStartDay = () => {
     const result = startDay();
     const currentPhase = useGameStore.getState().phase;
-    if (currentPhase === 'victory') {
-      router.push('/(game)/victory');
-    } else if (currentPhase === 'gameover') {
-      router.push('/(game)/gameover');
+    if (currentPhase === "victory") {
+      router.push("/(game)/victory");
+    } else if (currentPhase === "gameover") {
+      router.push("/(game)/gameover");
     } else {
-      router.push('/(game)/results');
+      router.push("/(game)/results");
     }
   };
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={['bottom']}>
+    <SafeAreaView style={styles.safeArea} edges={["bottom"]}>
       {/* Achievement Toast */}
       <AchievementToast achievementIds={newlyUnlockedAchievements} />
 
@@ -69,8 +71,13 @@ export default function DayScreen() {
             <MoneyDisplay amount={money} />
           </View>
           <View style={styles.weatherRow}>
-            <WeatherBadge weather={weather} label={`Today: ${weather.charAt(0).toUpperCase() + weather.slice(1)}`} />
-            {effects.showForecast && <WeatherBadge weather={forecast} label="Tomorrow" small />}
+            <WeatherBadge
+              weather={weather}
+              label={`Today: ${weather.charAt(0).toUpperCase() + weather.slice(1)}`}
+            />
+            {effects.showForecast && (
+              <WeatherBadge weather={forecast} label="Tomorrow" small />
+            )}
           </View>
         </View>
 
@@ -105,7 +112,9 @@ export default function DayScreen() {
               <View style={styles.summaryDivider} />
               <View style={styles.summaryItem}>
                 <Text style={styles.summaryLabel}>PASSIVE</Text>
-                <Text style={styles.summaryValueGreen}>+{formatMoney(passiveIncome)}</Text>
+                <Text style={styles.summaryValueGreen}>
+                  +{formatMoney(passiveIncome)}
+                </Text>
               </View>
             </>
           )}
@@ -125,13 +134,13 @@ export default function DayScreen() {
           <View style={styles.actionRow}>
             <GameButton
               title="SHOP"
-              onPress={() => router.push('/(game)/shop')}
+              onPress={() => router.push("/(game)/shop")}
               variant="secondary"
               style={styles.actionBtn}
             />
             <GameButton
               title="RECIPE"
-              onPress={() => router.push('/(game)/recipe')}
+              onPress={() => router.push("/(game)/recipe")}
               variant="secondary"
               style={styles.actionBtn}
             />
@@ -139,25 +148,25 @@ export default function DayScreen() {
           <View style={styles.actionRow}>
             <GameButton
               title="UPGRADES"
-              onPress={() => router.push('/(game)/upgrades')}
+              onPress={() => router.push("/(game)/upgrades")}
               variant="secondary"
               style={styles.actionBtn}
             />
             <GameButton
               title="STATS"
-              onPress={() => router.push('/(game)/stats')}
+              onPress={() => router.push("/(game)/stats")}
               variant="secondary"
               style={styles.actionBtn}
             />
           </View>
           <GameButton
             title="ACHIEVEMENTS"
-            onPress={() => router.push('/(game)/achievements')}
+            onPress={() => router.push("/(game)/achievements")}
             variant="secondary"
             style={styles.fullBtn}
           />
           <GameButton
-            title={canStart ? 'OPEN FOR BUSINESS!' : 'NEED SUPPLIES!'}
+            title={canStart ? "OPEN FOR BUSINESS!" : "NEED SUPPLIES!"}
             onPress={handleStartDay}
             disabled={!canStart}
             style={styles.fullBtn}
@@ -184,9 +193,9 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   dayInfo: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 8,
   },
   dayLabel: {
@@ -195,12 +204,12 @@ const styles = StyleSheet.create({
     color: C.gold,
   },
   weatherRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 6,
   },
   summary: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     ...pixelPanel,
     ...pixelBevel,
     marginTop: 8,
@@ -208,7 +217,7 @@ const styles = StyleSheet.create({
   },
   summaryItem: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
   },
   summaryDivider: {
     width: 2,
@@ -241,13 +250,13 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   actionRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 8,
   },
   actionBtn: {
     flex: 1,
   },
   fullBtn: {
-    width: '100%',
+    width: "100%",
   },
 });
