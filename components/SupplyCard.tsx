@@ -14,6 +14,7 @@ interface SupplyCardProps {
   maxInventory: number;
   money: number;
   onBuy: (supplyId: SupplyId, packs: number) => boolean;
+  onDiscard: (supplyId: SupplyId, amount: number) => boolean;
 }
 
 export default function SupplyCard({
@@ -23,6 +24,7 @@ export default function SupplyCard({
   maxInventory,
   money,
   onBuy,
+  onDiscard,
 }: SupplyCardProps) {
   const [packs, setPacks] = useState(1);
   const def = SUPPLY_DEFINITIONS[supplyId];
@@ -32,9 +34,17 @@ export default function SupplyCard({
   const isFull = totalInventory >= maxInventory;
   const spaceLeft = maxInventory - totalInventory;
   const unitsKept = Math.min(totalUnits, spaceLeft);
+  const discardAmount = Math.min(totalUnits, currentStock);
 
   const handleBuy = () => {
     const success = onBuy(supplyId, packs);
+    if (success) {
+      setPacks(1);
+    }
+  };
+
+  const handleDiscard = () => {
+    const success = onDiscard(supplyId, discardAmount);
     if (success) {
       setPacks(1);
     }
@@ -82,13 +92,24 @@ export default function SupplyCard({
           </Text>
         </View>
 
-        <GameButton
-          title={isFull ? "FULL" : "BUY"}
-          onPress={handleBuy}
-          disabled={!canAfford || isFull}
-          small
-          style={styles.buyBtn}
-        />
+        {isFull ? (
+          <GameButton
+            title="DUMP"
+            onPress={handleDiscard}
+            disabled={currentStock === 0}
+            variant="danger"
+            small
+            style={styles.buyBtn}
+          />
+        ) : (
+          <GameButton
+            title="BUY"
+            onPress={handleBuy}
+            disabled={!canAfford}
+            small
+            style={styles.buyBtn}
+          />
+        )}
       </View>
     </View>
   );

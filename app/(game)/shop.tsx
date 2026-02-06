@@ -30,6 +30,7 @@ export default function ShopScreen() {
   const inventoryBatches = useGameStore((s) => s.inventoryBatches);
   const day = useGameStore((s) => s.day);
   const buySupply = useGameStore((s) => s.buySupply);
+  const discardSupply = useGameStore((s) => s.discardSupply);
   const activeEvent = useGameStore((s) => s.activeEvent);
   const upgrades = useGameStore((s) => s.upgrades);
   const effects = aggregateEffects(upgrades);
@@ -113,6 +114,7 @@ export default function ShopScreen() {
             maxInventory={maxInventory}
             money={money}
             onBuy={buySupply}
+            onDiscard={discardSupply}
           />
         ))}
 

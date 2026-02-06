@@ -27,6 +27,7 @@ import { saveGame } from "@/utils/storage";
 interface GameActions {
   // ── Supply Actions ──────────────────────────────────────────────────
   buySupply: (supplyId: SupplyId, packs: number) => boolean;
+  discardSupply: (supplyId: SupplyId, amount: number) => boolean;
 
   // ── Recipe Actions ──────────────────────────────────────────────────
   setRecipe: (recipe: Partial<Recipe>) => void;
@@ -116,6 +117,49 @@ export const useGameStore = create<GameStore>((set, get) => ({
       inventoryBatches: updatedBatches,
       totalSpentToday:
         Math.round((state.totalSpentToday + totalCost) * 100) / 100,
+    });
+
+    return true;
+  },
+
+  // ── Discard Supplies ─────────────────────────────────────────────────
+
+  discardSupply: (supplyId: SupplyId, amount: number) => {
+    const state = get();
+    const current = state.inventory[supplyId];
+    if (current === 0) {
+      return false;
+    }
+
+    const toRemove = Math.min(amount, current);
+
+    // Drain from oldest batches first (FIFO)
+    let remaining = toRemove;
+    const batches = [...state.inventoryBatches[supplyId]];
+    const updatedBatches: typeof batches = [];
+    for (const batch of batches) {
+      if (remaining <= 0) {
+        updatedBatches.push(batch);
+        continue;
+      }
+      if (batch.amount <= remaining) {
+        remaining -= batch.amount;
+        // batch fully consumed — skip it
+      } else {
+        updatedBatches.push({ ...batch, amount: batch.amount - remaining });
+        remaining = 0;
+      }
+    }
+
+    set({
+      inventory: {
+        ...state.inventory,
+        [supplyId]: current - toRemove,
+      },
+      inventoryBatches: {
+        ...state.inventoryBatches,
+        [supplyId]: updatedBatches,
+      },
     });
 
     return true;
