@@ -1,11 +1,11 @@
-import { WeatherType, Recipe, UpgradeId, ActiveEvent } from './types';
+import { WeatherType, Recipe, UpgradeId, ActiveEvent } from "@/engine/types";
 import {
   WEATHER_DATA,
   BASE_DEMAND,
   DEMAND_GROWTH_PER_DAY,
-} from './constants';
-import { getEventDefinition } from './events';
-import { AggregatedEffects, aggregateEffects } from './upgrades';
+} from "@/engine/constants";
+import { getEventDefinition } from "@/engine/events";
+import { AggregatedEffects, aggregateEffects } from "@/engine/upgrades";
 
 /**
  * Clamp a number between min and max.
@@ -20,7 +20,9 @@ function clamp(value: number, min: number, max: number): number {
  */
 function ingredientScore(value: number, ideal: [number, number]): number {
   const [lo, hi] = ideal;
-  if (value >= lo && value <= hi) return 1.0;
+  if (value >= lo && value <= hi) {
+    return 1.0;
+  }
   const distance = value < lo ? lo - value : value - hi;
   return Math.max(0.3, 1.0 - distance * 0.2);
 }
@@ -33,7 +35,7 @@ export function recipeQuality(
   recipe: Recipe,
   weather: WeatherType,
   event: ActiveEvent | null,
-  effects?: AggregatedEffects
+  effects?: AggregatedEffects,
 ): number {
   const info = WEATHER_DATA[weather];
 
@@ -54,8 +56,8 @@ export function recipeQuality(
   const iceScore = ingredientScore(recipe.icePerCup, info.idealIce);
 
   // Weighted average: ice matters more in hot weather, sugar in cold
-  const iceWeight = weather === 'hot' || weather === 'sunny' ? 0.4 : 0.25;
-  const sugarWeight = weather === 'rainy' || weather === 'stormy' ? 0.4 : 0.25;
+  const iceWeight = weather === "hot" || weather === "sunny" ? 0.4 : 0.25;
+  const sugarWeight = weather === "rainy" || weather === "stormy" ? 0.4 : 0.25;
   const lemonWeight = 1.0 - iceWeight - sugarWeight;
 
   let quality =
@@ -66,7 +68,7 @@ export function recipeQuality(
 
   // Apply aggregated recipe quality bonus
   if (effects && effects.recipeQuality > 0) {
-    quality *= (1 + effects.recipeQuality);
+    quality *= 1 + effects.recipeQuality;
   }
 
   return quality;
@@ -91,7 +93,10 @@ export function reputationModifier(reputation: number): number {
  * Calculate the demand bonus from upgrades via aggregated effects.
  * Handles weather penalty reduction as continuous scaling.
  */
-export function upgradeBonus(effects: AggregatedEffects, weather: WeatherType): number {
+export function upgradeBonus(
+  effects: AggregatedEffects,
+  weather: WeatherType,
+): number {
   let bonus = 1.0;
 
   // Awareness bonus (from signage, marketing, staff, specials)
@@ -101,10 +106,10 @@ export function upgradeBonus(effects: AggregatedEffects, weather: WeatherType): 
   const weatherMult = WEATHER_DATA[weather].demandMultiplier;
   if (weatherMult < 1.0) {
     const penalty = 1.0 - weatherMult;
-    if (weather === 'rainy' || weather === 'stormy') {
+    if (weather === "rainy" || weather === "stormy") {
       // Rain reduction applies to rainy/stormy weather
       bonus += penalty * effects.rainReduction;
-    } else if (weather === 'cloudy') {
+    } else if (weather === "cloudy") {
       // Cold reduction applies to cloudy weather
       bonus += penalty * effects.coldReduction;
     }
@@ -130,7 +135,7 @@ export function calculateDemand(
   recipe: Recipe,
   reputation: number,
   upgrades: Record<UpgradeId, boolean>,
-  event: ActiveEvent | null
+  event: ActiveEvent | null,
 ): number {
   const effects = aggregateEffects(upgrades);
 
@@ -154,13 +159,17 @@ export function calculateDemand(
     if (eventDef.demandMultiplier > 1.0 && effects.eventBonusMult > 0) {
       const bonus = eventDef.demandMultiplier - 1.0;
       eventMod = 1.0 + bonus * (1 + effects.eventBonusMult);
-    } else if (eventDef.demandMultiplier < 1.0 && effects.eventPenaltyReduction > 0) {
+    } else if (
+      eventDef.demandMultiplier < 1.0 &&
+      effects.eventPenaltyReduction > 0
+    ) {
       const penalty = 1.0 - eventDef.demandMultiplier;
       eventMod = 1.0 - penalty * (1 - effects.eventPenaltyReduction);
     }
   }
 
-  const rawDemand = base * weatherMod * priceMod * qualityMod * repMod * upgMod * eventMod;
+  const rawDemand =
+    base * weatherMod * priceMod * qualityMod * repMod * upgMod * eventMod;
 
   // maxServedBonus caps max demand (like having more capacity)
   return Math.floor(rawDemand * maxServedMult);
@@ -171,9 +180,13 @@ export function calculateDemand(
  */
 export function cupsFromInventory(
   inventory: { lemons: number; sugar: number; ice: number; cups: number },
-  recipe: Recipe
+  recipe: Recipe,
 ): number {
-  if (recipe.lemonsPerCup === 0 || recipe.sugarPerCup === 0 || recipe.icePerCup === 0) {
+  if (
+    recipe.lemonsPerCup === 0 ||
+    recipe.sugarPerCup === 0 ||
+    recipe.icePerCup === 0
+  ) {
     return 0;
   }
 
@@ -194,7 +207,7 @@ export function calculateSatisfaction(
   weather: WeatherType,
   pricePerCup: number,
   event: ActiveEvent | null,
-  effects?: AggregatedEffects
+  effects?: AggregatedEffects,
 ): number {
   const quality = recipeQuality(recipe, weather, event, effects);
   const priceFairness = clamp(1.5 - pricePerCup * 0.4, 0.3, 1.2);

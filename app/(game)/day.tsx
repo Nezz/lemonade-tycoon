@@ -1,20 +1,20 @@
 import React from "react";
 import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
 import { useRouter } from "expo-router";
-import { useGameStore } from "../../store/gameStore";
-import StandPlaceholder from "../../components/StandPlaceholder";
-import WeatherBadge from "../../components/WeatherBadge";
-import MoneyDisplay from "../../components/MoneyDisplay";
-import InventoryBar from "../../components/InventoryBar";
-import GameButton from "../../components/GameButton";
-import EventBanner from "../../components/EventBanner";
-import AchievementToast from "../../components/AchievementToast";
-import StripedBackground from "../../components/StripedBackground";
-import { cupsFromInventory } from "../../engine/customers";
-import { getRentForDay } from "../../engine/constants";
-import { formatMoney } from "../../utils/format";
-import { aggregateEffects } from "../../engine/upgrades";
-import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from "../../theme/pixel";
+import { useGameStore } from "@/store/gameStore";
+import StandPlaceholder from "@/components/StandPlaceholder";
+import WeatherBadge from "@/components/WeatherBadge";
+import MoneyDisplay from "@/components/MoneyDisplay";
+import InventoryBar from "@/components/InventoryBar";
+import GameButton from "@/components/GameButton";
+import EventBanner from "@/components/EventBanner";
+import AchievementToast from "@/components/AchievementToast";
+import StripedBackground from "@/components/StripedBackground";
+import { cupsFromInventory } from "@/engine/customers";
+import { getRentForDay } from "@/engine/constants";
+import { formatMoney } from "@/utils/format";
+import { aggregateEffects } from "@/engine/upgrades";
+import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from "@/theme/pixel";
 
 export default function DayScreen() {
   const router = useRouter();
@@ -187,8 +187,8 @@ const styles = StyleSheet.create({
     padding: 12,
     paddingBottom: 32,
     maxWidth: 800,
-    width: '100%',
-    alignSelf: 'center',
+    width: "100%",
+    alignSelf: "center",
   },
   header: {
     marginBottom: 6,

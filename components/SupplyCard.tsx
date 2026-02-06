@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { SupplyId } from '../engine/types';
-import { SUPPLY_DEFINITIONS } from '../engine/constants';
-import { formatMoney } from '../utils/format';
-import GameButton from './GameButton';
-import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from '../theme/pixel';
+import React, { useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { SupplyId } from "@/engine/types";
+import { SUPPLY_DEFINITIONS } from "@/engine/constants";
+import { formatMoney } from "@/utils/format";
+import GameButton from "@/components/GameButton";
+import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from "@/theme/pixel";
 
 interface SupplyCardProps {
   supplyId: SupplyId;
@@ -33,7 +33,9 @@ export default function SupplyCard({
 
   const handleBuy = () => {
     const success = onBuy(supplyId, packs);
-    if (success) setPacks(1);
+    if (success) {
+      setPacks(1);
+    }
   };
 
   return (
@@ -78,7 +80,7 @@ export default function SupplyCard({
         </View>
 
         <GameButton
-          title={isFull ? 'FULL' : wouldExceedMax ? 'OVER' : 'BUY'}
+          title={isFull ? "FULL" : wouldExceedMax ? "OVER" : "BUY"}
           onPress={handleBuy}
           disabled={!canAfford || wouldExceedMax}
           small
@@ -96,8 +98,8 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 10,
   },
   emoji: {
@@ -132,13 +134,13 @@ const styles = StyleSheet.create({
     color: C.text,
   },
   controls: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 10,
   },
   quantityRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 2,
   },
   qtyBtn: {
@@ -155,11 +157,11 @@ const styles = StyleSheet.create({
     fontSize: F.body,
     color: C.text,
     minWidth: 20,
-    textAlign: 'center',
+    textAlign: "center",
   },
   costInfo: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
   },
   costLabel: {
     fontFamily: PIXEL_FONT,

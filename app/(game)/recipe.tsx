@@ -1,12 +1,12 @@
-import React from 'react';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
-import { useGameStore } from '../../store/gameStore';
-import RecipeSlider from '../../components/RecipeSlider';
-import Slider from '../../components/Slider';
-import InventoryBar from '../../components/InventoryBar';
-import { cupsFromInventory } from '../../engine/customers';
-import { costPerCup } from '../../engine/simulation';
-import { formatMoney } from '../../utils/format';
+import React from "react";
+import { View, Text, ScrollView, StyleSheet } from "react-native";
+import { useGameStore } from "@/store/gameStore";
+import RecipeSlider from "@/components/RecipeSlider";
+import Slider from "@/components/Slider";
+import InventoryBar from "@/components/InventoryBar";
+import { cupsFromInventory } from "@/engine/customers";
+import { costPerCup } from "@/engine/simulation";
+import { formatMoney } from "@/utils/format";
 import {
   MIN_INGREDIENT,
   MAX_INGREDIENT,
@@ -14,10 +14,10 @@ import {
   MAX_PRICE,
   PRICE_STEP,
   WEATHER_DATA,
-} from '../../engine/constants';
-import { aggregateEffects } from '../../engine/upgrades';
-import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from '../../theme/pixel';
-import StripedBackground from '../../components/StripedBackground';
+} from "@/engine/constants";
+import { aggregateEffects } from "@/engine/upgrades";
+import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from "@/theme/pixel";
+import StripedBackground from "@/components/StripedBackground";
 
 export default function RecipeScreen() {
   const recipe = useGameStore((s) => s.recipe);
@@ -39,10 +39,7 @@ export default function RecipeScreen() {
 
   return (
     <StripedBackground>
-      <ScrollView
-        style={styles.scroll}
-        contentContainerStyle={styles.content}
-      >
+      <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
         <InventoryBar inventory={inventory} />
 
         {/* Recipe Sliders */}
@@ -114,7 +111,9 @@ export default function RecipeScreen() {
         <View style={styles.summaryCard}>
           <View style={styles.summaryRow}>
             <Text style={styles.summaryLabel}>Cost</Text>
-            <Text style={styles.summaryValue}>{formatMoney(ingredientCost)}</Text>
+            <Text style={styles.summaryValue}>
+              {formatMoney(ingredientCost)}
+            </Text>
           </View>
           {showProfitPerCup && (
             <View style={styles.summaryRow}>
@@ -160,7 +159,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   priceRow: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 10,
   },
   priceValue: {
@@ -173,8 +172,8 @@ const styles = StyleSheet.create({
     ...pixelBevel,
   },
   summaryRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     paddingVertical: 4,
   },
   summaryLabel: {

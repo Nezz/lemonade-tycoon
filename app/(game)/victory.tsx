@@ -2,13 +2,13 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useGameStore } from "../../store/gameStore";
-import StatRow from "../../components/StatRow";
-import GameButton from "../../components/GameButton";
-import { formatMoney } from "../../utils/format";
-import { VICTORY_REVENUE_GOAL } from "../../engine/constants";
-import { C, PIXEL_FONT, F, pixelPanel } from "../../theme/pixel";
-import StripedBackground from "../../components/StripedBackground";
+import { useGameStore } from "@/store/gameStore";
+import StatRow from "@/components/StatRow";
+import GameButton from "@/components/GameButton";
+import { formatMoney } from "@/utils/format";
+import { VICTORY_REVENUE_GOAL } from "@/engine/constants";
+import { C, PIXEL_FONT, F, pixelPanel } from "@/theme/pixel";
+import StripedBackground from "@/components/StripedBackground";
 
 export default function VictoryScreen() {
   const router = useRouter();
@@ -94,12 +94,12 @@ const styles = StyleSheet.create({
   },
   card: {
     ...pixelPanel,
-    backgroundColor: '#009730',
+    backgroundColor: "#009730",
     borderColor: C.green,
     borderTopColor: C.greenLight,
     borderLeftColor: C.greenLight,
-    borderBottomColor: '#007F2E',
-    borderRightColor: '#007F2E',
+    borderBottomColor: "#007F2E",
+    borderRightColor: "#007F2E",
   },
   cardTitle: {
     fontFamily: PIXEL_FONT,

@@ -1,13 +1,16 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { C, PIXEL_FONT, F } from '../theme/pixel';
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
+import { C, PIXEL_FONT, F } from "@/theme/pixel";
 
 interface MiniBarChartProps {
   data: { label: string; value: number }[];
   height?: number;
 }
 
-export default function MiniBarChart({ data, height = 120 }: MiniBarChartProps) {
+export default function MiniBarChart({
+  data,
+  height = 120,
+}: MiniBarChartProps) {
   if (data.length === 0) {
     return (
       <View style={[styles.container, { height }]}>
@@ -49,25 +52,25 @@ export default function MiniBarChart({ data, height = 120 }: MiniBarChartProps) 
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
+    width: "100%",
   },
   chartArea: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
+    flexDirection: "row",
+    alignItems: "flex-end",
     gap: 3,
   },
   barColumn: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
   },
   barWrapper: {
     flex: 1,
-    justifyContent: 'flex-end',
-    width: '100%',
-    alignItems: 'center',
+    justifyContent: "flex-end",
+    width: "100%",
+    alignItems: "center",
   },
   bar: {
-    width: '70%',
+    width: "70%",
     borderRadius: 0,
     minWidth: 6,
   },
@@ -81,6 +84,6 @@ const styles = StyleSheet.create({
     fontFamily: PIXEL_FONT,
     color: C.textMuted,
     fontSize: F.body,
-    textAlign: 'center',
+    textAlign: "center",
   },
 });

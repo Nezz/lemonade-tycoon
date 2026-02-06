@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Animated } from "react-native";
-import { AchievementId } from "../engine/types";
-import { ACHIEVEMENT_DEFINITIONS } from "../engine/achievements";
-import { C, PIXEL_FONT, F } from "../theme/pixel";
+import { AchievementId } from "@/engine/types";
+import { ACHIEVEMENT_DEFINITIONS } from "@/engine/achievements";
+import { C, PIXEL_FONT, F } from "@/theme/pixel";
 
 interface AchievementToastProps {
   achievementIds: AchievementId[];
@@ -31,7 +31,9 @@ export default function AchievementToast({
     }
   }, [achievementIds]);
 
-  if (achievementIds.length === 0) return null;
+  if (achievementIds.length === 0) {
+    return null;
+  }
 
   return (
     <Animated.View style={[styles.container, { opacity }]}>

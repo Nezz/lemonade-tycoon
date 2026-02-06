@@ -5,7 +5,7 @@ import {
   InventoryBatches,
   SupplyId,
   SpoiledSupplies,
-} from './types';
+} from "@/engine/types";
 import {
   SUPPLY_DEFINITIONS,
   SUPPLY_IDS,
@@ -13,14 +13,14 @@ import {
   REPUTATION_MIN,
   REPUTATION_DECAY_RATE,
   getRentForDay,
-} from './constants';
-import { getEventDefinition } from './events';
+} from "@/engine/constants";
+import { getEventDefinition } from "@/engine/events";
 import {
   calculateDemand,
   cupsFromInventory,
   calculateSatisfaction,
-} from './customers';
-import { aggregateEffects } from './upgrades';
+} from "@/engine/customers";
+import { aggregateEffects } from "@/engine/upgrades";
 
 /**
  * Calculate the cost of ingredients consumed per cup.
@@ -28,12 +28,16 @@ import { aggregateEffects } from './upgrades';
  */
 function costPerCup(
   recipe: { lemonsPerCup: number; sugarPerCup: number; icePerCup: number },
-  costReduction: number = 0
+  costReduction: number = 0,
 ): number {
-  const lemonCostPerUnit = SUPPLY_DEFINITIONS.lemons.packCost / SUPPLY_DEFINITIONS.lemons.packSize;
-  const sugarCostPerUnit = SUPPLY_DEFINITIONS.sugar.packCost / SUPPLY_DEFINITIONS.sugar.packSize;
-  const iceCostPerUnit = SUPPLY_DEFINITIONS.ice.packCost / SUPPLY_DEFINITIONS.ice.packSize;
-  const cupCostPerUnit = SUPPLY_DEFINITIONS.cups.packCost / SUPPLY_DEFINITIONS.cups.packSize;
+  const lemonCostPerUnit =
+    SUPPLY_DEFINITIONS.lemons.packCost / SUPPLY_DEFINITIONS.lemons.packSize;
+  const sugarCostPerUnit =
+    SUPPLY_DEFINITIONS.sugar.packCost / SUPPLY_DEFINITIONS.sugar.packSize;
+  const iceCostPerUnit =
+    SUPPLY_DEFINITIONS.ice.packCost / SUPPLY_DEFINITIONS.ice.packSize;
+  const cupCostPerUnit =
+    SUPPLY_DEFINITIONS.cups.packCost / SUPPLY_DEFINITIONS.cups.packSize;
 
   let cost =
     recipe.lemonsPerCup * lemonCostPerUnit +
@@ -43,7 +47,7 @@ function costPerCup(
 
   // Apply cost reduction from supply chain upgrades (capped at 40%)
   if (costReduction > 0) {
-    cost *= (1 - costReduction);
+    cost *= 1 - costReduction;
   }
 
   return cost;
@@ -52,7 +56,10 @@ function costPerCup(
 /**
  * Get total count from batches for a supply type.
  */
-export function batchTotal(batches: InventoryBatches, supplyId: SupplyId): number {
+export function batchTotal(
+  batches: InventoryBatches,
+  supplyId: SupplyId,
+): number {
   return batches[supplyId].reduce((sum, b) => sum + b.amount, 0);
 }
 
@@ -61,10 +68,10 @@ export function batchTotal(batches: InventoryBatches, supplyId: SupplyId): numbe
  */
 export function inventoryFromBatches(batches: InventoryBatches): Inventory {
   return {
-    lemons: batchTotal(batches, 'lemons'),
-    sugar: batchTotal(batches, 'sugar'),
-    ice: batchTotal(batches, 'ice'),
-    cups: batchTotal(batches, 'cups'),
+    lemons: batchTotal(batches, "lemons"),
+    sugar: batchTotal(batches, "sugar"),
+    ice: batchTotal(batches, "ice"),
+    cups: batchTotal(batches, "cups"),
   };
 }
 
@@ -73,7 +80,7 @@ export function inventoryFromBatches(batches: InventoryBatches): Inventory {
  */
 function consumeFromBatches(
   batches: { amount: number; purchasedOnDay: number }[],
-  amount: number
+  amount: number,
 ): { amount: number; purchasedOnDay: number }[] {
   let remaining = amount;
   const newBatches: { amount: number; purchasedOnDay: number }[] = [];
@@ -86,7 +93,10 @@ function consumeFromBatches(
     if (batch.amount <= remaining) {
       remaining -= batch.amount;
     } else {
-      newBatches.push({ amount: batch.amount - remaining, purchasedOnDay: batch.purchasedOnDay });
+      newBatches.push({
+        amount: batch.amount - remaining,
+        purchasedOnDay: batch.purchasedOnDay,
+      });
       remaining = 0;
     }
   }
@@ -102,8 +112,11 @@ function removeExpiredBatches(
   batches: { amount: number; purchasedOnDay: number }[],
   currentDay: number,
   shelfLife: number | null,
-  shelfLifeBonus: number = 0
-): { newBatches: { amount: number; purchasedOnDay: number }[]; spoiled: number } {
+  shelfLifeBonus: number = 0,
+): {
+  newBatches: { amount: number; purchasedOnDay: number }[];
+  spoiled: number;
+} {
   if (shelfLife === null) {
     return { newBatches: [...batches], spoiled: 0 };
   }
@@ -133,17 +146,26 @@ export function runDay(state: GameState): {
   newInventoryBatches: InventoryBatches;
   newReputation: number;
 } {
-  const { day, weather, recipe, pricePerCup, inventoryBatches, reputation, upgrades, activeEvent } = state;
+  const {
+    day,
+    weather,
+    recipe,
+    pricePerCup,
+    inventoryBatches,
+    reputation,
+    upgrades,
+    activeEvent,
+  } = state;
 
   // Aggregate all upgrade effects once
   const effects = aggregateEffects(upgrades);
 
   // 0. Apply event: power outage destroys ice
   let workingBatches: InventoryBatches = {
-    lemons: [...inventoryBatches.lemons.map(b => ({ ...b }))],
-    sugar: [...inventoryBatches.sugar.map(b => ({ ...b }))],
-    ice: [...inventoryBatches.ice.map(b => ({ ...b }))],
-    cups: [...inventoryBatches.cups.map(b => ({ ...b }))],
+    lemons: [...inventoryBatches.lemons.map((b) => ({ ...b }))],
+    sugar: [...inventoryBatches.sugar.map((b) => ({ ...b }))],
+    ice: [...inventoryBatches.ice.map((b) => ({ ...b }))],
+    cups: [...inventoryBatches.cups.map((b) => ({ ...b }))],
   };
 
   if (activeEvent) {
@@ -156,7 +178,15 @@ export function runDay(state: GameState): {
   const workingInventory = inventoryFromBatches(workingBatches);
 
   // 1. Calculate demand (uses aggregated effects internally)
-  const maxDemand = calculateDemand(day, weather, pricePerCup, recipe, reputation, upgrades, activeEvent);
+  const maxDemand = calculateDemand(
+    day,
+    weather,
+    pricePerCup,
+    recipe,
+    reputation,
+    upgrades,
+    activeEvent,
+  );
 
   // 2. Calculate how many cups we can actually make
   const makeable = cupsFromInventory(workingInventory, recipe);
@@ -171,8 +201,14 @@ export function runDay(state: GameState): {
 
   // 4. Deduct consumed supplies from batches (FIFO)
   workingBatches = {
-    lemons: consumeFromBatches(workingBatches.lemons, cupsSold * recipe.lemonsPerCup),
-    sugar: consumeFromBatches(workingBatches.sugar, cupsSold * recipe.sugarPerCup),
+    lemons: consumeFromBatches(
+      workingBatches.lemons,
+      cupsSold * recipe.lemonsPerCup,
+    ),
+    sugar: consumeFromBatches(
+      workingBatches.sugar,
+      cupsSold * recipe.sugarPerCup,
+    ),
     ice: consumeFromBatches(workingBatches.ice, cupsSold * recipe.icePerCup),
     cups: consumeFromBatches(workingBatches.cups, cupsSold),
   };
@@ -181,7 +217,7 @@ export function runDay(state: GameState): {
   let iceMelted = 0;
   if (effects.iceShelfBonus <= 0) {
     // No cooling upgrades: all ice melts
-    iceMelted = batchTotal(workingBatches, 'ice');
+    iceMelted = batchTotal(workingBatches, "ice");
     workingBatches.ice = [];
   } else {
     // With cooling: ice has extended shelf life, handle via spoilage
@@ -189,30 +225,48 @@ export function runDay(state: GameState): {
   }
 
   // 6. Spoilage overnight: remove expired batches with shelf life bonuses
-  const spoiledSupplies: SpoiledSupplies = { lemons: 0, sugar: 0, ice: 0, cups: 0 };
+  const spoiledSupplies: SpoiledSupplies = {
+    lemons: 0,
+    sugar: 0,
+    ice: 0,
+    cups: 0,
+  };
   for (const supplyId of SUPPLY_IDS) {
-    if (supplyId === 'ice' && effects.iceShelfBonus <= 0) continue; // handled by melt
+    if (supplyId === "ice" && effects.iceShelfBonus <= 0) {
+      continue;
+    } // handled by melt
     const def = SUPPLY_DEFINITIONS[supplyId];
 
     let bonus = 0;
-    if (supplyId === 'ice') bonus = effects.iceShelfBonus;
-    else if (supplyId === 'lemons') bonus = effects.lemonShelfBonus;
-    else if (supplyId === 'sugar') bonus = effects.sugarShelfBonus;
+    if (supplyId === "ice") {
+      bonus = effects.iceShelfBonus;
+    } else if (supplyId === "lemons") {
+      bonus = effects.lemonShelfBonus;
+    } else if (supplyId === "sugar") {
+      bonus = effects.sugarShelfBonus;
+    }
 
     const { newBatches, spoiled } = removeExpiredBatches(
       workingBatches[supplyId],
       day,
       def.shelfLife,
-      bonus
+      bonus,
     );
     workingBatches[supplyId] = newBatches;
     spoiledSupplies[supplyId] = spoiled;
   }
 
   // 7. Calculate satisfaction & reputation change
-  const satisfaction = cupsSold > 0
-    ? calculateSatisfaction(recipe, weather, pricePerCup, activeEvent, effects)
-    : 0;
+  const satisfaction =
+    cupsSold > 0
+      ? calculateSatisfaction(
+          recipe,
+          weather,
+          pricePerCup,
+          activeEvent,
+          effects,
+        )
+      : 0;
 
   let reputationChange = 0;
   if (cupsSold > 0) {
@@ -234,13 +288,15 @@ export function runDay(state: GameState): {
 
   // Apply aggregated reputation gain bonus (only to positive gains)
   if (reputationChange > 0 && effects.reputationGain > 0) {
-    reputationChange = Math.ceil(reputationChange * (1 + effects.reputationGain));
+    reputationChange = Math.ceil(
+      reputationChange * (1 + effects.reputationGain),
+    );
   }
 
   // Event reputation effects
   if (activeEvent) {
     const eventDef = getEventDefinition(activeEvent.id);
-    if (activeEvent.id === 'healthInspector') {
+    if (activeEvent.id === "healthInspector") {
       if (satisfaction >= 60) {
         reputationChange += 5;
       } else {
@@ -253,7 +309,7 @@ export function runDay(state: GameState): {
 
   const newReputation = Math.min(
     REPUTATION_MAX,
-    Math.max(REPUTATION_MIN, reputation + reputationChange)
+    Math.max(REPUTATION_MIN, reputation + reputationChange),
   );
 
   const newInventory = inventoryFromBatches(workingBatches);
@@ -275,7 +331,12 @@ export function runDay(state: GameState): {
     achievementsUnlocked: [],
   };
 
-  return { result, newInventory, newInventoryBatches: workingBatches, newReputation };
+  return {
+    result,
+    newInventory,
+    newInventoryBatches: workingBatches,
+    newReputation,
+  };
 }
 
 export { costPerCup };

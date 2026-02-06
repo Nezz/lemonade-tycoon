@@ -1,8 +1,8 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { Inventory } from '../engine/types';
-import { SUPPLY_DEFINITIONS, SUPPLY_IDS } from '../engine/constants';
-import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from '../theme/pixel';
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
+import { Inventory } from "@/engine/types";
+import { SUPPLY_DEFINITIONS, SUPPLY_IDS } from "@/engine/constants";
+import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from "@/theme/pixel";
 
 interface InventoryBarProps {
   inventory: Inventory;
@@ -26,15 +26,15 @@ export default function InventoryBar({ inventory }: InventoryBarProps) {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    flexDirection: "row",
+    justifyContent: "space-around",
     ...pixelPanel,
     ...pixelBevel,
     paddingVertical: 8,
     paddingHorizontal: 6,
   },
   item: {
-    alignItems: 'center',
+    alignItems: "center",
     gap: 2,
   },
   emoji: {

@@ -1,15 +1,27 @@
-import React from 'react';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
-import { useGameStore } from '../../store/gameStore';
-import MoneyDisplay from '../../components/MoneyDisplay';
-import InventoryBar from '../../components/InventoryBar';
-import SupplyCard from '../../components/SupplyCard';
-import EventBanner from '../../components/EventBanner';
-import { SUPPLY_IDS, SUPPLY_DEFINITIONS, MAX_INVENTORY_BASE } from '../../engine/constants';
-import { getEventDefinition } from '../../engine/events';
-import { aggregateEffects } from '../../engine/upgrades';
-import { C, PIXEL_FONT, F, pixelPanel, pixelBevel, pixelTrack, pixelFill } from '../../theme/pixel';
-import StripedBackground from '../../components/StripedBackground';
+import React from "react";
+import { View, Text, ScrollView, StyleSheet } from "react-native";
+import { useGameStore } from "@/store/gameStore";
+import MoneyDisplay from "@/components/MoneyDisplay";
+import InventoryBar from "@/components/InventoryBar";
+import SupplyCard from "@/components/SupplyCard";
+import EventBanner from "@/components/EventBanner";
+import {
+  SUPPLY_IDS,
+  SUPPLY_DEFINITIONS,
+  MAX_INVENTORY_BASE,
+} from "@/engine/constants";
+import { getEventDefinition } from "@/engine/events";
+import { aggregateEffects } from "@/engine/upgrades";
+import {
+  C,
+  PIXEL_FONT,
+  F,
+  pixelPanel,
+  pixelBevel,
+  pixelTrack,
+  pixelFill,
+} from "@/theme/pixel";
+import StripedBackground from "@/components/StripedBackground";
 
 export default function ShopScreen() {
   const money = useGameStore((s) => s.money);
@@ -26,16 +38,16 @@ export default function ShopScreen() {
     ? getEventDefinition(activeEvent.id).supplyCostMultiplier !== 1.0
     : false;
 
-  const totalInventory = Object.values(inventory).reduce((sum, v) => sum + v, 0);
+  const totalInventory = Object.values(inventory).reduce(
+    (sum, v) => sum + v,
+    0,
+  );
   const fillRatio = Math.min(totalInventory / maxInventory, 1);
   const isFull = totalInventory >= maxInventory;
 
   return (
     <StripedBackground>
-      <ScrollView
-        style={styles.scroll}
-        contentContainerStyle={styles.content}
-      >
+      <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
         <MoneyDisplay amount={money} />
 
         {activeEvent && hasSupplyEvent && <EventBanner event={activeEvent} />}
@@ -65,13 +77,20 @@ export default function ShopScreen() {
         {/* Spoilage Warning */}
         {SUPPLY_IDS.map((id) => {
           const def = SUPPLY_DEFINITIONS[id];
-          if (!def.shelfLife || def.meltsOvernight) return null;
+          if (!def.shelfLife || def.meltsOvernight) {
+            return null;
+          }
           const batches = inventoryBatches[id];
           const expiringToday = batches.filter(
-            (b) => day - b.purchasedOnDay >= def.shelfLife! - 1
+            (b) => day - b.purchasedOnDay >= def.shelfLife! - 1,
           );
-          const expiringAmount = expiringToday.reduce((sum, b) => sum + b.amount, 0);
-          if (expiringAmount === 0) return null;
+          const expiringAmount = expiringToday.reduce(
+            (sum, b) => sum + b.amount,
+            0,
+          );
+          if (expiringAmount === 0) {
+            return null;
+          }
           return (
             <View key={`spoil-${id}`} style={styles.spoilWarning}>
               <Text style={styles.spoilText}>
@@ -101,17 +120,23 @@ export default function ShopScreen() {
             let lifeText: string;
             if (def.meltsOvernight) {
               const bonus = effects.iceShelfBonus;
-              lifeText = bonus > 0 ? `${1 + bonus} days` : 'Melts overnight';
+              lifeText = bonus > 0 ? `${1 + bonus} days` : "Melts overnight";
             } else if (def.shelfLife) {
-              const bonus = id === 'lemons' ? effects.lemonShelfBonus
-                : id === 'sugar' ? effects.sugarShelfBonus : 0;
+              const bonus =
+                id === "lemons"
+                  ? effects.lemonShelfBonus
+                  : id === "sugar"
+                    ? effects.sugarShelfBonus
+                    : 0;
               lifeText = `${def.shelfLife + bonus} days`;
             } else {
-              lifeText = 'Never spoils';
+              lifeText = "Never spoils";
             }
             return (
               <View key={id} style={styles.infoRow}>
-                <Text style={styles.infoLabel}>{def.emoji} {def.label}</Text>
+                <Text style={styles.infoLabel}>
+                  {def.emoji} {def.label}
+                </Text>
                 <Text style={styles.infoValue}>{lifeText}</Text>
               </View>
             );
@@ -137,9 +162,9 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   capacityHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 6,
   },
   capacityLabel: {
@@ -178,7 +203,7 @@ const styles = StyleSheet.create({
     fontFamily: PIXEL_FONT,
     fontSize: F.small,
     color: C.redLight,
-    textAlign: 'center',
+    textAlign: "center",
   },
   infoCard: {
     ...pixelPanel,
@@ -191,8 +216,8 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   infoRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     paddingVertical: 4,
   },
   infoLabel: {

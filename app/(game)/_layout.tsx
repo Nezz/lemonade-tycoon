@@ -1,6 +1,6 @@
 import { Stack, useRouter } from "expo-router";
 import { Pressable, Text, View, StyleSheet } from "react-native";
-import { C, PIXEL_FONT, F } from "../../theme/pixel";
+import { C, PIXEL_FONT, F } from "@/theme/pixel";
 
 const modalOptions = {
   presentation: "modal" as const,

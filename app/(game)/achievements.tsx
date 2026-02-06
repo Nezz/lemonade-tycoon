@@ -1,9 +1,20 @@
-import React from 'react';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
-import { useGameStore } from '../../store/gameStore';
-import { ACHIEVEMENT_DEFINITIONS, ACHIEVEMENT_IDS } from '../../engine/achievements';
-import { C, PIXEL_FONT, F, pixelPanel, pixelBevel, pixelTrack, pixelFill } from '../../theme/pixel';
-import StripedBackground from '../../components/StripedBackground';
+import React from "react";
+import { View, Text, ScrollView, StyleSheet } from "react-native";
+import { useGameStore } from "@/store/gameStore";
+import {
+  ACHIEVEMENT_DEFINITIONS,
+  ACHIEVEMENT_IDS,
+} from "@/engine/achievements";
+import {
+  C,
+  PIXEL_FONT,
+  F,
+  pixelPanel,
+  pixelBevel,
+  pixelTrack,
+  pixelFill,
+} from "@/theme/pixel";
+import StripedBackground from "@/components/StripedBackground";
 
 export default function AchievementsScreen() {
   const achievements = useGameStore((s) => s.achievements);
@@ -43,7 +54,9 @@ export default function AchievementsScreen() {
                   <Text style={styles.achievementEmoji}>{def.emoji}</Text>
                   <View style={styles.achievementInfo}>
                     <Text style={styles.achievementName}>{def.name}</Text>
-                    <Text style={styles.achievementDesc}>{def.description}</Text>
+                    <Text style={styles.achievementDesc}>
+                      {def.description}
+                    </Text>
                   </View>
                   <Text style={styles.checkmark}>[OK]</Text>
                 </View>
@@ -59,8 +72,13 @@ export default function AchievementsScreen() {
             {locked.map((id) => {
               const def = ACHIEVEMENT_DEFINITIONS[id];
               return (
-                <View key={id} style={[styles.achievementCard, styles.lockedCard]}>
-                  <Text style={[styles.achievementEmoji, styles.lockedEmoji]}>?</Text>
+                <View
+                  key={id}
+                  style={[styles.achievementCard, styles.lockedCard]}
+                >
+                  <Text style={[styles.achievementEmoji, styles.lockedEmoji]}>
+                    ?
+                  </Text>
                   <View style={styles.achievementInfo}>
                     <Text style={[styles.achievementName, styles.lockedText]}>
                       {def.name}
@@ -92,7 +110,7 @@ const styles = StyleSheet.create({
     ...pixelPanel,
     ...pixelBevel,
     padding: 16,
-    alignItems: 'center',
+    alignItems: "center",
   },
   progressText: {
     fontFamily: PIXEL_FONT,
@@ -108,7 +126,7 @@ const styles = StyleSheet.create({
   },
   progressBar: {
     ...pixelTrack,
-    width: '100%',
+    width: "100%",
   },
   progressFill: {
     ...pixelFill,
@@ -123,8 +141,8 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   achievementCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: C.achievePanel,
     borderRadius: 0,
     padding: 10,
@@ -139,7 +157,7 @@ const styles = StyleSheet.create({
   achievementEmoji: {
     fontSize: 20,
     width: 28,
-    textAlign: 'center',
+    textAlign: "center",
   },
   lockedEmoji: {
     fontFamily: PIXEL_FONT,

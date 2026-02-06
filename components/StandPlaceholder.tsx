@@ -1,6 +1,6 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from '../theme/pixel';
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
+import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from "@/theme/pixel";
 
 /**
  * Placeholder component for the lemonade stand visualization — pixel art style.
@@ -21,8 +21,8 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: C.border,
     borderRadius: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: C.bgLight,
     marginVertical: 8,
     ...pixelBevel,

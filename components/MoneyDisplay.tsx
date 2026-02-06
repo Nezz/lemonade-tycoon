@@ -1,7 +1,7 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { formatMoney } from '../utils/format';
-import { C, PIXEL_FONT, F } from '../theme/pixel';
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
+import { formatMoney } from "@/utils/format";
+import { C, PIXEL_FONT, F } from "@/theme/pixel";
 
 interface MoneyDisplayProps {
   amount: number;
@@ -18,7 +18,7 @@ export default function MoneyDisplay({ amount }: MoneyDisplayProps) {
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   label: {
     fontFamily: PIXEL_FONT,

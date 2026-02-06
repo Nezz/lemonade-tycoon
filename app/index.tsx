@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import GameButton from "../components/GameButton";
-import { useGameStore } from "../store/gameStore";
-import { hasSavedGame, loadGame } from "../utils/storage";
-import { C, PIXEL_FONT, F } from "../theme/pixel";
-import StripedBackground from "../components/StripedBackground";
+import GameButton from "@/components/GameButton";
+import { useGameStore } from "@/store/gameStore";
+import { hasSavedGame, loadGame } from "@/utils/storage";
+import { C, PIXEL_FONT, F } from "@/theme/pixel";
+import StripedBackground from "@/components/StripedBackground";
 
 export default function TitleScreen() {
   const router = useRouter();

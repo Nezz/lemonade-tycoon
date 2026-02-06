@@ -1,10 +1,10 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { UpgradeId, UpgradeCategory } from "../engine/types";
-import { UPGRADE_DEFINITIONS } from "../engine/constants";
-import { formatMoney } from "../utils/format";
-import GameButton from "./GameButton";
-import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from "../theme/pixel";
+import { UpgradeId, UpgradeCategory } from "@/engine/types";
+import { UPGRADE_DEFINITIONS } from "@/engine/constants";
+import { formatMoney } from "@/utils/format";
+import GameButton from "@/components/GameButton";
+import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from "@/theme/pixel";
 
 const CATEGORY_LABELS: Record<UpgradeCategory, string> = {
   stand: "Stand",

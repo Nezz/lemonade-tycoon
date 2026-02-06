@@ -2,13 +2,13 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useGameStore } from "../../store/gameStore";
-import StatRow from "../../components/StatRow";
-import GameButton from "../../components/GameButton";
-import { formatMoney } from "../../utils/format";
-import { deleteSave } from "../../utils/storage";
-import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from "../../theme/pixel";
-import StripedBackground from "../../components/StripedBackground";
+import { useGameStore } from "@/store/gameStore";
+import StatRow from "@/components/StatRow";
+import GameButton from "@/components/GameButton";
+import { formatMoney } from "@/utils/format";
+import { deleteSave } from "@/utils/storage";
+import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from "@/theme/pixel";
+import StripedBackground from "@/components/StripedBackground";
 
 export default function GameOverScreen() {
   const router = useRouter();
@@ -89,19 +89,19 @@ const styles = StyleSheet.create({
   subtitle: {
     fontFamily: PIXEL_FONT,
     fontSize: F.small,
-    color: '#FFB0B0',
+    color: "#FFB0B0",
     textAlign: "center",
     marginTop: 10,
     lineHeight: 36,
   },
   card: {
     ...pixelPanel,
-    backgroundColor: '#2A0808',
+    backgroundColor: "#2A0808",
     borderColor: C.red,
     borderTopColor: C.redLight,
     borderLeftColor: C.redLight,
-    borderBottomColor: '#500000',
-    borderRightColor: '#500000',
+    borderBottomColor: "#500000",
+    borderRightColor: "#500000",
   },
   cardTitle: {
     fontFamily: PIXEL_FONT,

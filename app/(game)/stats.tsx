@@ -1,11 +1,11 @@
-import React from 'react';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
-import { useGameStore } from '../../store/gameStore';
-import StatRow from '../../components/StatRow';
-import MiniBarChart from '../../components/MiniBarChart';
-import { formatMoney } from '../../utils/format';
-import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from '../../theme/pixel';
-import StripedBackground from '../../components/StripedBackground';
+import React from "react";
+import { View, Text, ScrollView, StyleSheet } from "react-native";
+import { useGameStore } from "@/store/gameStore";
+import StatRow from "@/components/StatRow";
+import MiniBarChart from "@/components/MiniBarChart";
+import { formatMoney } from "@/utils/format";
+import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from "@/theme/pixel";
+import StripedBackground from "@/components/StripedBackground";
 
 export default function StatsScreen() {
   const stats = useGameStore((s) => s.stats);
@@ -20,22 +20,30 @@ export default function StatsScreen() {
     value: r.profit,
   }));
 
-  const bestDay = results.length > 0
-    ? results.reduce((best, r) => (r.profit > best.profit ? r : best))
-    : null;
-  const worstDay = results.length > 0
-    ? results.reduce((worst, r) => (r.profit < worst.profit ? r : worst))
-    : null;
+  const bestDay =
+    results.length > 0
+      ? results.reduce((best, r) => (r.profit > best.profit ? r : best))
+      : null;
+  const worstDay =
+    results.length > 0
+      ? results.reduce((worst, r) => (r.profit < worst.profit ? r : worst))
+      : null;
 
   let currentStreak = 0;
   for (let i = results.length - 1; i >= 0; i--) {
-    if (results[i].profit > 0) currentStreak++;
-    else break;
+    if (results[i].profit > 0) {
+      currentStreak++;
+    } else {
+      break;
+    }
   }
 
-  const avgSatisfaction = results.length > 0
-    ? Math.round(results.reduce((sum, r) => sum + r.satisfaction, 0) / results.length)
-    : 0;
+  const avgSatisfaction =
+    results.length > 0
+      ? Math.round(
+          results.reduce((sum, r) => sum + r.satisfaction, 0) / results.length,
+        )
+      : 0;
 
   return (
     <StripedBackground>
@@ -57,10 +65,18 @@ export default function StatsScreen() {
           <StatRow label="Avg Sat." value={`${avgSatisfaction}/100`} />
           <StatRow label="Streak" value={`${currentStreak} days`} />
           {bestDay && (
-            <StatRow label="Best Day" value={`D${bestDay.day}: ${formatMoney(bestDay.profit)}`} color={C.green} />
+            <StatRow
+              label="Best Day"
+              value={`D${bestDay.day}: ${formatMoney(bestDay.profit)}`}
+              color={C.green}
+            />
           )}
           {worstDay && (
-            <StatRow label="Worst Day" value={`D${worstDay.day}: ${formatMoney(worstDay.profit)}`} color={C.red} />
+            <StatRow
+              label="Worst Day"
+              value={`D${worstDay.day}: ${formatMoney(worstDay.profit)}`}
+              color={C.red}
+            />
           )}
         </View>
 
@@ -76,7 +92,7 @@ export default function StatsScreen() {
                   <Text style={styles.logDay}>Day {r.day}</Text>
                   <Text style={styles.logDetail}>
                     {r.cupsSold} cups | {r.weather}
-                    {r.event ? ` | ${r.event.emoji}` : ''}
+                    {r.event ? ` | ${r.event.emoji}` : ""}
                   </Text>
                 </View>
                 <Text
@@ -119,13 +135,13 @@ const styles = StyleSheet.create({
     fontFamily: PIXEL_FONT,
     color: C.textMuted,
     fontSize: F.body,
-    textAlign: 'center',
+    textAlign: "center",
     paddingVertical: 12,
   },
   logRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingVertical: 5,
     borderBottomWidth: 1,
     borderBottomColor: C.border,

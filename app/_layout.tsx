@@ -1,9 +1,9 @@
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import { View, ActivityIndicator } from 'react-native';
-import { useFonts, VT323_400Regular } from '@expo-google-fonts/vt323';
-import { C } from '../theme/pixel';
-import { useDevSaves } from '../dev/useDevSaves';
+import { Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import { View, ActivityIndicator } from "react-native";
+import { useFonts, VT323_400Regular } from "@expo-google-fonts/vt323";
+import { C } from "@/theme/pixel";
+import { useDevSaves } from "@/dev/useDevSaves";
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -15,7 +15,14 @@ export default function RootLayout() {
 
   if (!fontsLoaded) {
     return (
-      <View style={{ flex: 1, backgroundColor: C.bg, alignItems: 'center', justifyContent: 'center' }}>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: C.bg,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         <ActivityIndicator color={C.gold} size="large" />
       </View>
     );
@@ -28,7 +35,7 @@ export default function RootLayout() {
         screenOptions={{
           headerShown: false,
           contentStyle: { backgroundColor: C.bg },
-          animation: 'fade',
+          animation: "fade",
         }}
       />
     </>

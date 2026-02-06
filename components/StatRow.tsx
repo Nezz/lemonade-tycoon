@@ -1,6 +1,6 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { C, PIXEL_FONT, F } from '../theme/pixel';
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
+import { C, PIXEL_FONT, F } from "@/theme/pixel";
 
 interface StatRowProps {
   label: string;
@@ -9,10 +9,17 @@ interface StatRowProps {
   color?: string;
 }
 
-export default function StatRow({ label, value, highlight = false, color }: StatRowProps) {
+export default function StatRow({
+  label,
+  value,
+  highlight = false,
+  color,
+}: StatRowProps) {
   return (
     <View style={[styles.row, highlight && styles.rowHighlight]}>
-      <Text style={[styles.label, highlight && styles.labelHighlight]}>{label}</Text>
+      <Text style={[styles.label, highlight && styles.labelHighlight]}>
+        {label}
+      </Text>
       <Text
         style={[
           styles.value,
@@ -28,9 +35,9 @@ export default function StatRow({ label, value, highlight = false, color }: Stat
 
 const styles = StyleSheet.create({
   row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingVertical: 6,
     paddingHorizontal: 4,
     borderBottomWidth: 1,

@@ -1,6 +1,6 @@
-import React, { useMemo } from 'react';
-import { View, StyleSheet, useWindowDimensions } from 'react-native';
-import { C } from '../theme/pixel';
+import React, { useMemo } from "react";
+import { View, StyleSheet, useWindowDimensions } from "react-native";
+import { C } from "@/theme/pixel";
 
 interface StripedBackgroundProps {
   color1?: string;
@@ -34,7 +34,7 @@ export default function StripedBackground({
             height: stripeWidth,
             backgroundColor: i % 2 === 0 ? color1 : color2,
           }}
-        />
+        />,
       );
     }
     return arr;
@@ -51,16 +51,14 @@ export default function StripedBackground({
             height: diagonal,
             top: -(diagonal - height) / 2,
             left: -(diagonal - width) / 2,
-            transform: [{ rotate: '45deg' }],
+            transform: [{ rotate: "45deg" }],
           },
         ]}
       >
         {stripes}
       </View>
       {/* Content layer */}
-      <View style={styles.content}>
-        {children}
-      </View>
+      <View style={styles.content}>{children}</View>
     </View>
   );
 }
@@ -71,7 +69,7 @@ const styles = StyleSheet.create({
     backgroundColor: C.bg,
   },
   stripeContainer: {
-    position: 'absolute',
+    position: "absolute",
   },
   content: {
     flex: 1,

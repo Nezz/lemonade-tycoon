@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { ActiveEvent } from "../engine/types";
-import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from "../theme/pixel";
+import { ActiveEvent } from "@/engine/types";
+import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from "@/theme/pixel";
 
 interface EventBannerProps {
   event: ActiveEvent;

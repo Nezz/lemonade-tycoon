@@ -1,12 +1,23 @@
-import React, { useState, useMemo } from 'react';
-import { ScrollView, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { useGameStore } from '../../store/gameStore';
-import MoneyDisplay from '../../components/MoneyDisplay';
-import UpgradeCard from '../../components/UpgradeCard';
-import { UPGRADE_IDS, UPGRADE_DEFINITIONS, TIER_NAMES, TIER_COUNT } from '../../engine/constants';
-import { UpgradeId } from '../../engine/types';
-import { C, PIXEL_FONT, F, pixelTrack, pixelFill } from '../../theme/pixel';
-import StripedBackground from '../../components/StripedBackground';
+import React, { useState, useMemo } from "react";
+import {
+  ScrollView,
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
+import { useGameStore } from "@/store/gameStore";
+import MoneyDisplay from "@/components/MoneyDisplay";
+import UpgradeCard from "@/components/UpgradeCard";
+import {
+  UPGRADE_IDS,
+  UPGRADE_DEFINITIONS,
+  TIER_NAMES,
+  TIER_COUNT,
+} from "@/engine/constants";
+import { UpgradeId } from "@/engine/types";
+import { C, PIXEL_FONT, F, pixelTrack, pixelFill } from "@/theme/pixel";
+import StripedBackground from "@/components/StripedBackground";
 
 const TIER_COLORS: Record<number, string> = {
   1: C.tierGray,
@@ -28,9 +39,15 @@ export default function UpgradesScreen() {
   const tierGroups = useMemo(() => {
     const groups: Record<number, UpgradeId[]> = {};
     for (const tier of tiers) {
-      const tierIds = UPGRADE_IDS.filter((id) => UPGRADE_DEFINITIONS[id].tier === tier);
-      const standIds = tierIds.filter((id) => UPGRADE_DEFINITIONS[id].category === 'stand');
-      const otherIds = tierIds.filter((id) => UPGRADE_DEFINITIONS[id].category !== 'stand');
+      const tierIds = UPGRADE_IDS.filter(
+        (id) => UPGRADE_DEFINITIONS[id].tier === tier,
+      );
+      const standIds = tierIds.filter(
+        (id) => UPGRADE_DEFINITIONS[id].category === "stand",
+      );
+      const otherIds = tierIds.filter(
+        (id) => UPGRADE_DEFINITIONS[id].category !== "stand",
+      );
       groups[tier] = [...otherIds, ...standIds];
     }
     return groups;
@@ -50,13 +67,15 @@ export default function UpgradesScreen() {
 
   const ownedCount = UPGRADE_IDS.filter((id) => upgrades[id]).length;
 
-  const [expandedTiers, setExpandedTiers] = useState<Record<number, boolean>>(() => {
-    const initial: Record<number, boolean> = {};
-    for (const tier of tiers) {
-      initial[tier] = tier <= 2;
-    }
-    return initial;
-  });
+  const [expandedTiers, setExpandedTiers] = useState<Record<number, boolean>>(
+    () => {
+      const initial: Record<number, boolean> = {};
+      for (const tier of tiers) {
+        initial[tier] = tier <= 2;
+      }
+      return initial;
+    },
+  );
 
   const toggleTier = (tier: number) => {
     setExpandedTiers((prev) => ({ ...prev, [tier]: !prev[tier] }));
@@ -76,10 +95,7 @@ export default function UpgradesScreen() {
 
   return (
     <StripedBackground>
-      <ScrollView
-        style={styles.scroll}
-        contentContainerStyle={styles.content}
-      >
+      <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
         <MoneyDisplay amount={money} />
 
         {/* Overall Progress */}
@@ -99,7 +115,9 @@ export default function UpgradesScreen() {
 
         {tiers.map((tier) => {
           const tierUpgrades = tierGroups[tier];
-          if (!tierUpgrades || tierUpgrades.length === 0) return null;
+          if (!tierUpgrades || tierUpgrades.length === 0) {
+            return null;
+          }
 
           const isExpanded = expandedTiers[tier];
           const { owned, total } = tierOwnedCounts[tier];
@@ -113,30 +131,41 @@ export default function UpgradesScreen() {
                 activeOpacity={0.7}
               >
                 <View style={styles.tierHeaderLeft}>
-                  <View style={[styles.tierBadge, { backgroundColor: TIER_COLORS[tier] }]}>
+                  <View
+                    style={[
+                      styles.tierBadge,
+                      { backgroundColor: TIER_COLORS[tier] },
+                    ]}
+                  >
                     <Text style={styles.tierBadgeText}>{tier}</Text>
                   </View>
                   <Text style={styles.tierTitle}>{TIER_NAMES[tier]}</Text>
                 </View>
                 <View style={styles.tierHeaderRight}>
-                  <Text style={[styles.tierProgress, allOwned && styles.tierProgressComplete]}>
+                  <Text
+                    style={[
+                      styles.tierProgress,
+                      allOwned && styles.tierProgressComplete,
+                    ]}
+                  >
                     {owned}/{total}
                   </Text>
-                  <Text style={styles.chevron}>{isExpanded ? 'v' : '>'}</Text>
+                  <Text style={styles.chevron}>{isExpanded ? "v" : ">"}</Text>
                 </View>
               </TouchableOpacity>
 
-              {isExpanded && tierUpgrades.map((id) => (
-                <UpgradeCard
-                  key={id}
-                  upgradeId={id}
-                  owned={upgrades[id]}
-                  locked={isLocked(id)}
-                  money={money}
-                  requiresNames={getMissingPrereqNames(id)}
-                  onBuy={buyUpgrade}
-                />
-              ))}
+              {isExpanded &&
+                tierUpgrades.map((id) => (
+                  <UpgradeCard
+                    key={id}
+                    upgradeId={id}
+                    owned={upgrades[id]}
+                    locked={isLocked(id)}
+                    money={money}
+                    requiresNames={getMissingPrereqNames(id)}
+                    onBuy={buyUpgrade}
+                  />
+                ))}
             </View>
           );
         })}
@@ -154,8 +183,8 @@ const styles = StyleSheet.create({
     paddingBottom: 32,
   },
   progressContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 8,
     marginTop: 10,
     marginBottom: 12,
@@ -177,9 +206,9 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   tierHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingVertical: 8,
     paddingHorizontal: 6,
     marginBottom: 4,
@@ -188,21 +217,21 @@ const styles = StyleSheet.create({
     backgroundColor: C.bgLight,
   },
   tierHeaderLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 8,
   },
   tierHeaderRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 8,
   },
   tierBadge: {
     width: 22,
     height: 22,
     borderRadius: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   tierBadgeText: {
     fontFamily: PIXEL_FONT,

@@ -1,17 +1,17 @@
-import React from 'react';
+import React from "react";
 import {
   TouchableOpacity,
   Text,
   StyleSheet,
   ViewStyle,
   TextStyle,
-} from 'react-native';
-import { C, PIXEL_FONT, F } from '../theme/pixel';
+} from "react-native";
+import { C, PIXEL_FONT, F } from "@/theme/pixel";
 
 interface GameButtonProps {
   title: string;
   onPress: () => void;
-  variant?: 'primary' | 'secondary' | 'danger';
+  variant?: "primary" | "secondary" | "danger";
   disabled?: boolean;
   style?: ViewStyle;
   textStyle?: TextStyle;
@@ -21,35 +21,34 @@ interface GameButtonProps {
 export default function GameButton({
   title,
   onPress,
-  variant = 'primary',
+  variant = "primary",
   disabled = false,
   style,
   textStyle,
   small = false,
 }: GameButtonProps) {
   const bg =
-    variant === 'primary'
+    variant === "primary"
       ? C.btnPrimary
-      : variant === 'danger'
+      : variant === "danger"
         ? C.btnDanger
         : C.btnSecondary;
 
   const hi =
-    variant === 'primary'
+    variant === "primary"
       ? C.btnPrimaryHi
-      : variant === 'danger'
+      : variant === "danger"
         ? C.btnDangerHi
         : C.btnSecHi;
 
   const lo =
-    variant === 'primary'
+    variant === "primary"
       ? C.btnPrimaryLo
-      : variant === 'danger'
+      : variant === "danger"
         ? C.btnDangerLo
         : C.btnSecLo;
 
-  const txtColor =
-    variant === 'secondary' ? C.text : C.white;
+  const txtColor = variant === "secondary" ? C.text : C.white;
 
   return (
     <TouchableOpacity
@@ -90,8 +89,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 0,
     borderWidth: 3,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   buttonSmall: {
     paddingVertical: 8,

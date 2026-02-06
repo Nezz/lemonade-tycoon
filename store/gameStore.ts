@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 import {
   GameState,
   SupplyId,
@@ -6,7 +6,7 @@ import {
   Recipe,
   DayResult,
   AchievementId,
-} from '../engine/types';
+} from "@/engine/types";
 import {
   INITIAL_GAME_STATE,
   SUPPLY_DEFINITIONS,
@@ -16,13 +16,13 @@ import {
   VICTORY_REVENUE_GOAL,
   BANKRUPTCY_THRESHOLD,
   FORECAST_ACCURACY,
-} from '../engine/constants';
-import { generateWeather, generateForecast } from '../engine/weather';
-import { rollEvent, getEventDefinition } from '../engine/events';
-import { runDay, batchTotal, inventoryFromBatches } from '../engine/simulation';
-import { checkAchievements } from '../engine/achievements';
-import { aggregateEffects } from '../engine/upgrades';
-import { saveGame } from '../utils/storage';
+} from "@/engine/constants";
+import { generateWeather, generateForecast } from "@/engine/weather";
+import { rollEvent, getEventDefinition } from "@/engine/events";
+import { runDay, batchTotal, inventoryFromBatches } from "@/engine/simulation";
+import { checkAchievements } from "@/engine/achievements";
+import { aggregateEffects } from "@/engine/upgrades";
+import { saveGame } from "@/utils/storage";
 
 interface GameActions {
   // ── Supply Actions ──────────────────────────────────────────────────
@@ -73,19 +73,27 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
     // Apply aggregated cost reduction from supply chain upgrades
     if (effects.costReduction > 0) {
-      costMultiplier *= (1 - effects.costReduction);
+      costMultiplier *= 1 - effects.costReduction;
     }
 
-    const totalCost = Math.round(def.packCost * packs * costMultiplier * 100) / 100;
+    const totalCost =
+      Math.round(def.packCost * packs * costMultiplier * 100) / 100;
     const totalUnits = def.packSize * packs;
 
-    if (totalCost > state.money) return false;
+    if (totalCost > state.money) {
+      return false;
+    }
 
     // Max inventory is a shared total across all supply types
     const maxInv = MAX_INVENTORY_BASE + effects.inventoryBonus;
-    const totalInventory = Object.values(state.inventory).reduce((sum, v) => sum + v, 0);
+    const totalInventory = Object.values(state.inventory).reduce(
+      (sum, v) => sum + v,
+      0,
+    );
 
-    if (totalInventory + totalUnits > maxInv) return false;
+    if (totalInventory + totalUnits > maxInv) {
+      return false;
+    }
     const currentAmount = state.inventory[supplyId];
 
     // Add batch tracking
@@ -102,7 +110,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
         [supplyId]: currentAmount + totalUnits,
       },
       inventoryBatches: updatedBatches,
-      totalSpentToday: Math.round((state.totalSpentToday + totalCost) * 100) / 100,
+      totalSpentToday:
+        Math.round((state.totalSpentToday + totalCost) * 100) / 100,
     });
 
     return true;
@@ -130,15 +139,21 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const def = UPGRADE_DEFINITIONS[upgradeId];
 
     // Already owned
-    if (state.upgrades[upgradeId]) return false;
+    if (state.upgrades[upgradeId]) {
+      return false;
+    }
 
     // Check prerequisites
     for (const reqId of def.requires) {
-      if (!state.upgrades[reqId]) return false;
+      if (!state.upgrades[reqId]) {
+        return false;
+      }
     }
 
     // Check cost
-    if (def.cost > state.money) return false;
+    if (def.cost > state.money) {
+      return false;
+    }
 
     set({
       money: Math.round((state.money - def.cost) * 100) / 100,
@@ -146,7 +161,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
         ...state.upgrades,
         [upgradeId]: true,
       },
-      totalSpentToday: Math.round((state.totalSpentToday + def.cost) * 100) / 100,
+      totalSpentToday:
+        Math.round((state.totalSpentToday + def.cost) * 100) / 100,
     });
 
     return true;
@@ -156,13 +172,18 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
   startDay: () => {
     const state = get();
-    const { result, newInventory, newInventoryBatches, newReputation } = runDay(state);
+    const { result, newInventory, newInventoryBatches, newReputation } =
+      runDay(state);
 
     // Add passive income and free lemons are handled in runDay via effects
     const newMoney = Math.round((state.money + result.profit) * 100) / 100;
 
     // Check achievements
-    const newlyUnlocked = checkAchievements(state, result, state.totalSpentToday);
+    const newlyUnlocked = checkAchievements(
+      state,
+      result,
+      state.totalSpentToday,
+    );
     result.achievementsUnlocked = newlyUnlocked;
 
     // Update achievements record
@@ -172,11 +193,12 @@ export const useGameStore = create<GameStore>((set, get) => ({
     }
 
     // Check win/lose conditions
-    const newTotalRevenue = Math.round((state.stats.totalRevenue + result.revenue) * 100) / 100;
-    let newPhase: GameState['phase'] = 'results';
+    const newTotalRevenue =
+      Math.round((state.stats.totalRevenue + result.revenue) * 100) / 100;
+    let newPhase: GameState["phase"] = "results";
 
     if (!state.freePlay && newTotalRevenue >= VICTORY_REVENUE_GOAL) {
-      newPhase = 'victory';
+      newPhase = "victory";
     }
 
     set({
@@ -199,7 +221,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const updatedInventory = get().inventory;
     const hasInventoryValue = SUPPLY_IDS.some((id) => updatedInventory[id] > 0);
     if (updatedMoney < BANKRUPTCY_THRESHOLD && !hasInventoryValue) {
-      set({ phase: 'gameover' });
+      set({ phase: "gameover" });
     }
 
     // Auto-save
@@ -232,9 +254,10 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const effects = aggregateEffects(state.upgrades);
 
     // Forecast accuracy from technology upgrades (or base 80%)
-    const accuracy = effects.forecastAccuracy > 0
-      ? effects.forecastAccuracy
-      : FORECAST_ACCURACY;
+    const accuracy =
+      effects.forecastAccuracy > 0
+        ? effects.forecastAccuracy
+        : FORECAST_ACCURACY;
 
     const newWeather = generateWeather(state.forecast, accuracy);
     const newForecast = generateForecast();
@@ -261,7 +284,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       weather: newWeather,
       forecast: newForecast,
       activeEvent: newEvent,
-      phase: 'planning',
+      phase: "planning",
       totalSpentToday: 0,
       newlyUnlockedAchievements: [],
       inventoryBatches: newBatches,
@@ -315,6 +338,6 @@ export const useGameStore = create<GameStore>((set, get) => ({
   // ── Continue After Victory ────────────────────────────────────────────
 
   continueAfterVictory: () => {
-    set({ freePlay: true, phase: 'results' });
+    set({ freePlay: true, phase: "results" });
   },
 }));

@@ -1,6 +1,6 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { C, PIXEL_FONT, F } from '../theme/pixel';
+import React from "react";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { C, PIXEL_FONT, F } from "@/theme/pixel";
 
 interface SliderProps {
   value: number;
@@ -13,7 +13,13 @@ interface SliderProps {
 /**
  * Simple discrete step slider using tap buttons — pixel art style.
  */
-export default function Slider({ value, min, max, step, onChange }: SliderProps) {
+export default function Slider({
+  value,
+  min,
+  max,
+  step,
+  onChange,
+}: SliderProps) {
   const steps: number[] = [];
   for (let i = min; i <= max; i += step) {
     steps.push(Math.round(i * 100) / 100);
@@ -23,10 +29,14 @@ export default function Slider({ value, min, max, step, onChange }: SliderProps)
     <View style={styles.container}>
       <TouchableOpacity
         style={[styles.arrowBtn, value <= min && styles.arrowBtnDisabled]}
-        onPress={() => onChange(Math.max(min, Math.round((value - step) * 100) / 100))}
+        onPress={() =>
+          onChange(Math.max(min, Math.round((value - step) * 100) / 100))
+        }
         disabled={value <= min}
       >
-        <Text style={[styles.arrow, value <= min && styles.arrowDisabled]}>{'<'}</Text>
+        <Text style={[styles.arrow, value <= min && styles.arrowDisabled]}>
+          {"<"}
+        </Text>
       </TouchableOpacity>
 
       <View style={styles.track}>
@@ -36,17 +46,23 @@ export default function Slider({ value, min, max, step, onChange }: SliderProps)
             style={[styles.dot, s <= value && styles.dotActive]}
             onPress={() => onChange(s)}
           >
-            <View style={[styles.dotInner, s === value && styles.dotSelected]} />
+            <View
+              style={[styles.dotInner, s === value && styles.dotSelected]}
+            />
           </TouchableOpacity>
         ))}
       </View>
 
       <TouchableOpacity
         style={[styles.arrowBtn, value >= max && styles.arrowBtnDisabled]}
-        onPress={() => onChange(Math.min(max, Math.round((value + step) * 100) / 100))}
+        onPress={() =>
+          onChange(Math.min(max, Math.round((value + step) * 100) / 100))
+        }
         disabled={value >= max}
       >
-        <Text style={[styles.arrow, value >= max && styles.arrowDisabled]}>{'>'}</Text>
+        <Text style={[styles.arrow, value >= max && styles.arrowDisabled]}>
+          {">"}
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -54,8 +70,8 @@ export default function Slider({ value, min, max, step, onChange }: SliderProps)
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 6,
   },
   arrowBtn: {
@@ -65,8 +81,8 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: C.border,
     backgroundColor: C.panelDark,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   arrowBtnDisabled: {
     opacity: 0.4,
@@ -81,9 +97,9 @@ const styles = StyleSheet.create({
   },
   track: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     height: 32,
     backgroundColor: C.bgLight,
     borderWidth: 2,
@@ -95,8 +111,8 @@ const styles = StyleSheet.create({
     width: 22,
     height: 22,
     borderRadius: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   dotActive: {
     backgroundColor: C.greenDark,
@@ -105,7 +121,7 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 0,
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
   },
   dotSelected: {
     backgroundColor: C.green,

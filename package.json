@@ -6,7 +6,10 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "check": "npx expo-doctor",
+    "check-types": "tsc --noEmit",
+    "lint": "expo lint app components dev engine store theme"
   },
   "dependencies": {
     "@expo-google-fonts/vt323": "^0.4.1",
@@ -30,6 +33,14 @@
   },
   "devDependencies": {
     "@types/react": "~19.1.0",
+    "eslint": "^9.0.0",
+    "eslint-config-expo": "~10.0.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-no-relative-import-paths": "^1.6.1",
+    "eslint-plugin-prettier": "^5.5.5",
+    "eslint-plugin-react-compiler": "^19.1.0-rc.2",
+    "eslint-plugin-react-native": "^5.0.0",
+    "prettier": "^3.8.1",
     "typescript": "~5.9.2"
   },
   "private": true

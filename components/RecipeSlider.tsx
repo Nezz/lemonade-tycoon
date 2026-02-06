@@ -1,7 +1,7 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import Slider from './Slider';
-import { C, PIXEL_FONT, F } from '../theme/pixel';
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
+import Slider from "@/components/Slider";
+import { C, PIXEL_FONT, F } from "@/theme/pixel";
 
 interface RecipeSliderProps {
   label: string;
@@ -22,7 +22,7 @@ export default function RecipeSlider({
   min,
   max,
   step = 1,
-  unit = '',
+  unit = "",
   hint,
   onChange,
 }: RecipeSliderProps) {
@@ -52,8 +52,8 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 4,
   },
   emoji: {
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     fontSize: F.body,
     color: C.green,
     minWidth: 40,
-    textAlign: 'right',
+    textAlign: "right",
   },
   hint: {
     fontFamily: PIXEL_FONT,
