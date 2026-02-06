@@ -1,26 +1,26 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { UpgradeId, UpgradeCategory } from '../engine/types';
-import { UPGRADE_DEFINITIONS } from '../engine/constants';
-import { formatMoney } from '../utils/format';
-import GameButton from './GameButton';
-import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from '../theme/pixel';
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
+import { UpgradeId, UpgradeCategory } from "../engine/types";
+import { UPGRADE_DEFINITIONS } from "../engine/constants";
+import { formatMoney } from "../utils/format";
+import GameButton from "./GameButton";
+import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from "../theme/pixel";
 
 const CATEGORY_LABELS: Record<UpgradeCategory, string> = {
-  stand: 'Stand',
-  signage: 'Signage',
-  cooling: 'Cooling',
-  storage: 'Storage',
-  recipe: 'Recipe',
-  weather: 'Weather',
-  marketing: 'Marketing',
-  experience: 'Experience',
-  supply: 'Supply Chain',
-  speed: 'Speed',
-  staff: 'Staff',
-  technology: 'Technology',
-  decor: 'Decor',
-  special: 'Special',
+  stand: "Stand",
+  signage: "Signage",
+  cooling: "Cooling",
+  storage: "Storage",
+  recipe: "Recipe",
+  weather: "Weather",
+  marketing: "Marketing",
+  experience: "Experience",
+  supply: "Supply Chain",
+  speed: "Speed",
+  staff: "Staff",
+  technology: "Technology",
+  decor: "Decor",
+  special: "Special",
 };
 
 interface UpgradeCardProps {
@@ -42,7 +42,7 @@ export default function UpgradeCard({
 }: UpgradeCardProps) {
   const def = UPGRADE_DEFINITIONS[upgradeId];
   const canAfford = def.cost <= money;
-  const isStand = def.category === 'stand';
+  const isStand = def.category === "stand";
 
   return (
     <View
@@ -56,23 +56,41 @@ export default function UpgradeCard({
     >
       <View style={styles.left}>
         <Text style={[styles.emoji, locked && styles.emojiLocked]}>
-          {locked ? '?' : def.emoji}
+          {locked ? "?" : def.emoji}
         </Text>
         <View style={styles.info}>
           <View style={styles.nameRow}>
-            <Text style={[styles.name, locked && styles.nameLocked, isStand && styles.nameStand]}>
+            <Text
+              style={[
+                styles.name,
+                locked && styles.nameLocked,
+                isStand && styles.nameStand,
+              ]}
+            >
               {def.name}
             </Text>
-            <View style={[styles.categoryBadge, isStand && styles.categoryBadgeStand]}>
-              <Text style={[styles.categoryText, isStand && styles.categoryTextStand]}>
+            <View
+              style={[
+                styles.categoryBadge,
+                isStand && styles.categoryBadgeStand,
+              ]}
+            >
+              <Text
+                style={[
+                  styles.categoryText,
+                  isStand && styles.categoryTextStand,
+                ]}
+              >
                 {CATEGORY_LABELS[def.category]}
               </Text>
             </View>
           </View>
-          <Text style={[styles.desc, locked && styles.descLocked]}>{def.description}</Text>
+          <Text style={[styles.desc, locked && styles.descLocked]}>
+            {def.description}
+          </Text>
           {locked && requiresNames.length > 0 && (
             <Text style={styles.requiresText}>
-              Needs: {requiresNames.join(', ')}
+              Needs: {requiresNames.join(", ")}
             </Text>
           )}
         </View>
@@ -101,9 +119,9 @@ export default function UpgradeCard({
 
 const styles = StyleSheet.create({
   card: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     ...pixelPanel,
     ...pixelBevel,
     marginBottom: 6,
@@ -124,13 +142,13 @@ const styles = StyleSheet.create({
     borderWidth: 3,
   },
   cardStandOwned: {
-    backgroundColor: '#E8D8A0',
+    backgroundColor: C.panelDark,
     borderColor: C.gold,
     borderWidth: 3,
   },
   left: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     flex: 1,
   },
   emoji: {
@@ -144,10 +162,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   nameRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 6,
-    flexWrap: 'wrap',
+    flexWrap: "wrap",
   },
   name: {
     fontFamily: PIXEL_FONT,

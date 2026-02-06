@@ -1,20 +1,20 @@
-import React from 'react';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
-import { useRouter } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useGameStore } from '../../store/gameStore';
-import WeatherBadge from '../../components/WeatherBadge';
-import EventBanner from '../../components/EventBanner';
-import StatRow from '../../components/StatRow';
-import GameButton from '../../components/GameButton';
-import { formatMoney } from '../../utils/format';
-import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from '../../theme/pixel';
+import React from "react";
+import { View, Text, ScrollView, StyleSheet } from "react-native";
+import { useRouter } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useGameStore } from "../../store/gameStore";
+import WeatherBadge from "../../components/WeatherBadge";
+import EventBanner from "../../components/EventBanner";
+import StatRow from "../../components/StatRow";
+import GameButton from "../../components/GameButton";
+import { formatMoney } from "../../utils/format";
+import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from "../../theme/pixel";
 
 function SatisfactionStars({ satisfaction }: { satisfaction: number }) {
   const filled = Math.round(satisfaction / 20);
   const stars = Array.from({ length: 5 }, (_, i) =>
-    i < filled ? '*' : '.'
-  ).join(' ');
+    i < filled ? "*" : ".",
+  ).join(" ");
 
   return (
     <View style={starStyles.container}>
@@ -26,7 +26,7 @@ function SatisfactionStars({ satisfaction }: { satisfaction: number }) {
 
 const starStyles = StyleSheet.create({
   container: {
-    alignItems: 'center',
+    alignItems: "center",
     marginVertical: 6,
   },
   stars: {
@@ -53,29 +53,34 @@ export default function ResultsScreen() {
 
   const handleNextDay = () => {
     nextDay();
-    router.replace('/(game)/day');
+    router.replace("/(game)/day");
   };
 
   if (!result) {
     return (
-      <SafeAreaView style={styles.safeArea} edges={['bottom']}>
+      <SafeAreaView style={styles.safeArea} edges={["bottom"]}>
         <View style={styles.center}>
           <Text style={styles.noResult}>NO RESULTS YET</Text>
-          <GameButton title="BACK" onPress={() => router.replace('/(game)/day')} />
+          <GameButton
+            title="BACK"
+            onPress={() => router.replace("/(game)/day")}
+          />
         </View>
       </SafeAreaView>
     );
   }
 
   const profitColor = result.profit >= 0 ? C.green : C.red;
-  const repChangeStr = result.reputationChange > 0
-    ? `+${result.reputationChange}`
-    : `${result.reputationChange}`;
-  const repColor = result.reputationChange > 0
-    ? C.green
-    : result.reputationChange < 0
-      ? C.red
-      : C.textMuted;
+  const repChangeStr =
+    result.reputationChange > 0
+      ? `+${result.reputationChange}`
+      : `${result.reputationChange}`;
+  const repColor =
+    result.reputationChange > 0
+      ? C.green
+      : result.reputationChange < 0
+        ? C.red
+        : C.textMuted;
 
   const hasSpoilage =
     result.spoiledSupplies.lemons > 0 ||
@@ -85,11 +90,8 @@ export default function ResultsScreen() {
   const hasAchievements = result.achievementsUnlocked.length > 0;
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={['bottom']}>
-      <ScrollView
-        style={styles.scroll}
-        contentContainerStyle={styles.content}
-      >
+    <SafeAreaView style={styles.safeArea} edges={["bottom"]}>
+      <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
         {/* Day header */}
         <View style={styles.header}>
           <Text style={styles.dayTitle}>DAY {result.day}</Text>
@@ -107,13 +109,25 @@ export default function ResultsScreen() {
         {/* Sales Stats */}
         <View style={styles.card}>
           <Text style={styles.cardTitle}>SALES REPORT</Text>
-          <StatRow label="Cups Sold" value={`${result.cupsSold}/${result.maxDemand}`} />
+          <StatRow
+            label="Cups Sold"
+            value={`${result.cupsSold}/${result.maxDemand}`}
+          />
           <StatRow label="Revenue" value={formatMoney(result.revenue)} />
           <StatRow label="Cost" value={formatMoney(result.costOfGoods)} />
           {result.rent > 0 && (
-            <StatRow label="Rent" value={`-${formatMoney(result.rent)}`} color={C.red} />
+            <StatRow
+              label="Rent"
+              value={`-${formatMoney(result.rent)}`}
+              color={C.red}
+            />
           )}
-          <StatRow label="Net Profit" value={formatMoney(result.profit)} highlight color={profitColor} />
+          <StatRow
+            label="Net Profit"
+            value={formatMoney(result.profit)}
+            highlight
+            color={profitColor}
+          />
         </View>
 
         {/* Overnight Report */}
@@ -121,22 +135,43 @@ export default function ResultsScreen() {
           <Text style={styles.cardTitle}>OVERNIGHT</Text>
           <StatRow label="Reputation" value={repChangeStr} color={repColor} />
           {result.iceMelted > 0 && (
-            <StatRow label="Ice Melted" value={`-${result.iceMelted}`} color={C.red} />
+            <StatRow
+              label="Ice Melted"
+              value={`-${result.iceMelted}`}
+              color={C.red}
+            />
           )}
           {hasSpoilage && (
             <>
               {result.spoiledSupplies.lemons > 0 && (
-                <StatRow label="Lemons Spoiled" value={`-${result.spoiledSupplies.lemons}`} color={C.red} />
+                <StatRow
+                  label="Lemons Spoiled"
+                  value={`-${result.spoiledSupplies.lemons}`}
+                  color={C.red}
+                />
               )}
               {result.spoiledSupplies.sugar > 0 && (
-                <StatRow label="Sugar Spoiled" value={`-${result.spoiledSupplies.sugar}`} color={C.red} />
+                <StatRow
+                  label="Sugar Spoiled"
+                  value={`-${result.spoiledSupplies.sugar}`}
+                  color={C.red}
+                />
               )}
               {result.spoiledSupplies.cups > 0 && (
-                <StatRow label="Cups Spoiled" value={`-${result.spoiledSupplies.cups}`} color={C.red} />
+                <StatRow
+                  label="Cups Spoiled"
+                  value={`-${result.spoiledSupplies.cups}`}
+                  color={C.red}
+                />
               )}
             </>
           )}
-          <StatRow label="Balance" value={formatMoney(money)} highlight color={C.green} />
+          <StatRow
+            label="Balance"
+            value={formatMoney(money)}
+            highlight
+            color={C.green}
+          />
         </View>
 
         {/* Achievements */}
@@ -144,7 +179,9 @@ export default function ResultsScreen() {
           <View style={styles.achievementCard}>
             <Text style={styles.cardTitle}>ACHIEVEMENTS!</Text>
             {result.achievementsUnlocked.map((id) => (
-              <Text key={id} style={styles.achievementText}>{id}</Text>
+              <Text key={id} style={styles.achievementText}>
+                {id}
+              </Text>
             ))}
           </View>
         )}
@@ -175,8 +212,8 @@ const styles = StyleSheet.create({
   },
   center: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     padding: 32,
     gap: 16,
   },
@@ -186,9 +223,9 @@ const styles = StyleSheet.create({
     color: C.textMuted,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   dayTitle: {
     fontFamily: PIXEL_FONT,
@@ -209,10 +246,10 @@ const styles = StyleSheet.create({
     ...pixelPanel,
     backgroundColor: C.warning,
     borderColor: C.warningBorder,
-    borderTopColor: '#FFE070',
-    borderLeftColor: '#FFE070',
-    borderBottomColor: '#A07818',
-    borderRightColor: '#A07818',
+    borderTopColor: C.borderLight,
+    borderLeftColor: C.borderLight,
+    borderBottomColor: C.borderDark,
+    borderRightColor: C.borderDark,
   },
   achievementText: {
     fontFamily: PIXEL_FONT,

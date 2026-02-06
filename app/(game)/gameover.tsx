@@ -1,13 +1,13 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { useRouter } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useGameStore } from '../../store/gameStore';
-import StatRow from '../../components/StatRow';
-import GameButton from '../../components/GameButton';
-import { formatMoney } from '../../utils/format';
-import { deleteSave } from '../../utils/storage';
-import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from '../../theme/pixel';
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
+import { useRouter } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useGameStore } from "../../store/gameStore";
+import StatRow from "../../components/StatRow";
+import GameButton from "../../components/GameButton";
+import { formatMoney } from "../../utils/format";
+import { deleteSave } from "../../utils/storage";
+import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from "../../theme/pixel";
 
 export default function GameOverScreen() {
   const router = useRouter();
@@ -18,13 +18,13 @@ export default function GameOverScreen() {
   const handleRestart = async () => {
     await deleteSave();
     resetGame();
-    router.replace('/(game)/day');
+    router.replace("/(game)/day");
   };
 
   const handleMainMenu = async () => {
     await deleteSave();
     resetGame();
-    router.replace('/');
+    router.replace("/");
   };
 
   return (
@@ -33,7 +33,9 @@ export default function GameOverScreen() {
         <View style={styles.titleSection}>
           <Text style={styles.emoji}>💸</Text>
           <Text style={styles.title}>BANKRUPT!</Text>
-          <Text style={styles.subtitle}>Your lemonade stand has gone out of business.</Text>
+          <Text style={styles.subtitle}>
+            Your lemonade stand has gone out of business.
+          </Text>
         </View>
 
         <View style={styles.card}>
@@ -45,7 +47,7 @@ export default function GameOverScreen() {
             <StatRow
               label="Best Day"
               value={formatMoney(
-                Math.max(...stats.dayResults.map((r) => r.profit))
+                Math.max(...stats.dayResults.map((r) => r.profit)),
               )}
             />
           )}
@@ -53,7 +55,11 @@ export default function GameOverScreen() {
 
         <View style={styles.buttonSection}>
           <GameButton title="TRY AGAIN" onPress={handleRestart} />
-          <GameButton title="MAIN MENU" onPress={handleMainMenu} variant="secondary" />
+          <GameButton
+            title="MAIN MENU"
+            onPress={handleMainMenu}
+            variant="secondary"
+          />
         </View>
       </SafeAreaView>
     </View>
@@ -68,11 +74,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 24,
-    justifyContent: 'center',
+    justifyContent: "center",
     gap: 20,
   },
   titleSection: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   emoji: {
     fontSize: 56,
@@ -87,7 +93,7 @@ const styles = StyleSheet.create({
     fontFamily: PIXEL_FONT,
     fontSize: F.small,
     color: '#FFB0B0',
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: 10,
     lineHeight: 36,
   },

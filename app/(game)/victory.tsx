@@ -1,13 +1,13 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { useRouter } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useGameStore } from '../../store/gameStore';
-import StatRow from '../../components/StatRow';
-import GameButton from '../../components/GameButton';
-import { formatMoney } from '../../utils/format';
-import { VICTORY_REVENUE_GOAL } from '../../engine/constants';
-import { C, PIXEL_FONT, F, pixelPanel } from '../../theme/pixel';
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
+import { useRouter } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useGameStore } from "../../store/gameStore";
+import StatRow from "../../components/StatRow";
+import GameButton from "../../components/GameButton";
+import { formatMoney } from "../../utils/format";
+import { VICTORY_REVENUE_GOAL } from "../../engine/constants";
+import { C, PIXEL_FONT, F, pixelPanel } from "../../theme/pixel";
 
 export default function VictoryScreen() {
   const router = useRouter();
@@ -19,12 +19,12 @@ export default function VictoryScreen() {
 
   const handleContinue = () => {
     continueAfterVictory();
-    router.replace('/(game)/results');
+    router.replace("/(game)/results");
   };
 
   const handleNewGame = () => {
     resetGame();
-    router.replace('/(game)/day');
+    router.replace("/(game)/day");
   };
 
   return (
@@ -41,14 +41,23 @@ export default function VictoryScreen() {
         <View style={styles.card}>
           <Text style={styles.cardTitle}>VICTORY STATS</Text>
           <StatRow label="Days" value={`${day}`} />
-          <StatRow label="Revenue" value={formatMoney(stats.totalRevenue)} highlight color={C.greenLight} />
+          <StatRow
+            label="Revenue"
+            value={formatMoney(stats.totalRevenue)}
+            highlight
+            color={C.greenLight}
+          />
           <StatRow label="Cups Sold" value={`${stats.totalCupsSold}`} />
           <StatRow label="Balance" value={formatMoney(money)} />
         </View>
 
         <View style={styles.buttonSection}>
           <GameButton title="KEEP PLAYING" onPress={handleContinue} />
-          <GameButton title="NEW GAME" onPress={handleNewGame} variant="secondary" />
+          <GameButton
+            title="NEW GAME"
+            onPress={handleNewGame}
+            variant="secondary"
+          />
         </View>
       </SafeAreaView>
     </View>
@@ -58,16 +67,16 @@ export default function VictoryScreen() {
 const styles = StyleSheet.create({
   bg: {
     flex: 1,
-    backgroundColor: '#0A2A0A',
+    backgroundColor: '#007F2E',
   },
   container: {
     flex: 1,
     padding: 24,
-    justifyContent: 'center',
+    justifyContent: "center",
     gap: 20,
   },
   titleSection: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   emoji: {
     fontSize: 56,
@@ -82,18 +91,18 @@ const styles = StyleSheet.create({
     fontFamily: PIXEL_FONT,
     fontSize: F.small,
     color: C.greenLight,
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: 10,
     lineHeight: 36,
   },
   card: {
     ...pixelPanel,
-    backgroundColor: '#0A3A0A',
+    backgroundColor: '#009730',
     borderColor: C.green,
     borderTopColor: C.greenLight,
     borderLeftColor: C.greenLight,
-    borderBottomColor: '#0A1A0A',
-    borderRightColor: '#0A1A0A',
+    borderBottomColor: '#007F2E',
+    borderRightColor: '#007F2E',
   },
   cardTitle: {
     fontFamily: PIXEL_FONT,

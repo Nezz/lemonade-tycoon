@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Animated } from 'react-native';
-import { AchievementId } from '../engine/types';
-import { ACHIEVEMENT_DEFINITIONS } from '../engine/achievements';
-import { C, PIXEL_FONT, F } from '../theme/pixel';
+import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet, Animated } from "react-native";
+import { AchievementId } from "../engine/types";
+import { ACHIEVEMENT_DEFINITIONS } from "../engine/achievements";
+import { C, PIXEL_FONT, F } from "../theme/pixel";
 
 interface AchievementToastProps {
   achievementIds: AchievementId[];
 }
 
-export default function AchievementToast({ achievementIds }: AchievementToastProps) {
+export default function AchievementToast({
+  achievementIds,
+}: AchievementToastProps) {
   const [opacity] = useState(new Animated.Value(0));
 
   useEffect(() => {
@@ -51,7 +53,7 @@ export default function AchievementToast({ achievementIds }: AchievementToastPro
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
+    position: "absolute",
     top: 8,
     left: 12,
     right: 12,
@@ -59,16 +61,16 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   toast: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: C.warning,
     borderRadius: 0,
     padding: 10,
     borderWidth: 3,
-    borderTopColor: '#FFE070',
-    borderLeftColor: '#FFE070',
-    borderBottomColor: '#A07818',
-    borderRightColor: '#A07818',
+    borderTopColor: C.borderLight,
+    borderLeftColor: C.borderLight,
+    borderBottomColor: C.borderDark,
+    borderRightColor: C.borderDark,
     gap: 8,
   },
   emoji: {

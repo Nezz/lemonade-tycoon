@@ -1,7 +1,7 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { ActiveEvent } from '../engine/types';
-import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from '../theme/pixel';
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
+import { ActiveEvent } from "../engine/types";
+import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from "../theme/pixel";
 
 interface EventBannerProps {
   event: ActiveEvent;
@@ -21,8 +21,8 @@ export default function EventBanner({ event }: EventBannerProps) {
 
 const styles = StyleSheet.create({
   banner: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: C.warning,
     borderRadius: 0,
     padding: 10,
@@ -30,10 +30,10 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: C.warningBorder,
     ...pixelBevel,
-    borderTopColor: '#FFE070',
-    borderLeftColor: '#FFE070',
-    borderBottomColor: '#A07818',
-    borderRightColor: '#A07818',
+    borderTopColor: C.borderLight,
+    borderLeftColor: C.borderLight,
+    borderBottomColor: C.borderDark,
+    borderRightColor: C.borderDark,
     gap: 8,
   },
   emoji: {
