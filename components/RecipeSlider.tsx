@@ -30,7 +30,7 @@ export default function RecipeSlider({
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <PixelIcon emoji={emoji} size={16} style={styles.iconMargin} />
+        <PixelIcon emoji={emoji} size={20} style={styles.iconMargin} />
         <Text style={styles.label}>{label}</Text>
         <Text style={styles.value}>
           {value} {unit}

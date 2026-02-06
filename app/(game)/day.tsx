@@ -176,7 +176,7 @@ export default function DayScreen() {
         <StandPlaceholder />
 
         {/* Inventory */}
-        <InventoryBar inventory={inventory} />
+        <InventoryBar inventory={inventory} recipe={recipe} />
 
         {/* Current Settings Summary */}
         <View style={styles.summary}>

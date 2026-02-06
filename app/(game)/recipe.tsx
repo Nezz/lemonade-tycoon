@@ -40,7 +40,7 @@ export default function RecipeScreen() {
   return (
     <StripedBackground>
       <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
-        <InventoryBar inventory={inventory} />
+        <InventoryBar inventory={inventory} recipe={recipe} />
 
         {/* Recipe Sliders */}
         <View style={styles.section}>

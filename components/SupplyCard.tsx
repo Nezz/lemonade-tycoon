@@ -53,7 +53,7 @@ export default function SupplyCard({
   return (
     <View style={styles.card}>
       <View style={styles.header}>
-        <PixelIcon emoji={def.emoji} size={22} style={styles.iconMargin} />
+        <PixelIcon emoji={def.emoji} size={30} style={styles.iconMargin} />
         <View style={styles.headerText}>
           <Text style={styles.name}>{def.label}</Text>
           <Text style={styles.packInfo}>

@@ -26,6 +26,7 @@ import StripedBackground from "@/components/StripedBackground";
 export default function ShopScreen() {
   const money = useGameStore((s) => s.money);
   const inventory = useGameStore((s) => s.inventory);
+  const recipe = useGameStore((s) => s.recipe);
   const inventoryBatches = useGameStore((s) => s.inventoryBatches);
   const day = useGameStore((s) => s.day);
   const buySupply = useGameStore((s) => s.buySupply);
@@ -56,7 +57,7 @@ export default function ShopScreen() {
 
         {hasSupplyEvent && <EventBanner event={plannedEvent} />}
 
-        <InventoryBar inventory={inventory} />
+        <InventoryBar inventory={inventory} recipe={recipe} />
 
         {/* Total Capacity Bar */}
         <View style={styles.capacityCard}>
@@ -98,7 +99,7 @@ export default function ShopScreen() {
           return (
             <View key={`spoil-${id}`} style={styles.spoilWarning}>
               <View style={styles.spoilRow}>
-                <PixelIcon emoji={def.emoji} size={14} />
+                <PixelIcon emoji={def.emoji} size={20} />
                 <Text style={styles.spoilText}>
                   {expiringAmount} {def.unit} EXPIRING!
                 </Text>
@@ -143,7 +144,7 @@ export default function ShopScreen() {
             return (
               <View key={id} style={styles.infoRow}>
                 <View style={styles.infoLabelRow}>
-                  <PixelIcon emoji={def.emoji} size={14} />
+                  <PixelIcon emoji={def.emoji} size={20} />
                   <Text style={styles.infoLabel}>{def.label}</Text>
                 </View>
                 <Text style={styles.infoValue}>{lifeText}</Text>

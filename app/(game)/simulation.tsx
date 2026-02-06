@@ -132,7 +132,7 @@ function SurpriseToast({
     <Animated.View
       style={[styles.toastBanner, { opacity, transform: [{ translateY }] }]}
     >
-      <PixelIcon emoji={event.emoji} size={18} />
+      <PixelIcon emoji={event.emoji} size={20} />
       <View style={styles.toastTextContainer}>
         <Text style={styles.toastName}>{event.name}</Text>
         <Text style={styles.toastDescription} numberOfLines={2}>
