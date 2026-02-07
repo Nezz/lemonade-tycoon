@@ -68,7 +68,7 @@ const earlyGame: DevSave = {
       dayResults: [],
     },
     phase: "planning",
-    freePlay: false,
+    bailedOut: false,
   },
 };
 
@@ -114,13 +114,13 @@ const midGame: DevSave = {
       dayResults: [],
     },
     phase: "planning",
-    freePlay: false,
+    bailedOut: false,
   },
 };
 
 const lateGame: DevSave = {
   label: "🚀 Late Game (Day 25)",
-  description: "Closing in on victory, lots of upgrades",
+  description: "Late game with lots of upgrades",
   state: {
     ...INITIAL_GAME_STATE,
     day: 25,
@@ -191,7 +191,7 @@ const lateGame: DevSave = {
       dayResults: [],
     },
     phase: "planning",
-    freePlay: false,
+    bailedOut: false,
   },
 };
 
@@ -222,7 +222,7 @@ const nearBankrupt: DevSave = {
       dayResults: [],
     },
     phase: "planning",
-    freePlay: false,
+    bailedOut: false,
   },
 };
 
@@ -392,76 +392,7 @@ const stacked: DevSave = {
       dayResults: [],
     },
     phase: "planning",
-    freePlay: false,
-  },
-};
-
-const freePlayMode: DevSave = {
-  label: "🏖️ Free Play (Post-Victory)",
-  description: "Already won, continuing in free play mode",
-  state: {
-    ...INITIAL_GAME_STATE,
-    day: 30,
-    money: 250.0,
-    inventory: { lemons: 80, sugar: 60, ice: 70, cups: 90 },
-    inventoryBatches: {
-      lemons: [{ amount: 80, purchasedOnDay: 29 }],
-      sugar: [{ amount: 60, purchasedOnDay: 29 }],
-      ice: [{ amount: 70, purchasedOnDay: 29 }],
-      cups: [{ amount: 90, purchasedOnDay: 29 }],
-    },
-    recipe: { lemonsPerCup: 4, sugarPerCup: 3, icePerCup: 4 },
-    pricePerCup: 2.0,
-    weather: "sunny",
-    forecast: "warm",
-    reputation: 78,
-    upgrades: withUpgrades(
-      "standWoodenStand",
-      "standMarketCart",
-      "standGardenBooth",
-      "standCornerShop",
-      "signCardboardSign",
-      "signChalkboardSign",
-      "signWoodenSign",
-      "signNeonSign",
-      "coolStyrofoamBox",
-      "coolBasicCooler",
-      "coolInsulatedCooler",
-      "storExtraCrate",
-      "storStorageShelf",
-      "storStorageRack",
-      "recpRecipeNotebook",
-      "recpQualityLemons",
-      "mktgFlyers",
-      "mktgBusinessCards",
-      "mktgLocalPaperAd",
-      "mktgSocialMedia",
-      "techWeatherRadio",
-      "techCalculator",
-      "techPriceBoard",
-      "techWeatherApp",
-      "weatPoncho",
-      "weatUmbrella",
-      "spdSharpKnife",
-      "spdPrepStation",
-      "stfTipJar",
-      "stfHelpWantedSign",
-      "stfPartTimeHelper",
-    ) as any,
-    achievements: withAchievements(
-      "firstSale",
-      "centurion",
-      "entrepreneur",
-      "rainyDayFund",
-      "tycoon",
-    ) as any,
-    stats: {
-      totalRevenue: 520.0,
-      totalCupsSold: 380,
-      dayResults: [],
-    },
-    phase: "planning",
-    freePlay: true,
+    bailedOut: false,
   },
 };
 
@@ -472,5 +403,4 @@ export const DEV_SAVES: DevSave[] = [
   lateGame,
   nearBankrupt,
   stacked,
-  freePlayMode,
 ];

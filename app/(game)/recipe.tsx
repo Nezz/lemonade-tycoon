@@ -37,6 +37,17 @@ export default function RecipeScreen() {
   const hasRecipeHints = effects.showRecipeHints;
   const showProfitPerCup = effects.showProfitPerCup;
 
+  const zeroIngredients: string[] = [];
+  if (recipe.lemonsPerCup === 0) {
+    zeroIngredients.push("lemons");
+  }
+  if (recipe.sugarPerCup === 0) {
+    zeroIngredients.push("sugar");
+  }
+  if (recipe.icePerCup === 0) {
+    zeroIngredients.push("ice");
+  }
+
   return (
     <StripedBackground>
       <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
@@ -91,6 +102,16 @@ export default function RecipeScreen() {
             onChange={(v) => setRecipe({ icePerCup: v })}
           />
         </View>
+
+        {zeroIngredients.length > 0 && (
+          <View style={styles.warningCard}>
+            <Text style={styles.warningText}>
+              {"⚠️ No "}
+              {zeroIngredients.join(", ")}
+              {"! Expect complaints, reputation damage, and lower demand."}
+            </Text>
+          </View>
+        )}
 
         {/* Price */}
         <View style={styles.section}>
@@ -200,5 +221,16 @@ const styles = StyleSheet.create({
     fontFamily: PIXEL_FONT,
     fontSize: F.heading,
     color: C.green,
+  },
+  warningCard: {
+    ...pixelPanel,
+    backgroundColor: "#4a1c1c",
+    borderColor: C.red,
+  },
+  warningText: {
+    fontFamily: PIXEL_FONT,
+    fontSize: F.small,
+    color: C.red,
+    textAlign: "center",
   },
 });

@@ -383,10 +383,10 @@ export default function SimulationScreen() {
     // Navigate away after all hours + a short pause
     const navTimeout = setTimeout(() => {
       const currentPhase = useGameStore.getState().phase;
-      if (currentPhase === "victory") {
-        router.replace("/(game)/victory");
-      } else if (currentPhase === "gameover") {
+      if (currentPhase === "gameover") {
         router.replace("/(game)/gameover");
+      } else if (currentPhase === "bailout") {
+        router.replace("/(game)/bailout");
       } else {
         router.replace("/(game)/results");
       }

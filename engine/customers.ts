@@ -16,8 +16,16 @@ function clamp(value: number, min: number, max: number): number {
 /**
  * Score how well a single ingredient value fits within an ideal range.
  * Returns 1.0 for perfect match, lower for deviation.
+ * Zero = missing ingredient: 0.0 penalty, or 1.2 bonus if a beneficial event is active.
  */
-function ingredientScore(value: number, ideal: [number, number]): number {
+function ingredientScore(
+  value: number,
+  ideal: [number, number],
+  hasZeroBonus: boolean = false,
+): number {
+  if (value === 0) {
+    return hasZeroBonus ? 1.2 : 0.0;
+  }
   const [lo, hi] = ideal;
   if (value >= lo && value <= hi) {
     return 1.0;
@@ -48,9 +56,24 @@ export function recipeQuality(
     ];
   }
 
-  const lemonScore = ingredientScore(recipe.lemonsPerCup, info.idealLemons);
-  const sugarScore = ingredientScore(recipe.sugarPerCup, sugarIdeal);
-  const iceScore = ingredientScore(recipe.icePerCup, info.idealIce);
+  // Check zero-ingredient bonuses from beneficial events
+  const zeroBonuses = eventEffects?.zeroIngredientBonuses;
+
+  const lemonScore = ingredientScore(
+    recipe.lemonsPerCup,
+    info.idealLemons,
+    zeroBonuses?.lemons ?? false,
+  );
+  const sugarScore = ingredientScore(
+    recipe.sugarPerCup,
+    sugarIdeal,
+    zeroBonuses?.sugar ?? false,
+  );
+  const iceScore = ingredientScore(
+    recipe.icePerCup,
+    info.idealIce,
+    zeroBonuses?.ice ?? false,
+  );
 
   // Weighted average: ice matters more in hot weather, sugar in cold
   const iceWeight = weather === "hot" || weather === "sunny" ? 0.4 : 0.25;
@@ -171,22 +194,24 @@ export function calculateDemand(
 
 /**
  * Calculate how many cups can be made from current inventory & recipe.
+ * An ingredient set to 0 per cup means it's skipped (not used).
  */
 export function cupsFromInventory(
   inventory: { lemons: number; sugar: number; ice: number; cups: number },
   recipe: Recipe,
 ): number {
-  if (
-    recipe.lemonsPerCup === 0 ||
-    recipe.sugarPerCup === 0 ||
-    recipe.icePerCup === 0
-  ) {
-    return 0;
-  }
-
-  const fromLemons = Math.floor(inventory.lemons / recipe.lemonsPerCup);
-  const fromSugar = Math.floor(inventory.sugar / recipe.sugarPerCup);
-  const fromIce = Math.floor(inventory.ice / recipe.icePerCup);
+  const fromLemons =
+    recipe.lemonsPerCup > 0
+      ? Math.floor(inventory.lemons / recipe.lemonsPerCup)
+      : Infinity;
+  const fromSugar =
+    recipe.sugarPerCup > 0
+      ? Math.floor(inventory.sugar / recipe.sugarPerCup)
+      : Infinity;
+  const fromIce =
+    recipe.icePerCup > 0
+      ? Math.floor(inventory.ice / recipe.icePerCup)
+      : Infinity;
   const fromCups = inventory.cups;
 
   return Math.min(fromLemons, fromSugar, fromIce, fromCups);

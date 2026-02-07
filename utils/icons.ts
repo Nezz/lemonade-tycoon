@@ -52,6 +52,10 @@ export const ICON_MAP: Record<string, ImageSource> = {
   "👎": require("@/assets/icons/thumbs-down.png"),
   "🐕": require("@/assets/icons/dog.png"),
   "🔧": require("@/assets/icons/wrench.png"),
+  "😡": require("@/assets/icons/angry.png"),
+  "🥦": require("@/assets/icons/broccoli.png"),
+  "🤧": require("@/assets/icons/sneezing.png"),
+  "☕": require("@/assets/icons/coffee.png"),
 
   // Upgrades — Stand / Signage / Cooling / Storage
   "🔨": require("@/assets/icons/hammer.png"),
@@ -153,6 +157,9 @@ export const ICON_MAP: Record<string, ImageSource> = {
   "😊": require("@/assets/icons/smiling.png"),
   "♻️": require("@/assets/icons/recycle.png"),
   "🏧": require("@/assets/icons/atm.png"),
+  "🦷": require("@/assets/icons/tooth.png"),
+  "🥵": require("@/assets/icons/hot-face.png"),
+  "🧪": require("@/assets/icons/test-tube.png"),
 
   // UI / Misc
   "❓": require("@/assets/icons/question-mark.png"),

@@ -1539,7 +1539,7 @@ export const STARTING_MONEY = 20.0;
 export const STARTING_REPUTATION = 50;
 
 export const MAX_INGREDIENT = 6;
-export const MIN_INGREDIENT = 1;
+export const MIN_INGREDIENT = 0;
 
 export const MIN_PRICE = 0.25;
 export const MAX_PRICE = 5.0;
@@ -1570,10 +1570,10 @@ export function getRentForDay(
   return maxRent;
 }
 
-// ── Victory / Game Over ──────────────────────────────────────────────────────
+// ── Game Over ────────────────────────────────────────────────────────────────
 
-export const VICTORY_REVENUE_GOAL = 500;
 export const BANKRUPTCY_THRESHOLD = 0;
+export const BAILOUT_AMOUNT = 15;
 
 // ── Default Starting State ───────────────────────────────────────────────────
 
@@ -1649,6 +1649,12 @@ export const DEFAULT_ACHIEVEMENTS: Record<AchievementId, boolean> = {
   crowdPleaser: false,
   zeroWaste: false,
   profitMachine: false,
+  // Zero-ingredient
+  holdTheLemons: false,
+  sugarFree: false,
+  lukewarm: false,
+  madScientist: false,
+  justCups: false,
 };
 
 export const INITIAL_GAME_STATE: GameState = {
@@ -1668,5 +1674,5 @@ export const INITIAL_GAME_STATE: GameState = {
   achievements: { ...DEFAULT_ACHIEVEMENTS },
   stats: { totalRevenue: 0, totalCupsSold: 0, dayResults: [] },
   phase: "planning",
-  freePlay: false,
+  bailedOut: false,
 };

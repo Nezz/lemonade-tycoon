@@ -269,6 +269,39 @@ export const ACHIEVEMENT_DEFINITIONS: Record<
     description: "Earn $100+ profit in a single day",
     emoji: "🏧",
   },
+
+  // ── Zero-ingredient ────────────────────────────────────────────────────────
+
+  holdTheLemons: {
+    id: "holdTheLemons",
+    name: "Hold the Lemons",
+    description: "Sell 'lemonade' with 0 lemons per cup",
+    emoji: "🚫",
+  },
+  sugarFree: {
+    id: "sugarFree",
+    name: "Sugar-Free",
+    description: "Serve completely unsweetened lemonade and sell some",
+    emoji: "🦷",
+  },
+  lukewarm: {
+    id: "lukewarm",
+    name: "Lukewarm",
+    description: "Serve lemonade with 0 ice and sell some",
+    emoji: "🥵",
+  },
+  madScientist: {
+    id: "madScientist",
+    name: "Mad Scientist",
+    description: "Sell cups with 2+ ingredients at zero",
+    emoji: "🧪",
+  },
+  justCups: {
+    id: "justCups",
+    name: "Just Cups",
+    description: "Sell empty cups — all 3 ingredients at zero",
+    emoji: "🫗",
+  },
 };
 
 export const ACHIEVEMENT_IDS: AchievementId[] = Object.keys(
@@ -504,6 +537,29 @@ export function checkAchievements(
 
   // Profit Machine: $100+ profit in one day
   check("profitMachine", result.profit >= 100);
+
+  // ── Zero-ingredient ──────────────────────────────────────────────────────
+
+  const { lemonsPerCup, sugarPerCup, icePerCup } = state.recipe;
+  const zeroCount =
+    (lemonsPerCup === 0 ? 1 : 0) +
+    (sugarPerCup === 0 ? 1 : 0) +
+    (icePerCup === 0 ? 1 : 0);
+
+  // Hold the Lemons: sell with 0 lemons
+  check("holdTheLemons", lemonsPerCup === 0 && result.cupsSold > 0);
+
+  // Sugar-Free: sell with 0 sugar
+  check("sugarFree", sugarPerCup === 0 && result.cupsSold > 0);
+
+  // Lukewarm: sell with 0 ice
+  check("lukewarm", icePerCup === 0 && result.cupsSold > 0);
+
+  // Mad Scientist: sell with 2+ ingredients at zero
+  check("madScientist", zeroCount >= 2 && result.cupsSold > 0);
+
+  // Just Cups: sell with all 3 ingredients at zero
+  check("justCups", zeroCount === 3 && result.cupsSold > 0);
 
   return newly;
 }

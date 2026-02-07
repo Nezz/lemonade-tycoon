@@ -4,6 +4,7 @@ import {
   ActiveEvent,
   EventEffects,
   SupplyId,
+  type Recipe,
 } from "@/engine/types";
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -257,6 +258,32 @@ export const EVENT_DEFINITIONS: Record<GameEventId, GameEventDefinition> = {
     },
   },
 
+  // ── Zero-ingredient beneficial (planned) ────────────────────────────────
+
+  healthCraze: {
+    id: "healthCraze",
+    name: "Health Craze",
+    emoji: "🥦",
+    timing: "planned",
+    effects: {
+      ...NEUTRAL_EFFECTS,
+      demandMultiplier: 1.15,
+      sugarPreferenceShift: -2,
+      zeroIngredientBonuses: { sugar: true },
+    },
+  },
+  citrusAllergyScare: {
+    id: "citrusAllergyScare",
+    name: "Citrus Allergy Scare",
+    emoji: "🤧",
+    timing: "planned",
+    effects: {
+      ...NEUTRAL_EFFECTS,
+      demandMultiplier: 1.1,
+      zeroIngredientBonuses: { lemons: true },
+    },
+  },
+
   // ═══════════════════════════════════════════════════════════════════════════
   // SURPRISE EVENTS (16) — revealed as toasts during simulation
   // ═══════════════════════════════════════════════════════════════════════════
@@ -411,6 +438,56 @@ export const EVENT_DEFINITIONS: Record<GameEventId, GameEventDefinition> = {
     timing: "surprise",
     effects: { ...NEUTRAL_EFFECTS, sugarPreferenceShift: -1 },
   },
+
+  // ── Zero-ingredient beneficial (surprise) ─────────────────────────────
+
+  warmDrinkTrend: {
+    id: "warmDrinkTrend",
+    name: "Warm Drinks Trending",
+    emoji: "☕",
+    timing: "surprise",
+    effects: {
+      ...NEUTRAL_EFFECTS,
+      demandMultiplier: 1.1,
+      zeroIngredientBonuses: { ice: true },
+    },
+  },
+
+  // ── Zero-ingredient complaints (recipe-triggered, not in random pool) ──
+
+  noLemonComplaint: {
+    id: "noLemonComplaint",
+    name: "Where's the Lemon?!",
+    emoji: "😡",
+    timing: "surprise",
+    effects: {
+      ...NEUTRAL_EFFECTS,
+      demandMultiplier: 0.7,
+      reputationEffect: -5,
+    },
+  },
+  noSugarComplaint: {
+    id: "noSugarComplaint",
+    name: "Too Sour!",
+    emoji: "😡",
+    timing: "surprise",
+    effects: {
+      ...NEUTRAL_EFFECTS,
+      demandMultiplier: 0.85,
+      reputationEffect: -3,
+    },
+  },
+  noIceComplaint: {
+    id: "noIceComplaint",
+    name: "It's Warm!",
+    emoji: "😡",
+    timing: "surprise",
+    effects: {
+      ...NEUTRAL_EFFECTS,
+      demandMultiplier: 0.9,
+      reputationEffect: -2,
+    },
+  },
 };
 
 // ── Event Pools ──────────────────────────────────────────────────────────────
@@ -505,6 +582,12 @@ const DESCRIPTIONS: Record<GameEventId, DescriptionFn> = {
   dietTrend: () =>
     "A diet trend article boosts demand — people prefer less sugar.",
 
+  // Planned — zero-ingredient beneficial
+  healthCraze: () =>
+    "Health craze sweeping the city! Sugar-free drinks are all the rage.",
+  citrusAllergyScare: () =>
+    "Citrus allergy scare in the news! Lemon-free drinks are the safe choice.",
+
   // Surprise — existing
   healthInspector: () =>
     "Health inspector visiting! High satisfaction = bonus rep.",
@@ -539,6 +622,18 @@ const DESCRIPTIONS: Record<GameEventId, DescriptionFn> = {
 
   // Surprise — preference
   gymClassField: () => "A gym class stopped by! They prefer less sugar.",
+
+  // Surprise — zero-ingredient beneficial
+  warmDrinkTrend: () =>
+    "Warm drinks trending on social media! Ice-free is the hot new thing.",
+
+  // Surprise — zero-ingredient complaints
+  noLemonComplaint: () =>
+    "Customers are furious — this isn't lemonade without lemons!",
+  noSugarComplaint: () =>
+    "Customers grimace at the sourness — way too bitter without sugar!",
+  noIceComplaint: () =>
+    "Customers complain their drinks are lukewarm — where's the ice?",
 };
 
 // ── Effect Resolvers (randomization) ─────────────────────────────────────────
@@ -679,6 +774,24 @@ const RESOLVERS: Partial<Record<GameEventId, ResolverFn>> = {
     ...NEUTRAL_EFFECTS,
     sugarPreferenceShift: randInt(-2, -1),
   }),
+
+  // Zero-ingredient beneficial — randomized
+  healthCraze: () => ({
+    ...NEUTRAL_EFFECTS,
+    demandMultiplier: randBetween(1.1, 1.2),
+    sugarPreferenceShift: -2,
+    zeroIngredientBonuses: { sugar: true },
+  }),
+  citrusAllergyScare: () => ({
+    ...NEUTRAL_EFFECTS,
+    demandMultiplier: randBetween(1.05, 1.15),
+    zeroIngredientBonuses: { lemons: true },
+  }),
+  warmDrinkTrend: () => ({
+    ...NEUTRAL_EFFECTS,
+    demandMultiplier: randBetween(1.05, 1.15),
+    zeroIngredientBonuses: { ice: true },
+  }),
 };
 
 // ── Resolve an event into an ActiveEvent ─────────────────────────────────────
@@ -770,9 +883,52 @@ export function combineEventEffects(events: ActiveEvent[]): EventEffects {
           (combined.supplyCostMultipliers[supplyId] ?? 1) * mult;
       }
     }
+
+    // Zero-ingredient bonuses: OR together
+    if (e.zeroIngredientBonuses) {
+      if (!combined.zeroIngredientBonuses) {
+        combined.zeroIngredientBonuses = {};
+      }
+      if (e.zeroIngredientBonuses.lemons) {
+        combined.zeroIngredientBonuses.lemons = true;
+      }
+      if (e.zeroIngredientBonuses.sugar) {
+        combined.zeroIngredientBonuses.sugar = true;
+      }
+      if (e.zeroIngredientBonuses.ice) {
+        combined.zeroIngredientBonuses.ice = true;
+      }
+    }
   }
 
   return combined;
+}
+
+// ── Recipe-Triggered Events ──────────────────────────────────────────────────
+
+/**
+ * Generate complaint events for zero-ingredient recipes.
+ * Skips the complaint when a matching beneficial event is active
+ * (e.g. health craze suppresses the no-sugar complaint).
+ */
+export function rollRecipeEvents(
+  recipe: Recipe,
+  combinedEffects: EventEffects,
+): ActiveEvent[] {
+  const result: ActiveEvent[] = [];
+  const bonuses = combinedEffects.zeroIngredientBonuses;
+
+  if (recipe.lemonsPerCup === 0 && !bonuses?.lemons) {
+    result.push(resolveEvent("noLemonComplaint"));
+  }
+  if (recipe.sugarPerCup === 0 && !bonuses?.sugar) {
+    result.push(resolveEvent("noSugarComplaint"));
+  }
+  if (recipe.icePerCup === 0 && !bonuses?.ice) {
+    result.push(resolveEvent("noIceComplaint"));
+  }
+
+  return result;
 }
 
 /**

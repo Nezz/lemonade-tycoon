@@ -97,17 +97,17 @@ export default function GameLayout() {
         }}
       />
       <Stack.Screen
-        name="gameover"
+        name="bailout"
         options={{
-          title: "GAME OVER",
+          title: "A SECOND CHANCE",
           headerShown: false,
           gestureEnabled: false,
         }}
       />
       <Stack.Screen
-        name="victory"
+        name="gameover"
         options={{
-          title: "VICTORY!",
+          title: "GAME OVER",
           headerShown: false,
           gestureEnabled: false,
         }}

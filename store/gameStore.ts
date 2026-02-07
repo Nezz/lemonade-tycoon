@@ -13,12 +13,17 @@ import {
   UPGRADE_DEFINITIONS,
   MAX_INVENTORY_BASE,
   SUPPLY_IDS,
-  VICTORY_REVENUE_GOAL,
   BANKRUPTCY_THRESHOLD,
+  BAILOUT_AMOUNT,
   FORECAST_ACCURACY,
 } from "@/engine/constants";
 import { generateWeather, generateForecast } from "@/engine/weather";
-import { rollPlannedEvent, rollSurpriseEvents } from "@/engine/events";
+import {
+  rollPlannedEvent,
+  rollSurpriseEvents,
+  rollRecipeEvents,
+  combineEventEffects,
+} from "@/engine/events";
 import { runDay } from "@/engine/simulation";
 import { checkAchievements } from "@/engine/achievements";
 import { aggregateEffects } from "@/engine/upgrades";
@@ -44,7 +49,7 @@ interface GameActions {
   resetGame: () => void;
   loadState: (state: GameState) => void;
   getLastResult: () => DayResult | null;
-  continueAfterVictory: () => void;
+  claimBailout: () => void;
 
   // ── Tracking ────────────────────────────────────────────────────────
   totalSpentToday: number;
@@ -71,7 +76,7 @@ function getSerializableState(state: GameStore): GameState {
     achievements: state.achievements,
     stats: state.stats,
     phase: state.phase,
-    freePlay: state.freePlay,
+    bailedOut: state.bailedOut,
   };
 }
 
@@ -243,7 +248,16 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const state = get();
 
     // Roll surprise events right before simulation
-    const surprises = rollSurpriseEvents();
+    const randomSurprises = rollSurpriseEvents();
+
+    // Roll recipe-triggered complaint events (suppressed by beneficial events)
+    const combinedSoFar = combineEventEffects([
+      state.plannedEvent,
+      ...randomSurprises,
+    ]);
+    const recipeEvents = rollRecipeEvents(state.recipe, combinedSoFar);
+    const surprises = [...randomSurprises, ...recipeEvents];
+
     // Store surprise events so runDay and UI can use them
     const stateWithSurprises: GameState = {
       ...state,
@@ -270,21 +284,15 @@ export const useGameStore = create<GameStore>((set, get) => ({
       updatedAchievements[id] = true;
     }
 
-    // Check win/lose conditions
     const newTotalRevenue =
       Math.round((state.stats.totalRevenue + result.revenue) * 100) / 100;
-    let newPhase: GameState["phase"] = "results";
-
-    if (!state.freePlay && newTotalRevenue >= VICTORY_REVENUE_GOAL) {
-      newPhase = "victory";
-    }
 
     set({
       money: newMoney,
       inventory: newInventory,
       inventoryBatches: newInventoryBatches,
       reputation: newReputation,
-      phase: newPhase,
+      phase: "results",
       surpriseEvents: surprises,
       achievements: updatedAchievements,
       newlyUnlockedAchievements: newlyUnlocked,
@@ -300,7 +308,11 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const updatedInventory = get().inventory;
     const hasInventoryValue = SUPPLY_IDS.some((id) => updatedInventory[id] > 0);
     if (updatedMoney < BANKRUPTCY_THRESHOLD && !hasInventoryValue) {
-      set({ phase: "gameover" });
+      if (!get().bailedOut) {
+        set({ phase: "bailout" });
+      } else {
+        set({ phase: "gameover" });
+      }
     }
 
     return result;
@@ -380,16 +392,32 @@ export const useGameStore = create<GameStore>((set, get) => ({
       weather,
       forecast,
       forecastExtended,
-      freePlay: false,
       totalSpentToday: 0,
       newlyUnlockedAchievements: [],
+      bailedOut: false,
     });
   },
 
   // ── Load State ────────────────────────────────────────────────────────
 
   loadState: (state: GameState) => {
-    set({ ...state, totalSpentToday: 0, newlyUnlockedAchievements: [] });
+    set({
+      ...state,
+      totalSpentToday: 0,
+      newlyUnlockedAchievements: [],
+      // Backward compat: old saves lack bailedOut
+      bailedOut: state.bailedOut ?? false,
+    });
+  },
+
+  // ── Claim Bailout ──────────────────────────────────────────────────────
+
+  claimBailout: () => {
+    set({
+      money: BAILOUT_AMOUNT,
+      bailedOut: true,
+      phase: "planning",
+    });
   },
 
   // ── Get Last Result ───────────────────────────────────────────────────
@@ -398,12 +426,6 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const state = get();
     const results = state.stats.dayResults;
     return results.length > 0 ? results[results.length - 1] : null;
-  },
-
-  // ── Continue After Victory ────────────────────────────────────────────
-
-  continueAfterVictory: () => {
-    set({ freePlay: true, phase: "results" });
   },
 }));
 

@@ -121,8 +121,8 @@ export default function TitleScreen() {
       loadState(saved);
       if (saved.phase === "gameover") {
         router.replace("/(game)/gameover");
-      } else if (saved.phase === "victory") {
-        router.replace("/(game)/victory");
+      } else if (saved.phase === "bailout") {
+        router.replace("/(game)/bailout");
       } else if (saved.phase === "results") {
         router.replace("/(game)/results");
       } else {

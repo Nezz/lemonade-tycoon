@@ -331,7 +331,16 @@ export type GameEventId =
   // New surprise — ice
   | "fridgeMalfunction"
   // New surprise — preference
-  | "gymClassField";
+  | "gymClassField"
+  // Planned — zero-ingredient beneficial
+  | "healthCraze"
+  | "citrusAllergyScare"
+  // Surprise — zero-ingredient beneficial
+  | "warmDrinkTrend"
+  // Surprise — zero-ingredient complaints (recipe-triggered)
+  | "noLemonComplaint"
+  | "noSugarComplaint"
+  | "noIceComplaint";
 
 /** Resolved effect values for an event (stored so randomized values persist). */
 export interface EventEffects {
@@ -341,6 +350,8 @@ export interface EventEffects {
   reputationEffect: number;
   destroysIce: boolean;
   sugarPreferenceShift: number;
+  /** When set, 0 of that ingredient becomes beneficial instead of penalized. */
+  zeroIngredientBonuses?: { lemons?: boolean; sugar?: boolean; ice?: boolean };
 }
 
 export interface GameEventDefinition {
@@ -410,7 +421,13 @@ export type AchievementId =
   | "hotStreak"
   | "crowdPleaser"
   | "zeroWaste"
-  | "profitMachine";
+  | "profitMachine"
+  // Zero-ingredient
+  | "holdTheLemons"
+  | "sugarFree"
+  | "lukewarm"
+  | "madScientist"
+  | "justCups";
 
 export interface AchievementDefinition {
   id: AchievementId;
@@ -449,7 +466,7 @@ export interface DayResult {
 
 // ── Game State ───────────────────────────────────────────────────────────────
 
-export type GamePhase = "planning" | "results" | "gameover" | "victory";
+export type GamePhase = "planning" | "results" | "bailout" | "gameover";
 
 export interface GameState {
   day: number;
@@ -472,5 +489,6 @@ export interface GameState {
     dayResults: DayResult[];
   };
   phase: GamePhase;
-  freePlay: boolean;
+  /** Whether the player has already received the one-time bailout */
+  bailedOut: boolean;
 }
