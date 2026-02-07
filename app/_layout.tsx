@@ -1,9 +1,11 @@
+import { useEffect } from "react";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { View, ActivityIndicator } from "react-native";
 import { useFonts, VT323_400Regular } from "@expo-google-fonts/vt323";
 import { C } from "@/theme/pixel";
 import { useDevSaves } from "@/dev/useDevSaves";
+import { useReactorStore } from "@/store/reactorStore";
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -12,6 +14,11 @@ export default function RootLayout() {
 
   // Register dev menu save states (no-op in production)
   useDevSaves();
+
+  // Hydrate Reactor API key from storage
+  useEffect(() => {
+    useReactorStore.getState().hydrate();
+  }, []);
 
   if (!fontsLoaded) {
     return (

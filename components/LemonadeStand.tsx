@@ -1,21 +1,19 @@
 import { View, Text, StyleSheet, Platform, type ViewStyle } from "react-native";
 import { UnityView } from "@/modules/unity";
 import { C, PIXEL_FONT, F, pixelBevel } from "@/theme/pixel";
+import ReactorSettings from "@/components/ReactorSettings";
 
 interface LemonadeStandProps {
   style?: ViewStyle;
 }
 
 export default function LemonadeStand({ style }: LemonadeStandProps) {
+  if (Platform.OS === "web") {
+    return <ReactorSettings />;
+  }
   return (
     <View style={[styles.container, style]}>
-      {Platform.OS === "web" ? (
-        <Text style={styles.webMessage}>
-          Download the full game for iOS or Android to see your lemonade stand
-        </Text>
-      ) : (
-        <UnityView style={styles.unity} />
-      )}
+      <UnityView style={styles.unity} />
     </View>
   );
 }
@@ -37,12 +35,5 @@ const styles = StyleSheet.create({
   unity: {
     width: "100%",
     height: "100%",
-  },
-  webMessage: {
-    fontFamily: PIXEL_FONT,
-    fontSize: F.small,
-    color: C.textMuted,
-    textAlign: "center",
-    paddingHorizontal: 20,
   },
 });
