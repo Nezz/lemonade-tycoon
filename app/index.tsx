@@ -151,7 +151,11 @@ export default function TitleScreen() {
           <Text style={styles.title}>LEMONADE</Text>
           <Text style={styles.subtitle}>TYCOON</Text>
           <View style={styles.taglineBox}>
-            <Text style={styles.tagline}>Build your lemonade empire!</Text>
+            <Text style={styles.tagline}>
+              The best advice I was ever given was on my twenty-first birthday
+              when my father said:{"\n"}"Son, here's a million dollars. Don't
+              lose it."
+            </Text>
           </View>
         </View>
 
