@@ -33,23 +33,21 @@ function loadSave(
 export function useDevSaves() {
   useEffect(() => {
     if (__DEV__) {
-      return;
-    }
-
-    if (isDevBuild) {
-      import("expo-dev-client").then(({ registerDevMenuItems }) => {
-        registerDevMenuItems(
-          DEV_SAVES.map((save) => ({
-            name: save.label,
-            callback: () => loadSave(save.label, save.description, save.state),
-          })),
-        );
-      });
-    } else {
-      for (const save of DEV_SAVES) {
-        DevSettings.addMenuItem(save.label, () => {
-          loadSave(save.label, save.description, save.state);
+      if (isDevBuild) {
+        import("expo-dev-client").then(({ registerDevMenuItems }) => {
+          registerDevMenuItems(
+            DEV_SAVES.map((save) => ({
+              name: save.label,
+              callback: () => loadSave(save.label, save.description, save.state),
+            })),
+          );
         });
+      } else {
+        for (const save of DEV_SAVES) {
+          DevSettings.addMenuItem(save.label, () => {
+            loadSave(save.label, save.description, save.state);
+          });
+        }
       }
     }
   }, []);
