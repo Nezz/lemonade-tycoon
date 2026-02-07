@@ -138,7 +138,7 @@ export default function ResultsScreen() {
 
         {/* Overnight Report */}
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>OVERNIGHT</Text>
+          <Text style={styles.cardTitle}>END OF DAY</Text>
           <StatRow label="Reputation" value={repChangeStr} color={repColor} />
           {result.iceMelted > 0 && (
             <StatRow
