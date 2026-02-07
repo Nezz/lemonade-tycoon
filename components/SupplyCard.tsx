@@ -108,6 +108,7 @@ export default function SupplyCard({
             onPress={handleDiscard}
             disabled={currentStock === 0}
             variant="danger"
+            haptic
             small
             style={styles.buyBtn}
           />
@@ -116,6 +117,7 @@ export default function SupplyCard({
             title="BUY"
             onPress={handleBuy}
             disabled={!canAfford}
+            haptic
             small
             style={styles.buyBtn}
           />

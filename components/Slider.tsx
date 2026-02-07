@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { C, PIXEL_FONT, F } from "@/theme/pixel";
+import { selectionHaptic } from "@/utils/haptics";
 
 interface SliderProps {
   value: number;
@@ -29,9 +30,10 @@ export default function Slider({
     <View style={styles.container}>
       <TouchableOpacity
         style={[styles.arrowBtn, value <= min && styles.arrowBtnDisabled]}
-        onPress={() =>
-          onChange(Math.max(min, Math.round((value - step) * 100) / 100))
-        }
+        onPress={() => {
+          selectionHaptic();
+          onChange(Math.max(min, Math.round((value - step) * 100) / 100));
+        }}
         disabled={value <= min}
       >
         <Text style={[styles.arrow, value <= min && styles.arrowDisabled]}>
@@ -45,7 +47,10 @@ export default function Slider({
             <TouchableOpacity
               key={s}
               style={[styles.dot, s <= value && styles.dotActive]}
-              onPress={() => onChange(s)}
+              onPress={() => {
+                selectionHaptic();
+                onChange(s);
+              }}
             >
               <View
                 style={[styles.dotInner, s === value && styles.dotSelected]}
@@ -57,9 +62,10 @@ export default function Slider({
 
       <TouchableOpacity
         style={[styles.arrowBtn, value >= max && styles.arrowBtnDisabled]}
-        onPress={() =>
-          onChange(Math.min(max, Math.round((value + step) * 100) / 100))
-        }
+        onPress={() => {
+          selectionHaptic();
+          onChange(Math.min(max, Math.round((value + step) * 100) / 100));
+        }}
         disabled={value >= max}
       >
         <Text style={[styles.arrow, value >= max && styles.arrowDisabled]}>

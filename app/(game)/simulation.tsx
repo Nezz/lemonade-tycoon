@@ -9,6 +9,7 @@ import PixelIcon from "@/components/PixelIcon";
 import { WEATHER_DATA } from "@/engine/constants";
 import type { ActiveEvent, DayResult } from "@/engine/types";
 import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from "@/theme/pixel";
+import { heavyTapHaptic, successHaptic } from "@/utils/haptics";
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
@@ -51,6 +52,7 @@ function SimulationClock({
 }) {
   const [display, setDisplay] = useState(() => formatGameTime(START_HOUR));
   const isSoldOut = display === "SOLD OUT!";
+  const soldOutHapticFired = useRef(false);
 
   useEffect(() => {
     const start = Date.now();
@@ -62,6 +64,10 @@ function SimulationClock({
         return;
       }
       if (soldOutAtMs !== null && elapsed >= soldOutAtMs) {
+        if (!soldOutHapticFired.current) {
+          soldOutHapticFired.current = true;
+          heavyTapHaptic();
+        }
         setDisplay("SOLD OUT!");
         return;
       }
@@ -388,6 +394,7 @@ export default function SimulationScreen() {
       } else if (currentPhase === "bailout") {
         router.replace("/(game)/bailout");
       } else {
+        successHaptic();
         router.replace("/(game)/results");
       }
     }, schedule.effectiveTotalMs + NAV_DELAY_AFTER_CLOSE);

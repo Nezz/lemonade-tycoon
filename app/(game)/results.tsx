@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, ScrollView, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { useGameStore } from "@/store/gameStore";
@@ -11,6 +11,7 @@ import { ACHIEVEMENT_DEFINITIONS } from "@/engine/achievements";
 import PixelIcon from "@/components/PixelIcon";
 import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from "@/theme/pixel";
 import StripedBackground from "@/components/StripedBackground";
+import { successHaptic } from "@/utils/haptics";
 
 function SatisfactionStars({ satisfaction }: { satisfaction: number }) {
   const filled = Math.round(satisfaction / 20);
@@ -52,6 +53,13 @@ export default function ResultsScreen() {
   const money = useGameStore((s) => s.money);
 
   const result = getLastResult();
+
+  const hasAchievementsToast = result?.achievementsUnlocked.length ?? 0;
+  useEffect(() => {
+    if (hasAchievementsToast) {
+      successHaptic();
+    }
+  }, [hasAchievementsToast]);
 
   const handleNextDay = () => {
     nextDay();
@@ -205,6 +213,7 @@ export default function ResultsScreen() {
         <GameButton
           title="START NEXT DAY"
           onPress={handleNextDay}
+          haptic
           style={styles.nextBtn}
         />
       </ScrollView>

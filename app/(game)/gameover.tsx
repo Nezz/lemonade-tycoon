@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -10,12 +10,17 @@ import { deleteSave } from "@/utils/storage";
 import PixelIcon from "@/components/PixelIcon";
 import { C, PIXEL_FONT, F, pixelPanel } from "@/theme/pixel";
 import StripedBackground from "@/components/StripedBackground";
+import { errorHaptic } from "@/utils/haptics";
 
 export default function GameOverScreen() {
   const router = useRouter();
   const stats = useGameStore((s) => s.stats);
   const day = useGameStore((s) => s.day);
   const resetGame = useGameStore((s) => s.resetGame);
+
+  useEffect(() => {
+    errorHaptic();
+  }, []);
 
   const handleRestart = async () => {
     await deleteSave();

@@ -7,6 +7,7 @@ import {
   TextStyle,
 } from "react-native";
 import { C, PIXEL_FONT, F } from "@/theme/pixel";
+import { tapHaptic } from "@/utils/haptics";
 
 interface GameButtonProps {
   title: string;
@@ -16,6 +17,7 @@ interface GameButtonProps {
   style?: ViewStyle;
   textStyle?: TextStyle;
   small?: boolean;
+  haptic?: boolean;
 }
 
 export default function GameButton({
@@ -26,6 +28,7 @@ export default function GameButton({
   style,
   textStyle,
   small = false,
+  haptic = false,
 }: GameButtonProps) {
   const bg =
     variant === "primary"
@@ -52,7 +55,12 @@ export default function GameButton({
 
   return (
     <TouchableOpacity
-      onPress={onPress}
+      onPress={() => {
+        if (haptic) {
+          tapHaptic();
+        }
+        onPress();
+      }}
       disabled={disabled}
       activeOpacity={0.8}
       style={[

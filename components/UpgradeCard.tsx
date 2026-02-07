@@ -116,6 +116,7 @@ export default function UpgradeCard({
             title={formatMoney(def.cost)}
             onPress={() => onBuy(upgradeId)}
             disabled={!canAfford}
+            haptic
             small
           />
         )}

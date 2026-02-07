@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -9,10 +9,15 @@ import { formatMoney } from "@/utils/format";
 import { BAILOUT_AMOUNT } from "@/engine/constants";
 import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from "@/theme/pixel";
 import StripedBackground from "@/components/StripedBackground";
+import { successHaptic } from "@/utils/haptics";
 
 export default function BailoutScreen() {
   const router = useRouter();
   const claimBailout = useGameStore((s) => s.claimBailout);
+
+  useEffect(() => {
+    successHaptic();
+  }, []);
 
   const handleClaim = () => {
     claimBailout();
@@ -72,6 +77,7 @@ export default function BailoutScreen() {
           <GameButton
             title={`THANK YOU! (+${formatMoney(BAILOUT_AMOUNT)})`}
             onPress={handleClaim}
+            haptic
           />
         </ScrollView>
       </SafeAreaView>

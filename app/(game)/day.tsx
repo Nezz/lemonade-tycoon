@@ -254,6 +254,7 @@ export default function DayScreen() {
             title={canStart ? "OPEN FOR BUSINESS!" : "NEED SUPPLIES!"}
             onPress={handleStartDay}
             disabled={!canStart}
+            haptic
             style={styles.fullBtn}
           />
         </View>
