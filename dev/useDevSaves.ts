@@ -4,7 +4,7 @@
  * React Native DevSettings in Expo Go.
  */
 import { useEffect } from "react";
-import { DevSettings, Alert, Platform } from "react-native";
+import { Alert, Platform } from "react-native";
 import Constants, { ExecutionEnvironment } from "expo-constants";
 import { DEV_SAVES } from "@/dev/saves";
 import { useGameStore } from "@/store/gameStore";
@@ -42,12 +42,6 @@ export function useDevSaves() {
             })),
           );
         });
-      } else {
-        for (const save of DEV_SAVES) {
-          DevSettings.addMenuItem(save.label, () => {
-            loadSave(save.label, save.description, save.state);
-          });
-        }
       }
     }
   }, []);
