@@ -13,6 +13,7 @@ interface SupplyCardProps {
   totalInventory: number;
   maxInventory: number;
   money: number;
+  costMultiplier: number;
   onBuy: (supplyId: SupplyId, packs: number) => boolean;
   onDiscard: (supplyId: SupplyId, amount: number) => boolean;
 }
@@ -23,12 +24,14 @@ export default function SupplyCard({
   totalInventory,
   maxInventory,
   money,
+  costMultiplier,
   onBuy,
   onDiscard,
 }: SupplyCardProps) {
   const [packs, setPacks] = useState(1);
   const def = SUPPLY_DEFINITIONS[supplyId];
-  const totalCost = def.packCost * packs;
+  const totalCost =
+    Math.round(def.packCost * packs * costMultiplier * 100) / 100;
   const totalUnits = def.packSize * packs;
   const canAfford = totalCost <= money;
   const isFull = totalInventory >= maxInventory;
@@ -87,7 +90,14 @@ export default function SupplyCard({
             +{unitsKept}
             {unitsKept < totalUnits ? `/${totalUnits}` : ""} {def.unit}
           </Text>
-          <Text style={[styles.cost, !canAfford && styles.costRed]}>
+          <Text
+            style={[
+              styles.cost,
+              costMultiplier > 1 && styles.costUp,
+              costMultiplier < 1 && styles.costDown,
+              !canAfford && styles.costRed,
+            ]}
+          >
             {formatMoney(totalCost)}
           </Text>
         </View>
@@ -195,6 +205,12 @@ const styles = StyleSheet.create({
     fontFamily: PIXEL_FONT,
     fontSize: F.body,
     color: C.gold,
+  },
+  costUp: {
+    color: C.red,
+  },
+  costDown: {
+    color: C.green,
   },
   costRed: {
     color: C.red,

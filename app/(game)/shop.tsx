@@ -108,18 +108,26 @@ export default function ShopScreen() {
           );
         })}
 
-        {SUPPLY_IDS.map((id) => (
-          <SupplyCard
-            key={id}
-            supplyId={id}
-            currentStock={inventory[id]}
-            totalInventory={totalInventory}
-            maxInventory={maxInventory}
-            money={money}
-            onBuy={buySupply}
-            onDiscard={discardSupply}
-          />
-        ))}
+        {SUPPLY_IDS.map((id) => {
+          const perSupply = eventFx.supplyCostMultipliers?.[id];
+          let costMultiplier = perSupply ?? eventFx.supplyCostMultiplier;
+          if (effects.costReduction > 0) {
+            costMultiplier *= 1 - effects.costReduction;
+          }
+          return (
+            <SupplyCard
+              key={id}
+              supplyId={id}
+              currentStock={inventory[id]}
+              totalInventory={totalInventory}
+              maxInventory={maxInventory}
+              money={money}
+              costMultiplier={costMultiplier}
+              onBuy={buySupply}
+              onDiscard={discardSupply}
+            />
+          );
+        })}
 
         {/* Shelf life info */}
         <View style={styles.infoCard}>
