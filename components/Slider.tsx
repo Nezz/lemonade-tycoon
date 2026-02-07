@@ -110,7 +110,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
   },
   dot: {
-    width: 22,
+    flex: 1,
+    maxWidth: 22,
     height: 22,
     borderRadius: 0,
     alignItems: "center",
