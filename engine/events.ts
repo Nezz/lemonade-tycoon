@@ -503,7 +503,7 @@ const SURPRISE_EVENT_IDS = ALL_EVENT_IDS.filter(
 );
 
 /** Chance each surprise slot fires (rolled twice independently). */
-const SURPRISE_CHANCE = 0.25;
+const SURPRISE_CHANCE = 0.35;
 
 // ── Description Generators ───────────────────────────────────────────────────
 //
