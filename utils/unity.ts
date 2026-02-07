@@ -17,7 +17,14 @@ type UpgradesChangedMessage = {
   upgrades: UpgradeId[];
 };
 
-type OutboundMessage = UpgradesChangedMessage;
+type CameraView = "day" | "simulation";
+
+type CameraViewChangedMessage = {
+  messageType: "CameraViewChanged";
+  view: CameraView;
+};
+
+type OutboundMessage = UpgradesChangedMessage | CameraViewChangedMessage;
 
 // ── Channel ──────────────────────────────────────────────────────────────────
 
@@ -26,9 +33,13 @@ type MessageListener<T extends InboundMessage> = (message: T) => void;
 class UnityMessageChannel {
   private listeners: Map<string, Set<MessageListener<any>>> = new Map();
   private subscription: EventSubscription | null = null;
+  private initialized = false;
 
   constructor() {
     this.setupListener();
+    this.addListener("Initialized", () => {
+      this.initialized = true;
+    });
   }
 
   private setupListener(): void {
@@ -92,6 +103,18 @@ class UnityMessageChannel {
   }
 
   /**
+   * Run a callback once Unity is ready. If already initialized the callback
+   * fires immediately. Also re-fires on any subsequent re-initialization.
+   * Returns an unsubscribe function.
+   */
+  whenReady(callback: () => void): () => void {
+    if (this.initialized) {
+      callback();
+    }
+    return this.addListener("Initialized", callback);
+  }
+
+  /**
    * Clean up listeners
    */
   destroy(): void {
@@ -117,5 +140,15 @@ export function sendUpgradesToUnity(
   unityMessageChannel.postMessage({
     messageType: "UpgradesChanged",
     upgrades: owned,
+  });
+}
+
+/**
+ * Tell Unity which camera view to show.
+ */
+export function sendCameraViewToUnity(view: CameraView): void {
+  unityMessageChannel.postMessage({
+    messageType: "CameraViewChanged",
+    view,
   });
 }

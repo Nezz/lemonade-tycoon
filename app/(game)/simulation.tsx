@@ -10,6 +10,7 @@ import { WEATHER_DATA } from "@/engine/constants";
 import type { ActiveEvent, DayResult } from "@/engine/types";
 import { C, PIXEL_FONT, F, pixelPanel, pixelBevel } from "@/theme/pixel";
 import { heavyTapHaptic, successHaptic } from "@/utils/haptics";
+import { sendCameraViewToUnity, unityMessageChannel } from "@/utils/unity";
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
@@ -337,6 +338,12 @@ export default function SimulationScreen() {
     scheduleRef.current = buildSchedule(result);
   }
   const schedule = scheduleRef.current;
+
+  useEffect(() => {
+    return unityMessageChannel.whenReady(() =>
+      sendCameraViewToUnity("simulation"),
+    );
+  }, []);
 
   useEffect(() => {
     if (!result || !schedule) {

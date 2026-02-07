@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
 import { useRouter } from "expo-router";
 import { useGameStore } from "@/store/gameStore";
 import LemonadeStand from "@/components/LemonadeStand";
+import { sendCameraViewToUnity, unityMessageChannel } from "@/utils/unity";
 
 import MoneyDisplay from "@/components/MoneyDisplay";
 import InventoryBar from "@/components/InventoryBar";
@@ -42,6 +43,10 @@ export default function DayScreen() {
   const effects = aggregateEffects(upgrades);
   const passiveIncome = effects.passiveIncome;
   const freeLemons = Math.floor(effects.freeLemons);
+
+  useEffect(() => {
+    return unityMessageChannel.whenReady(() => sendCameraViewToUnity("day"));
+  }, []);
 
   const [expanded, setExpanded] = useState<"weather" | "event" | null>(null);
   const toggleExpanded = (panel: "weather" | "event") =>
