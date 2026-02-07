@@ -94,6 +94,9 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "center",
     gap: 20,
+    maxWidth: 800,
+    width: "100%",
+    alignSelf: "center",
   },
   iconRow: {
     alignItems: "center",

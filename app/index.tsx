@@ -8,6 +8,7 @@ import { useGameStore } from "@/store/gameStore";
 import { hasSavedGame, loadGame } from "@/utils/storage";
 import { C, PIXEL_FONT, F } from "@/theme/pixel";
 import StripedBackground from "@/components/StripedBackground";
+import ConfirmDialog from "@/components/ConfirmDialog";
 
 // ── Floating emoji config ────────────────────────────────────────────────────
 
@@ -102,6 +103,7 @@ export default function TitleScreen() {
   const loadState = useGameStore((s) => s.loadState);
   const [saveExists, setSaveExists] = useState(false);
   const [checking, setChecking] = useState(true);
+  const [confirmVisible, setConfirmVisible] = useState(false);
 
   useEffect(() => {
     hasSavedGame().then((exists) => {
@@ -110,9 +112,18 @@ export default function TitleScreen() {
     });
   }, []);
 
-  const handleNewGame = () => {
+  const startNewGame = () => {
+    setConfirmVisible(false);
     resetGame();
     router.replace("/(game)/day");
+  };
+
+  const handleNewGame = () => {
+    if (saveExists) {
+      setConfirmVisible(true);
+    } else {
+      startNewGame();
+    }
   };
 
   const handleContinue = async () => {
@@ -161,6 +172,16 @@ export default function TitleScreen() {
 
         <Text style={styles.version}>v1.0</Text>
       </SafeAreaView>
+
+      <ConfirmDialog
+        visible={confirmVisible}
+        title="Start New Game?"
+        message="This will overwrite your existing save. Are you sure?"
+        confirmLabel="NEW GAME"
+        cancelLabel="CANCEL"
+        onConfirm={startNewGame}
+        onCancel={() => setConfirmVisible(false)}
+      />
     </StripedBackground>
   );
 }
