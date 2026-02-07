@@ -3,8 +3,8 @@ import { View, Text, StyleSheet, Animated } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useGameStore } from "@/store/gameStore";
-import { Image } from "expo-image";
-import StripedBackground from "@/components/StripedBackground";
+import SimulationBackground from "@/components/SimulationBackground";
+import SimulationStand from "@/components/SimulationStand";
 import PixelIcon from "@/components/PixelIcon";
 import { WEATHER_DATA } from "@/engine/constants";
 import type { ActiveEvent, DayResult } from "@/engine/types";
@@ -413,11 +413,13 @@ export default function SimulationScreen() {
   const surpriseDelays = [2 * MS_PER_HOUR, 4 * MS_PER_HOUR];
 
   return (
-    <StripedBackground>
+    <SimulationBackground>
       <SafeAreaView style={styles.safeArea}>
         {/* Header: Day label + Clock */}
         <View style={styles.header}>
-          <Text style={styles.dayLabel}>DAY {result.day}</Text>
+          <View style={styles.clockPanel}>
+            <Text style={styles.dayLabel}>DAY {result.day}</Text>
+          </View>
           <View style={styles.clockPanel}>
             <SimulationClock
               effectiveTotalMs={schedule?.effectiveTotalMs ?? TOTAL_DURATION_MS}
@@ -444,11 +446,7 @@ export default function SimulationScreen() {
             floatHeight.current = e.nativeEvent.layout.height * 0.75;
           }}
         >
-          <Image
-            source={require("@/assets/stand.png")}
-            style={styles.standImage}
-            contentFit="contain"
-          />
+          <SimulationStand />
 
           {/* Floating icon overlay */}
           {activeIcons.map((icon) => (
@@ -468,7 +466,7 @@ export default function SimulationScreen() {
           ))}
         </View>
       </SafeAreaView>
-    </StripedBackground>
+    </SimulationBackground>
   );
 }
 
@@ -487,7 +485,7 @@ const styles = StyleSheet.create({
   },
   dayLabel: {
     fontFamily: PIXEL_FONT,
-    fontSize: F.heading,
+    fontSize: F.body,
     color: C.gold,
   },
   clockPanel: {
@@ -506,11 +504,6 @@ const styles = StyleSheet.create({
   },
   // Surprise event toasts
   toastContainer: {
-    position: "absolute",
-    top: 60,
-    left: 12,
-    right: 12,
-    zIndex: 100,
     gap: 6,
   },
   toastBanner: {
@@ -547,13 +540,6 @@ const styles = StyleSheet.create({
   standArea: {
     flex: 1,
     position: "relative",
-  },
-  standImage: {
-    alignSelf: "center",
-    width: 200,
-    height: 200,
-    position: "absolute",
-    bottom: "30%",
   },
   floatingIcon: {
     position: "absolute",
