@@ -40,17 +40,19 @@ export default function Slider({
       </TouchableOpacity>
 
       <View style={styles.track}>
-        {steps.map((s) => (
-          <TouchableOpacity
-            key={s}
-            style={[styles.dot, s <= value && styles.dotActive]}
-            onPress={() => onChange(s)}
-          >
-            <View
-              style={[styles.dotInner, s === value && styles.dotSelected]}
-            />
-          </TouchableOpacity>
-        ))}
+        {steps.map((s) =>
+          s === min ? null : (
+            <TouchableOpacity
+              key={s}
+              style={[styles.dot, s <= value && styles.dotActive]}
+              onPress={() => onChange(s)}
+            >
+              <View
+                style={[styles.dotInner, s === value && styles.dotSelected]}
+              />
+            </TouchableOpacity>
+          ),
+        )}
       </View>
 
       <TouchableOpacity
