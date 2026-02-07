@@ -237,7 +237,7 @@ export const EVENT_DEFINITIONS: Record<GameEventId, GameEventDefinition> = {
 
   churchPicnic: {
     id: "churchPicnic",
-    name: "Church Picnic",
+    name: "Vappu Picnic",
     emoji: "⛪",
     timing: "planned",
     effects: {
@@ -578,7 +578,7 @@ const DESCRIPTIONS: Record<GameEventId, DescriptionFn> = {
     `Road closure detour! ${pctDown(e.demandMultiplier)}% fewer pedestrians.`,
 
   // Planned — preference / mixed
-  churchPicnic: () => "Church picnic nearby! Families prefer sweeter lemonade.",
+  churchPicnic: () => "It's Vappu! Families prefer sweeter lemonade.",
   dietTrend: () =>
     "A diet trend article boosts demand — people prefer less sugar.",
 
