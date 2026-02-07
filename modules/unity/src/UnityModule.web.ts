@@ -1,19 +1,16 @@
-import { registerWebModule, NativeModule } from 'expo';
-
-import { ChangeEventPayload } from './UnityModule.types';
-
-type UnityModuleEvents = {
-  onChange: (params: ChangeEventPayload) => void;
-}
+import { UnityModuleEvents } from "@/modules/unity/src/UnityModule.types";
+import { NativeModule, registerWebModule } from "expo";
 
 class UnityModule extends NativeModule<UnityModuleEvents> {
-  PI = Math.PI;
-  async setValueAsync(value: string): Promise<void> {
-    this.emit('onChange', { value });
-  }
-  hello() {
-    return 'Hello world! 👋';
-  }
-};
+  postMessage(gameObject: string, methodName: string, message: string): void {}
 
-export default registerWebModule(UnityModule, 'UnityModule');
+  unloadUnity(): void {
+    this.emit("onUnityUnloaded");
+  }
+
+  pauseUnity(pause: boolean): void {}
+
+  windowFocusChanged(hasFocus: boolean): void {}
+}
+
+export default registerWebModule(UnityModule, "UnityModule");

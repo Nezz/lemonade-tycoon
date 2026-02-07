@@ -28,6 +28,7 @@ import { runDay } from "@/engine/simulation";
 import { checkAchievements } from "@/engine/achievements";
 import { aggregateEffects } from "@/engine/upgrades";
 import { saveGame } from "@/utils/storage";
+import { sendUpgradesToUnity, unityMessageChannel } from "@/utils/unity";
 
 interface GameActions {
   // ── Supply Actions ──────────────────────────────────────────────────
@@ -439,4 +440,19 @@ useGameStore.subscribe((state) => {
   saveTimeout = setTimeout(() => {
     saveGame(getSerializableState(state));
   }, 500);
+});
+
+// ── Sync upgrades to Unity whenever they change ──────────────────────
+let prevUpgrades: Record<string, boolean> | null = null;
+
+useGameStore.subscribe((state) => {
+  if (state.upgrades !== prevUpgrades) {
+    prevUpgrades = state.upgrades;
+    sendUpgradesToUnity(state.upgrades);
+  }
+});
+
+// ── Send current state to Unity once it's initialized ────────────────
+unityMessageChannel.addListener("Initialized", () => {
+  sendUpgradesToUnity(useGameStore.getState().upgrades);
 });

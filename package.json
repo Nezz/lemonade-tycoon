@@ -4,12 +4,12 @@
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android --device",
+    "ios": "expo run:ios --device",
     "web": "expo start --web",
     "check": "npx expo-doctor",
     "check-types": "tsc --noEmit",
-    "lint": "expo lint app components dev engine store theme utils"
+    "lint": "expo lint app components dev engine modules store theme utils"
   },
   "dependencies": {
     "@expo-google-fonts/vt323": "^0.4.1",

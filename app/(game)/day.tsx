@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
 import { useRouter } from "expo-router";
 import { useGameStore } from "@/store/gameStore";
-import StandPlaceholder from "@/components/StandPlaceholder";
+import LemonadeStand from "@/components/LemonadeStand";
 
 import MoneyDisplay from "@/components/MoneyDisplay";
 import InventoryBar from "@/components/InventoryBar";
@@ -172,8 +172,8 @@ export default function DayScreen() {
           )}
         </View>
 
-        {/* Lemonade Stand Placeholder */}
-        <StandPlaceholder />
+        {/* Lemonade Stand */}
+        <LemonadeStand style={styles.stand} />
 
         {/* Inventory */}
         <InventoryBar inventory={inventory} recipe={recipe} />
@@ -352,6 +352,9 @@ const styles = StyleSheet.create({
     fontFamily: PIXEL_FONT,
     fontSize: F.small,
     color: C.textMuted,
+  },
+  stand: {
+    height: 200,
   },
   summary: {
     flexDirection: "row",

@@ -1,12 +1,12 @@
-import { NativeModule, requireNativeModule } from 'expo';
+import { NativeModule, requireOptionalNativeModule } from "expo";
 
-import { UnityModuleEvents } from './UnityModule.types';
+import { UnityModuleEvents } from "@/modules/unity/src/UnityModule.types";
 
 declare class UnityModule extends NativeModule<UnityModuleEvents> {
-  PI: number;
-  hello(): string;
-  setValueAsync(value: string): Promise<void>;
+  postMessage(gameObject: string, methodName: string, message: string): void;
+  unloadUnity(): void;
+  pauseUnity(pause: boolean): void;
+  windowFocusChanged(hasFocus: boolean): void;
 }
 
-// This call loads the native module object from the JSI.
-export default requireNativeModule<UnityModule>('UnityModule');
+export default requireOptionalNativeModule<UnityModule>("UnityModule");

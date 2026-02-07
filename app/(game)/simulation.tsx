@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Animated } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useGameStore } from "@/store/gameStore";
-import StandPlaceholder from "@/components/StandPlaceholder";
+import { Image } from "expo-image";
 import StripedBackground from "@/components/StripedBackground";
 import PixelIcon from "@/components/PixelIcon";
 import { WEATHER_DATA } from "@/engine/constants";
@@ -444,7 +444,11 @@ export default function SimulationScreen() {
             floatHeight.current = e.nativeEvent.layout.height * 0.75;
           }}
         >
-          <StandPlaceholder style={styles.standFull} />
+          <Image
+            source={require("@/assets/stand.png")}
+            style={styles.standImage}
+            contentFit="contain"
+          />
 
           {/* Floating icon overlay */}
           {activeIcons.map((icon) => (
@@ -544,9 +548,12 @@ const styles = StyleSheet.create({
     flex: 1,
     position: "relative",
   },
-  standFull: {
-    marginVertical: 0,
-    minHeight: 0,
+  standImage: {
+    alignSelf: "center",
+    width: 200,
+    height: 200,
+    position: "absolute",
+    bottom: "30%",
   },
   floatingIcon: {
     position: "absolute",

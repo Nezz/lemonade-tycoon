@@ -1,19 +1,12 @@
-import type { StyleProp, ViewStyle } from 'react-native';
-
-export type OnLoadEventPayload = {
-  url: string;
-};
+import type { StyleProp, ViewStyle } from "react-native";
 
 export type UnityModuleEvents = {
-  onChange: (params: ChangeEventPayload) => void;
+  onUnityMessage: (payload: { message: string }) => void;
+  onUnityUnloaded: () => void;
 };
 
-export type ChangeEventPayload = {
-  value: string;
-};
-
-export type UnityModuleViewProps = {
-  url: string;
-  onLoad: (event: { nativeEvent: OnLoadEventPayload }) => void;
+export type UnityViewProps = {
   style?: StyleProp<ViewStyle>;
+  androidKeepPlayerMounted?: boolean;
+  fullScreen?: boolean;
 };

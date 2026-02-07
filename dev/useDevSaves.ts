@@ -38,7 +38,8 @@ export function useDevSaves() {
           registerDevMenuItems(
             DEV_SAVES.map((save) => ({
               name: save.label,
-              callback: () => loadSave(save.label, save.description, save.state),
+              callback: () =>
+                loadSave(save.label, save.description, save.state),
             })),
           );
         });

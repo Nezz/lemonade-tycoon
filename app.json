@@ -17,7 +17,8 @@
       "typedRoutes": true
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.adamys.lemonade-tycoon"
     },
     "android": {
       "adaptiveIcon": {
