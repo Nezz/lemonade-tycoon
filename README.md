@@ -1,5 +1,7 @@
 # Lemonade Tycoon
 
+<img width="200" align="right" alt="Illustration" src="https://github.com/user-attachments/assets/0d25e7c9-2468-419b-be18-1720e54c06e0" />
+
 A business simulation game where you run a lemonade stand, built with **Expo** (React Native) and **Unity**.
 
 Built in ~24 hours (with almost 8 hours of sleep!) for the **Supercell AI Hackathon**.
